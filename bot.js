@@ -1,4 +1,18 @@
 const Discord = require('discord.js');
+const client = new Discord.client();
+
+client.on('ready', () => {
+   console.log("I am ready"); 
+});
+
+client.on('message', message => {
+   if(!message.content === "ping"){
+      message.reply("pong");    
+   }
+});
+
+client.login(process.env.BOT_TOKEN);
+/*const Discord = require('discord.js');
 const request = require('request');
 const bot = new Discord.Client();
 const start = new Date();
@@ -541,3 +555,4 @@ bot.on('message', message => {
     //var wonsayings = [":sob: you won..","I'm humiliated","NO!!!!!!!!!!","Stop winning","STOP PLEASE!","I don't like losing :(","Please have mercy","Why?!?!?!?!","What a cruel, cruel world!",":sob:","Maybe next time... :cry:","So, sad","I KEEP LOSING!!!!!!","I feel sorry for myself","This sucks"];
 });
 bot.login(process.env.BOT_TOKEN);
+*/
