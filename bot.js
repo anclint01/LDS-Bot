@@ -1,4 +1,17 @@
-const Discord = require('discord.js');
+cons Discord = require('discord.js');
+const client = new Discord.Client();
+
+client.on('ready', () => {
+    console.log('I am ready!');
+});
+
+bot.on('message', message => {
+   if(message.content == "ping"){
+       message.reply("pong");    
+   }
+});
+
+/*const Discord = require('discord.js');
 const request = require('request');
 const bot = new Discord.Client();
 const start = new Date();
@@ -540,6 +553,5 @@ bot.on('message', message => {
     //var lostsayings = ["You got Rekt boi","Mwhaha you lost","LOSER!!","You'll just lose again next time.","Why do you keep trying? You will just lose!","You should ask the 8ball if you will win, I bet it will say your a loser at this game.","I'm getting bored of winning, though I still don't wnat you to win.","The outlook good that you won't win.","Yes, I won. shocking isn't it?","Why, you lose so much?","Maybe next time :grin:","You keeping coming back, and you keep losing. An occasional win but...","YOU KEEP LOSING!!!!!!","I'm starting to feel sympathy for you, wait nevermind.","I could cheat really easily, but I won't I guess the fates just favor me more then you."];
     //var wonsayings = [":sob: you won..","I'm humiliated","NO!!!!!!!!!!","Stop winning","STOP PLEASE!","I don't like losing :(","Please have mercy","Why?!?!?!?!","What a cruel, cruel world!",":sob:","Maybe next time... :cry:","So, sad","I KEEP LOSING!!!!!!","I feel sorry for myself","This sucks"];
 });
-bot.login("NTI5ODY5OTAzMDc5OTMxOTI0.Dw3Hlw._fBhuzuncoV33yzx7HDLcItWUms");
-//bot.login(process.env.BOT_TOKEN);
-
+bot.login(process.env.BOT_TOKEN);
+*/
