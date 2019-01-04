@@ -1,23 +1,8 @@
 const Discord = require('discord.js');
-const client = new Discord.Client();
-
-client.on('ready', () => {
-    console.log('I am ready!');
-});
-
-client.on('message', message => {
-   if(message.content == "ping"){
-       message.reply("pong");    
-   }
-});
-
-bot.login(process.env.BOT_TOKEN);
-/*const Discord = require('discord.js');
 const request = require('request');
 const bot = new Discord.Client();
 const start = new Date();
 const prefix = "p!";
-const notif = require('node-notifier');
 const profanities = require('profanities');
 const lower_case = require('lower-case');
 //const config = require("./config.json");
