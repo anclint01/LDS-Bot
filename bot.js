@@ -1,16 +1,17 @@
-cons Discord = require('discord.js');
+const Discord = require('discord.js');
 const client = new Discord.Client();
 
 client.on('ready', () => {
     console.log('I am ready!');
 });
 
-bot.on('message', message => {
+client.on('message', message => {
    if(message.content == "ping"){
        message.reply("pong");    
    }
 });
 
+bot.login(process.env.BOT_TOKEN);
 /*const Discord = require('discord.js');
 const request = require('request');
 const bot = new Discord.Client();
