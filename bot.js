@@ -1,34 +1,34 @@
 const Discord = require('discord.js');
 const request = require('request');
-const bot = new Discord.Client();
+const client = new Discord.Client();
 const start = new Date();
 const prefix = "p!";
 const profanities = require('profanities');
 const lower_case = require('lower-case');
 //const config = require("./config.json");
-bot.on('ready', () => {
+client.on('ready', () => {
     console.log('I am ready!');
 });
-bot.on("guildMemberAdd", member => {
+client.on("guildMemberAdd", member => {
     //if(message.guild.id != "210923273553313792"){
     let guild = member.guild;
     guild.defaultChannel.sendMessage(`Please welcome ${member.user} to the server!`);
     //}
 });
-bot.on("guildMemberRemove", member => {
+client.on("guildMemberRemove", member => {
     //if(message.guild.id != "210923273553313792"){
     let guild = member.guild;
     guild.defaultChannel.sendMessage(`${member.user} has left the server!`);
     //}
 });
-bot.on("guildBanAdd", (guild, user) => {
+client.on("guildBanAdd", (guild, user) => {
     guild.defaultChannel.sendMessage(`${user.username} was just banned.`);
 });
-bot.on("guildBanRemove", (guild, user) => {
+client.on("guildBanRemove", (guild, user) => {
     guild.defaultChannel.sendMessage(`${user.username} was just unbanned.`);
 });
 //let censor = "[Sorry, I Swear]";
-bot.on('message', message => {
+client.on('message', message => {
     //let edit = message.content.replace(lower_case(profanites), censor);
     //message.delete();
     //message.channel.send(`${message.author.username}: ${edit}`);
@@ -78,7 +78,7 @@ bot.on('message', message => {
     additions.map(function(value, key, mapObj) {
         mapObj[key] = value.trim();
     });
-    if (message.author.bot) return;
+    if (message.author.client) return;
 
     if (!message.content.startsWith(prefix)) return;
 
@@ -149,7 +149,7 @@ bot.on('message', message => {
             if (!message.member.roles.has(modRole.id)) {
                 return message.reply("Unfortunately you do not have the necessary permissions to perform this action");
             }
-            if (!message.guild.member(bot.user).hasPermission("MANAGE_MESSAGES")) {
+            if (!message.guild.member(client.user).hasPermission("MANAGE_MESSAGES")) {
                 return message.reply("I don't have the permission (MANAGE_MESSAGES) to do this.");
             }
             if (result > 2) {
@@ -175,7 +175,7 @@ bot.on('message', message => {
             if (!kickMember) {
                 return message.reply("That user does not seem valid");
             }
-            if (!message.guild.member(bot.user).hasPermission("KICK_MEMBERS")) {
+            if (!message.guild.member(client.user).hasPermission("KICK_MEMBERS")) {
                 return message.reply("I don't have the permission (KICK_MEMBERS) to do this.");
             }
 
@@ -194,7 +194,7 @@ bot.on('message', message => {
             if (!banMember) {
                 return message.reply("That user does not seem valid");
             }
-            if (!message.guild.member(bot.user).hasPermission("BAN_MEMBERS")) {
+            if (!message.guild.member(client.user).hasPermission("BAN_MEMBERS")) {
                 return message.reply("I don't have the permission (BAN_MEMBERS) to do this.");
             }
             banMember.ban().then(member => {
@@ -205,7 +205,7 @@ bot.on('message', message => {
             if (!message.member.roles.has(modRole.id)) {
                 return message.reply("Unfortunately you do not have the necessary permissions to perform this action");
             }
-            //const reactions = bot.emojis.find(emoji => emoji.name === "poop");
+            //const reactions = client.emojis.find(emoji => emoji.name === "poop");
             embed = new Discord.RichEmbed()
                 .setColor(0xffffff)
                 .setFooter("React to vote")
@@ -260,7 +260,7 @@ bot.on('message', message => {
             message.reply(sayings[result]);
             break;
         case "stats":
-            message.channel.sendMessage(`Bot Stats:\n\n Users: ${bot.user} \nServers:  ${bot.servers}  \nChannels: ${bot.channels}`)
+            message.channel.sendMessage(`Bot Stats:\n\n Users: ${client.user} \nServers:  ${client.servers}  \nChannels: ${client.channels}`)
             break;
         case "uptime":
             let now = new Date()
@@ -320,38 +320,38 @@ bot.on('message', message => {
             if (!message.member.roles.has(modRole.id)) {
                 message.reply("Unfortunately you do not have the necessary permissions to perform this action.");
             }
-            bot.user.setGame(args.join(" "));
+            client.user.setGame(args.join(" "));
             break;
         case "dnd":
             if (!message.member.roles.has(modRole.id)) {
                 message.reply("Unfortunately you do not have the necessary permissions to perform this action.");
             } else {
-                bot.user.setStatus("dnd");
-                message.channel.sendMessage(`You have successfully change the bot status to ${bot.user.presence.status}!`);
+                client.user.setStatus("dnd");
+                message.channel.sendMessage(`You have successfully change the bot status to ${client.user.presence.status}!`);
             }
             break;
         case "idle":
             if (!message.member.roles.has(modRole.id)) {
                 message.reply("Unfortunately you do not have the necessary permissions to perform this action.");
             } else {
-                bot.user.setStatus("idle");
-                message.channel.sendMessage(`You have successfully change the bot status to ${bot.user.presence.status}!`);
+                client.user.setStatus("idle");
+                message.channel.sendMessage(`You have successfully change the bot status to ${client.user.presence.status}!`);
             }
             break;
         case "online":
             if (!message.member.roles.has(modRole.id)) {
                 message.reply("Unfortunately you do not have the necessary permissions to perform this action.");
             } else {
-                bot.user.setStatus("online");
-                message.channel.sendMessage(`You have successfully change the bot status to ${bot.user.presence.status}!`);
+                client.user.setStatus("online");
+                message.channel.sendMessage(`You have successfully change the bot status to ${client.user.presence.status}!`);
             }
             break;
         case "invisible":
             if (!message.member.roles.has(modRole.id)) {
                 message.reply("Unfortunately you do not have the necessary permissions to perform this action.");
             } else {
-                bot.user.setStatus("invisible");
-                message.channel.sendMessage(`You have successfully change the bot status to ${bot.user.presence.status}!`);
+                client.user.setStatus("invisible");
+                message.channel.sendMessage(`You have successfully change the bot status to ${client.user.presence.status}!`);
             }
             break;
         case "botowner":
@@ -453,10 +453,10 @@ bot.on('message', message => {
             }
             break;
         case "botguilds":
-            bot.guilds.map(g => g.name).join("\n");
+            client.guilds.map(g => g.name).join("\n");
             break;
         case "botchannels":
-            bot.channels.map(g => g.name).join("\n");
+            client.channels.map(g => g.name).join("\n");
             break;
         case "rock":
             if (res === 2) {
@@ -498,7 +498,7 @@ bot.on('message', message => {
             if (!message.member.roles.has(modRole.id)) {
                 return message.reply("Unfortunately you do not have the necessary permissions to perform this action.");
             }
-            bot.user.setUsername(result).then(user => {
+            client.user.setUsername(result).then(user => {
                 message.reply('✔ Username set!');
             }).catch((err) => {
                 message.channel.sendMessage("Unable to set username. You may have tried a username that to many people already have.")
@@ -509,7 +509,7 @@ bot.on('message', message => {
             if (!message.member.roles.has(modRole.id)) {
                 return message.reply("Unfortunately you do not have the necessary permissions to perform this action.");
             }
-            bot.user.setAvatar(result);
+            client.user.setAvatar(result);
             message.channel.sendMessage("You successfully changed the the bots avatar.");
             break;
         case "help":
@@ -539,5 +539,5 @@ bot.on('message', message => {
     //var lostsayings = ["You got Rekt boi","Mwhaha you lost","LOSER!!","You'll just lose again next time.","Why do you keep trying? You will just lose!","You should ask the 8ball if you will win, I bet it will say your a loser at this game.","I'm getting bored of winning, though I still don't wnat you to win.","The outlook good that you won't win.","Yes, I won. shocking isn't it?","Why, you lose so much?","Maybe next time :grin:","You keeping coming back, and you keep losing. An occasional win but...","YOU KEEP LOSING!!!!!!","I'm starting to feel sympathy for you, wait nevermind.","I could cheat really easily, but I won't I guess the fates just favor me more then you."];
     //var wonsayings = [":sob: you won..","I'm humiliated","NO!!!!!!!!!!","Stop winning","STOP PLEASE!","I don't like losing :(","Please have mercy","Why?!?!?!?!","What a cruel, cruel world!",":sob:","Maybe next time... :cry:","So, sad","I KEEP LOSING!!!!!!","I feel sorry for myself","This sucks"];
 });
-bot.login(process.env.BOT_TOKEN);
-*/
+client.login(process.env.BOT_TOKEN);
+
