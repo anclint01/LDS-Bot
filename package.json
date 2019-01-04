@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "main": "bot.js",
   "scripts": {
-    "start": "npm install profanities"
+    "start": "node bot.js"
   },
   "dependencies": {
     "discord.js": "11.1.0",
