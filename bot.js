@@ -3,7 +3,6 @@ const request = require('request');
 const client = new Discord.Client();
 const start = new Date();
 const prefix = "p!";
-const profanities = require('profanities');
 const lower_case = require('lower-case');
 //const config = require("./config.json");
 client.on('ready', () => {
@@ -32,13 +31,13 @@ client.on('message', message => {
     //let edit = message.content.replace(lower_case(profanites), censor);
     //message.delete();
     //message.channel.send(`${message.author.username}: ${edit}`);
-    for (x = 0; x < profanities.length; x++) {
+  /*for (x = 0; x < profanities.length; x++) {
         if (lower_case(message.content) == lower_case(profanities[x])) {
             console.log("test");
             message.channel.sendMessage("Excuse me! NO SWEARING IN MY CHRISTIAN MINECRAFT SERVER!!");
             message.delete();
         }
-    }
+    }*/
     let responseObject = {
         "chocolate": "chocolate Is da best.",
         "wat": "Say what?",
