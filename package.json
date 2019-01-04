@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "main": "bot.js",
   "scripts": {
-    "start": "heroku config:set BOT_TOKEN=NTI5ODY5OTAzMDc5OTMxOTI0.Dw3Hlw._fBhuzuncoV33yzx7HDLcItWUms"
+    "start": "node bot.js"
   },
   "dependencies": {
     "discord.js": "11.1.0",
