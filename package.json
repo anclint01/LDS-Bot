@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "main": "bot.js",
   "scripts": {
-    "start": "npm install discord.js --save"
+    "start": "heroku config:set BOT_TOKEN=NTI5ODY5OTAzMDc5OTMxOTI0.Dw3Hlw._fBhuzuncoV33yzx7HDLcItWUms"
   },
   "dependencies": {
     "discord.js": "11.1.0",
