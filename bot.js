@@ -106,86 +106,6 @@ bot.on("message", message => {
 	    
 	}
 
-
-/*    var message_array1 = message.content.split(" ");
-    
-    var citations1 = [];
-    
-    for (let name in pgp_books) {
-        for(var i = 0; i < message_array1.length - 1; i++) {
-            if (message_array1[i].toLowerCase() == name.toLowerCase()) {
-            	console.log("test");
-                var location1 = message_array1[i + 1]; // Should be something like 1:8 or 1:8-10
-                var chapter1 = parseInt(location1.split(":")[0]); // 1
-                if (isNaN(chapter1)) return; // No chapter number; exit the function here
-
-                var verse_nums1 = location1.split(":")[1]; // 8 or 8-10
-                if (verse_nums1.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
-                    var verse_first1 = parseInt(verse_nums1.split("-")[0]); // 8
-                    if (isNaN(verse_first1)) return; // No verse number; exit the function here
-                    
-                    var verse_last1 = parseInt(verse_nums1.split("-")[1]); // 10
-                    if (isNaN(verse_last1)) return; // No last verse number; exit the function here or just ignore and set to verse_first
-                } else { // Just a single verse; eg 8
-                    var verse_first1 = parseInt(verse_nums1); // 8
-                    if (isNaN(verse_first1)) return; // No verse number; exit the function here
-                    var verse_last1 = verse_first1; // 8
-                }
-                citations1.push([name, chapter1, verse_first1, verse_last1])
-                console.log("test1");
-            }
-
-        }
-    }
-
-	for (var citation1 of citations1) {
-		console.log(citation1[0]);
-		console.log(citation1[1]);
-		console.log(citation1[2]);
-		console.log(citation1[3]);
-		var books1 = pgp.books[pgp_books[citation1[0]]];
-	    var chapter1 = pgp.chapters[citation1[1]];
-	    if (citation1[2] == citation1[3]) { // one verse
-	        var verse1 = chapter1.verses[citation1[2]];
-	        message.channel.send("**" + citation1[0] + " " + citation1[1] + ":" + citation1[2] + "**\n```html\n" + "<" + citation1[2] + "> " + verse1.text + "\n```");
-	    }
-	    else { // multiple verses
-	        var verse1 = "";
-	        for (var v = citation1[2] - 1; v < citation1[3]; v++) {
-	            verse1 += "<" + (v + 1) + "> " + chapter1.verses[v].text + " ";
-	        }
-	        message.channel.send("**" + citation1[0] + " " + citation1[1] + ":" + verse_first1 + "-" + verse_last1 + "**\n\n```html\n" + verse1 + "\n```");
-	    }
-	    
-	}
-*/
-	
-
-	//message.channel.send("**" + bom.books[1].book + " " + bom.books[1].chapters[parseInt(args[0]) - 1].chapter + ":" + bom.books[1].chapters[parseInt(args[0]) - 1].verses[parseInt(args[1]) -1].verse + "**\n")
-    //message.channel.send("```" + bom.books[1].chapters[parseInt(args[0]) - 1].verses[parseInt(args[1]) - 1].text + "```");
-
-    //console.log(typeof randomVarName);
-/*  var books = bom.books[bom_books[randomVarName]];
-    var chapter = books.chapters[parseInt(args[0]) - 1];
-    var verse = chapter.verses[parseInt(args[1]) - 1];
-    if(message.content.startsWith(bom_books[randomVarName])){
-        console.log("test");
-        message.channel.send("**" + books.book + " " + chapter.chapter + ":" + verse.verse + "**\n")
-        message.channel.send("```" + verse.text + "```");
-    }
-            var books = bom.books[bom_books[randomVarName]];
-        message.channel.send("**" + books.book + " " + books.chapters[parseInt(args[0]) - 1].chapter + ":" + books.chapters[parseInt(args[0]) - 1].verses[parseInt(args[1]) -1].verse + "**\n")
-        message.channel.send("```" + books.chapters[parseInt(args[0]) - 1].verses[parseInt(args[1]) - 1].text + "```");
-    //console.log(message.content.startsWith(bom_books[randomVarName]));
-    console.log(bom_books[randomVarName]);
-    console.log(randomVarName in bom_books)
-    if(randomVarName in bom_books){
-
-    }*/
-    //console.log("bom_books[randomVarName]: " + bom_books[randomVarName]);
-    //console.log("bom.books[bom_books[randomVarName]].book: " + bom.books[bom_books[randomVarName]].book);
-    //console.log("parseInt(args[0]) - 1: " + (parseInt(args[0]) - 1));
-    
     switch(command.trim()){
         case "eval":
             console.log("test");
@@ -236,5 +156,4 @@ bot.on("message", message => {
         
     
 })
-bot.login("NjM5MjcxNzcyODE4MTEyNTY0.Xby5Zg.uvswEMTcR9_oJJb6hSoiJvD7cMM");
-//bot.login("NDUzODQwNTE0MDIyODk5NzEy.XVU7og.g0P2Pi3P3Nos_1zIDZhEI8NUhYE");
+bot.login(process.env.BOT_TOKEN);
