@@ -1,4 +1,3 @@
-require('dotenv').config(); 
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 const prefix = "lds";
@@ -144,4 +143,4 @@ bot.on("message", message => {
         
     
 })
-bot.login();
+bot.login(process.env.BOT_TOKEN);
