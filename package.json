@@ -3,6 +3,10 @@
   "description": "Just A Bot",
   "version": "0.0.0",
   "main": "bot.js",
+  "engines": {
+    "node": "7.6",
+    npm: "4.1.2",
+  },
   "scripts": {
     "start": "node bot.js"
   },
