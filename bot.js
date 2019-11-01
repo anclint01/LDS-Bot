@@ -85,12 +85,7 @@ bot.on("message", message => {
     }
 
 	for (var citation of citations) {
-				console.log(citation[0]);
-		console.log(citation[1]);
-		console.log(citation[2]);
-		console.log(citation[3]);
-		var books = bom.books[bom_books[citation[0]]];
-		console.log(books);
+            var books = bom.books[bom_books[citation[0]]];
 	    var chapter = books.chapters[citation[1] - 1];
 	    if (citation[2] == citation[3]) { // one verse
 	        var verse = chapter.verses[citation[2] - 1];
