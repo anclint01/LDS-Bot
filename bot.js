@@ -143,4 +143,4 @@ bot.on("message", message => {
         
     
 })
-bot.login("NjM5MjcxNzcyODE4MTEyNTY0.Xbydbg.yvcCM7Juxp424EkeCg9-GPer0GI");
+bot.login();
