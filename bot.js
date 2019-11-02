@@ -120,7 +120,7 @@ bot.on("message", message => {
                     	message.channel.send({embed: {
 			    color: 0x086587,
 			    title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + citation[2],
-			    description: citation[2] + " " + verse.text
+			    description: "**" + citation[2] + "** " + verse.text
 			  }
 			});
                     } else {
