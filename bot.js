@@ -145,7 +145,7 @@ bot.on("message", message => {
                 var verse = "";
                 for (var v = citation[2] - 1; v < citation[3]; v++) {
                 	try {
-                    	verse += "<" + (v + 1) + "> " + chapter.verses[v].text + " ";
+                    	verse += (v + 1) + " " + chapter.verses[v].text + "\n ";
                     } catch (error) {
                     	console.log(error);
                     	return;
