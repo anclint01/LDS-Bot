@@ -176,6 +176,93 @@ bot.on("message", message => {
         }
     }
 
+    var name_dc = "D&C";
+    var message_array_dc = message.content.split(" ");
+
+    var citations_dc = [];
+    for (var i = 0; i < message_array_dc.length - 1; i++) {
+        if (message_array_dc[i].toLowerCase() == name_dc.toLowerCase()) {
+            var location_dc = message_array_dc[i + 1]; // Should be something like 1:8 or 1:8-10
+            console.log(location_dc);
+            var chapter_dc = parseInt(location_dc.split(":")[0]); // 1
+            console.log(chapter_dc);
+            if (isNaN(chapter_dc)) return; // No chapter number; exit the function here
+
+            var verse_nums_dc = location_dc.split(":")[1]; // 8 or 8-10
+            console.log(verse_nums_dc);
+            if (verse_nums_dc.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
+                var verse_first_dc = parseInt(verse_nums_dc.split("-")[0]); // 8
+                console.log(verse_first_dc);
+                if (isNaN(verse_first_dc)) return; // No verse number; exit the function here
+
+                var verse_last_dc = parseInt(verse_nums_dc.split("-")[1]); // 10
+                console.log(verse_last_dc);
+                if (isNaN(verse_last_dc)) return; // No last verse number; exit the function here or just ignore and set to verse_first
+            } else { // Just a single verse; eg 8
+                var verse_first_dc = parseInt(verse_nums_dc); // 8
+                if (isNaN(verse_first_dc)) return; // No verse number; exit the function here
+                var verse_last_dc = verse_first_dc; // 8
+            }
+            if (verse_first_dc > verse_last_dc) {
+                verse_last_dc = verse_first_dc + (verse_first_dc = verse_last_dc) - verse_last_dc;
+            }
+            citations_dc.push([name_dc, chapter_dc, verse_first_dc, verse_last_dc])
+        }
+    }
+    for (var citation_dc of citations_dc) {
+    	console.log(citation_dc[0])
+    	console.log(citation_dc[1])
+    	console.log(citation_dc[2])
+    	console.log(citation_dc[3])
+        var chapter_dc = dc.sections[citation_dc[1] - 1];
+        if (citation_dc[2] == citation_dc[3]) { // one verse
+            if (chapter_dc != undefined) {
+                var verse_dc = chapter_dc.verses[citation_dc[2] - 1];
+                console.log(verse_dc)
+            } else {
+                return;
+            }
+            if (verse_dc != undefined) {
+                if (verse_dc.text != undefined) {
+                    message.channel.send({embed: {
+			            color: 0x086587,
+			            title: citation_dc[0] + " " + citation_dc[1] + ":" + citation_dc[2],
+			            description: citation_dc[2] + " " + verse_dc.text
+			          }
+			        });
+                } else {
+                    return;
+                }
+            } else {
+                return;
+            }
+        } else { // multiple verses
+            if (chapter_dc != undefined) {
+                var verse_dc = "";
+                for (var v = citation_dc[2] - 1; v < citation_dc[3]; v++) {
+                	try {
+                    	verse_dc += (v + 1) + " " + chapter_dc.verses[v].text + "\n\n ";
+                    } catch (error) {
+                    	console.log(error);
+                    	return;
+                    }
+                }
+            } else {
+                return;
+            }
+            if (verse_dc != undefined) {
+               	message.channel.send({embed: {
+		            color: 0x086587,
+		            title: citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
+		            description: verse_dc
+		          }
+		        });
+            } else {
+                return;
+            }
+        }
+    }	
+
     switch (command.trim()) {
         case "eval":
             console.log("test");
