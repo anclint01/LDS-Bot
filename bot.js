@@ -119,7 +119,11 @@ bot.on("message", message => {
             }
             if (verse != undefined) {
                 if (verse.text != undefined) {
-                    message.channel.send("**" + citation[0] + " " + citation[1] + ":" + citation[2] + "**\n```html\n" + "<" + citation[2] + "> " + verse.text + "\n```");
+                    if(citation.length == 4){
+                        message.channel.send("**" + citation[4] + " " + citation[0] + " " + citation[1] + ":" + citation[2] + "**\n```html\n" + "<" + citation[2] + "> " + verse.text + "\n```");
+                    } else {
+                        message.channel.send("**" + citation[0] + " " + citation[1] + ":" + citation[2] + "**\n```html\n" + "<" + citation[2] + "> " + verse.text + "\n```");
+                    }
                 } else {
                     return;
                 }
@@ -140,7 +144,11 @@ bot.on("message", message => {
                 return;
             }
             if (verse != undefined) {
-                message.channel.send("**" + citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last + "**\n\n```html\n" + verse + "\n```");
+                if (citation.length == 4){
+                    message.channel.send("**" + citation[4] + " " + citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last + "**\n\n```html\n" + verse + "\n```");
+                } else {
+                    message.channel.send("**" + citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last + "**\n\n```html\n" + verse + "\n```");
+                }
             } else {
                 return;
             }
