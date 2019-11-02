@@ -134,10 +134,11 @@ bot.on("message", message => {
             if (chapter != undefined) {
                 var verse = "";
                 for (var v = citation[2] - 1; v < citation[3]; v++) {
-                    if (verse.text != undefined) {
-                        verse += "<" + (v + 1) + "> " + chapter.verses[v].text + " ";
-                    } else {
-                        return;
+                	try {
+                    	verse += "<" + (v + 1) + "> " + chapter.verses[v].text + " ";
+                    } catch (error) {
+                    	console.log(error);
+                    	return;
                     }
                 }
             } else {
