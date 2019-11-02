@@ -127,7 +127,7 @@ bot.on("message", message => {
                     	message.channel.send({embed: {
 			    color: 0x086587,
 			    title: citation[0] + " " + citation[1] + ":" + citation[2],
-			    description: citation[2] + " " + verse.text
+			    description: "**" + citation[2] + "** " + verse.text
 			  }
 			});
                     }
@@ -142,7 +142,7 @@ bot.on("message", message => {
                 var verse = "";
                 for (var v = citation[2] - 1; v < citation[3]; v++) {
                 	try {
-                    	verse += (v + 1) + " " + chapter.verses[v].text + "\n\n ";
+                    	verse += "**" + (v + 1) + "** " + chapter.verses[v].text + "\n\n ";
                     } catch (error) {
                     	console.log(error);
                     	return;
