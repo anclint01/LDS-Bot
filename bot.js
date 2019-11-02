@@ -5,14 +5,13 @@ const bom = require("./book-of-mormon.json");
 const dc = require("./doctrine-and-covenants.json");
 const pgp = require("./pearl-of-great-price.json");
 
-const parseJsonAsync = (jsonString) => {
-    return new Promise(resolve => {
-        resolve(JSON.parse(jsonString))
-    })
+function clean(text) {
+    if (typeof(text) === "string") {
+        return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
+    } else {
+        return text;
+    }
 }
-
-
-//console.log(bom.books[0].chapters[0].verses[0].reference);
 
 bot.on("ready", () => {
     console.log("ready");
@@ -43,7 +42,6 @@ bot.on("message", message => {
         "Articles-Of-Faith": 4,
     }
 
-    //if (!message.content.startsWith(prefix)) return;
     if (message.author.bot) return;
     var contents = message.content.slice(prefix.length) + " ~";
     const command = contents.substring(0, contents.indexOf(" ")).trim();
@@ -104,7 +102,6 @@ bot.on("message", message => {
             var chapter = books.chapters[citation[1] - 1];
         } else {
             // Length is 5; a book like Nephi
-            console.log(citation[4]);
             if (citation[4] <= 4 && citation[4] > 0) {
                 var chapter = books.numbers[citation[4] - 1].chapters[citation[1] - 1];
             } else {
@@ -121,18 +118,18 @@ bot.on("message", message => {
                 if (verse.text != undefined) {
                     if(citation.length == 5){
                     	message.channel.send({embed: {
-			                color: 0x086587,
-			                title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + citation[2],
-			                description: citation[2] + " " + verse.text
-			              }
-			            });
+			    color: 0x086587,
+			    title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + citation[2],
+			    description: citation[2] + " " + verse.text
+			  }
+			});
                     } else {
                     	message.channel.send({embed: {
-			                color: 0x086587,
-			                title: citation[0] + " " + citation[1] + ":" + citation[2],
-			                description: citation[2] + " " + verse.text
-			              }
-			            });
+			    color: 0x086587,
+			    title: citation[0] + " " + citation[1] + ":" + citation[2],
+			    description: citation[2] + " " + verse.text
+			  }
+			});
                     }
                 } else {
                     return;
@@ -157,18 +154,18 @@ bot.on("message", message => {
             if (verse != undefined) {
                 if (citation.length == 5){
                 	message.channel.send({embed: {
-			            color: 0x086587,
-			            title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
-			            description: verse
-			          }
-			        });
+			    color: 0x086587,
+			    title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
+			    description: verse
+			  }
+			});
                 } else {
                 	message.channel.send({embed: {
-			            color: 0x086587,
-			            title: citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
-			            description: verse
-			          }
-			        });
+			    color: 0x086587,
+			    title: citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
+			    description: verse
+			  }
+			});
                 }
             } else {
                 return;
@@ -183,20 +180,16 @@ bot.on("message", message => {
     for (var i = 0; i < message_array_dc.length - 1; i++) {
         if (message_array_dc[i].toLowerCase() == name_dc.toLowerCase()) {
             var location_dc = message_array_dc[i + 1]; // Should be something like 1:8 or 1:8-10
-            console.log(location_dc);
             var chapter_dc = parseInt(location_dc.split(":")[0]); // 1
-            console.log(chapter_dc);
-            if (isNaN(chapter_dc)) return; // No chapter number; exit the function here
+           
+	    if (isNaN(chapter_dc)) return; // No chapter number; exit the function here
 
             var verse_nums_dc = location_dc.split(":")[1]; // 8 or 8-10
-            console.log(verse_nums_dc);
             if (verse_nums_dc.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
                 var verse_first_dc = parseInt(verse_nums_dc.split("-")[0]); // 8
-                console.log(verse_first_dc);
                 if (isNaN(verse_first_dc)) return; // No verse number; exit the function here
 
                 var verse_last_dc = parseInt(verse_nums_dc.split("-")[1]); // 10
-                console.log(verse_last_dc);
                 if (isNaN(verse_last_dc)) return; // No last verse number; exit the function here or just ignore and set to verse_first
             } else { // Just a single verse; eg 8
                 var verse_first_dc = parseInt(verse_nums_dc); // 8
@@ -210,11 +203,7 @@ bot.on("message", message => {
         }
     }
     for (var citation_dc of citations_dc) {
-    	console.log(citation_dc[0])
-    	console.log(citation_dc[1])
-    	console.log(citation_dc[2])
-    	console.log(citation_dc[3])
-        var chapter_dc = dc.sections[citation_dc[1] - 1];
+    	var chapter_dc = dc.sections[citation_dc[1] - 1];
         if (citation_dc[2] == citation_dc[3]) { // one verse
             if (chapter_dc != undefined) {
                 var verse_dc = chapter_dc.verses[citation_dc[2] - 1];
@@ -225,11 +214,11 @@ bot.on("message", message => {
             if (verse_dc != undefined) {
                 if (verse_dc.text != undefined) {
                     message.channel.send({embed: {
-			            color: 0x086587,
-			            title: citation_dc[0] + " " + citation_dc[1] + ":" + citation_dc[2],
-			            description: citation_dc[2] + " " + verse_dc.text
-			          }
-			        });
+	                color: 0x086587,
+	                title: citation_dc[0] + " " + citation_dc[1] + ":" + citation_dc[2],
+	                description: citation_dc[2] + " " + verse_dc.text
+	              }
+	            });
                 } else {
                     return;
                 }
@@ -252,11 +241,11 @@ bot.on("message", message => {
             }
             if (verse_dc != undefined) {
                	message.channel.send({embed: {
-		            color: 0x086587,
-		            title: citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
-		            description: verse_dc
-		          }
-		        });
+	            color: 0x086587,
+	            title: citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
+	            description: verse_dc
+	          }
+	        });
             } else {
                 return;
             }
