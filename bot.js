@@ -120,9 +120,19 @@ bot.on("message", message => {
             if (verse != undefined) {
                 if (verse.text != undefined) {
                     if(citation.length == 5){
-                        message.channel.send("**" + citation[4] + " " + citation[0] + " " + citation[1] + ":" + citation[2] + "**\n```html\n" + "<" + citation[2] + "> " + verse.text + "\n```");
+                    	message.channel.send({embed: {
+			                color: 0x086587,
+			                title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + citation[2],
+			                description: citation[2] + " " + verse.text
+			              }
+			            });
                     } else {
-                        message.channel.send("**" + citation[0] + " " + citation[1] + ":" + citation[2] + "**\n```html\n" + "<" + citation[2] + "> " + verse.text + "\n```");
+                    	message.channel.send({embed: {
+			                color: 0x086587,
+			                title: citation[0] + " " + citation[1] + ":" + citation[2],
+			                description: citation[2] + " " + verse.text
+			              }
+			            });
                     }
                 } else {
                     return;
@@ -146,9 +156,19 @@ bot.on("message", message => {
             }
             if (verse != undefined) {
                 if (citation.length == 5){
-                    message.channel.send("**" + citation[4] + " " + citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last + "**\n\n```html\n" + verse + "\n```");
+                	message.channel.send({embed: {
+			            color: 0x086587,
+			            title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
+			            description: verse
+			          }
+			        });
                 } else {
-                    message.channel.send("**" + citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last + "**\n\n```html\n" + verse + "\n```");
+                	message.channel.send({embed: {
+			            color: 0x086587,
+			            title: citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
+			            description: verse
+			          }
+			        });
                 }
             } else {
                 return;
