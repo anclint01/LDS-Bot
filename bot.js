@@ -17,8 +17,18 @@ bot.on("ready", () => {
     console.log("ready");
 });
 
+
+
+
+
 bot.on("message", message => {
 
+    if (message.author.id == 221285118608801802){
+        var userColorPreference = 0xf2a93b;	 
+    } else {
+    	var userColorPreference = 0x086587;
+    }
+	
     let bom_books = {
         "Nephi": 0,
         "Jacob": 1,
@@ -118,14 +128,14 @@ bot.on("message", message => {
                 if (verse.text != undefined) {
                     if(citation.length == 5){
                     	message.channel.send({embed: {
-			    color: 0x086587,
+			    color: userColorPreference,
 			    title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + citation[2],
 			    description: "**" + citation[2] + "** " + verse.text
 			  }
 			});
                     } else {
                     	message.channel.send({embed: {
-			    color: 0x086587,
+			    color: userColorPreference,
 			    title: citation[0] + " " + citation[1] + ":" + citation[2],
 			    description: "**" + citation[2] + "** " + verse.text
 			  }
@@ -154,14 +164,14 @@ bot.on("message", message => {
             if (verse != undefined) {
                 if (citation.length == 5){
                 	message.channel.send({embed: {
-			    color: 0x086587,
+			    color: userColorPreference,
 			    title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
 			    description: verse
 			  }
 			});
                 } else {
                 	message.channel.send({embed: {
-			    color: 0x086587,
+			    color: userColorPreference,
 			    title: citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
 			    description: verse
 			  }
@@ -214,9 +224,9 @@ bot.on("message", message => {
             if (verse_dc != undefined) {
                 if (verse_dc.text != undefined) {
                     message.channel.send({embed: {
-	                color: 0x086587,
+	                color: userColorPreference,
 	                title: citation_dc[0] + " " + citation_dc[1] + ":" + citation_dc[2],
-	                description: citation_dc[2] + " " + verse_dc.text
+	                description: "**" + citation_dc[2] + "** " + verse_dc.text
 	              }
 	            });
                 } else {
@@ -230,7 +240,7 @@ bot.on("message", message => {
                 var verse_dc = "";
                 for (var v = citation_dc[2] - 1; v < citation_dc[3]; v++) {
                 	try {
-                    	verse_dc += (v + 1) + " " + chapter_dc.verses[v].text + "\n\n ";
+                    	verse_dc += "**" + (v + 1) + "** " + chapter_dc.verses[v].text + "\n\n ";
                     } catch (error) {
                     	console.log(error);
                     	return;
@@ -241,7 +251,7 @@ bot.on("message", message => {
             }
             if (verse_dc != undefined) {
                	message.channel.send({embed: {
-	            color: 0x086587,
+	            color: userColorPreference,
 	            title: citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
 	            description: verse_dc
 	          }
