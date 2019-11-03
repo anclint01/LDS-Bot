@@ -20,15 +20,14 @@ bot.on("ready", () => {
 
 
 
-
 bot.on("message", message => {
 
-    if (message.author.id == 221285118608801802){
-        var userColorPreference = 0xf2a93b;	 
+    if (message.author.id == 221285118608801802) {
+        var userColorPreference = 0xf2a93b;
     } else {
-    	var userColorPreference = 0x086587;
+        var userColorPreference = 0x086587;
     }
-	
+
     let bom_books = {
         "Nephi": 0,
         "Jacob": 1,
@@ -75,16 +74,20 @@ bot.on("message", message => {
                 if (isNaN(chapter)) return; // No chapter number; exit the function here
 
                 var verse_nums = location.split(":")[1]; // 8 or 8-10
-                if (verse_nums.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
-                    var verse_first = parseInt(verse_nums.split("-")[0]); // 8
-                    if (isNaN(verse_first)) return; // No verse number; exit the function here
+                try {
+                    if (verse_nums.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
+                        var verse_first = parseInt(verse_nums.split("-")[0]); // 8
+                        if (isNaN(verse_first)) return; // No verse number; exit the function here
 
-                    var verse_last = parseInt(verse_nums.split("-")[1]); // 10
-                    if (isNaN(verse_last)) return; // No last verse number; exit the function here or just ignore and set to verse_first
-                } else { // Just a single verse; eg 8
-                    var verse_first = parseInt(verse_nums); // 8
-                    if (isNaN(verse_first)) return; // No verse number; exit the function here
-                    var verse_last = verse_first; // 8
+                        var verse_last = parseInt(verse_nums.split("-")[1]); // 10
+                        if (isNaN(verse_last)) return; // No last verse number; exit the function here or just ignore and set to verse_first
+                    } else { // Just a single verse; eg 8
+                        var verse_first = parseInt(verse_nums); // 8
+                        if (isNaN(verse_first)) return; // No verse number; exit the function here
+                        var verse_last = verse_first; // 8
+                    }
+                } catch (error) {
+                    console.log(error);
                 }
                 if (verse_first > verse_last) {
                     verse_last = verse_first + (verse_first = verse_last) - verse_last;
@@ -126,20 +129,22 @@ bot.on("message", message => {
             }
             if (verse != undefined) {
                 if (verse.text != undefined) {
-                    if(citation.length == 5){
-                    	message.channel.send({embed: {
-			    color: userColorPreference,
-			    title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + citation[2],
-			    description: "**" + citation[2] + "** " + verse.text
-			  }
-			});
+                    if (citation.length == 5) {
+                        message.channel.send({
+                            embed: {
+                                color: userColorPreference,
+                                title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + citation[2],
+                                description: citation[2] + " " + verse.text
+                            }
+                        });
                     } else {
-                    	message.channel.send({embed: {
-			    color: userColorPreference,
-			    title: citation[0] + " " + citation[1] + ":" + citation[2],
-			    description: "**" + citation[2] + "** " + verse.text
-			  }
-			});
+                        message.channel.send({
+                            embed: {
+                                color: userColorPreference,
+                                title: citation[0] + " " + citation[1] + ":" + citation[2],
+                                description: citation[2] + " " + verse.text
+                            }
+                        });
                     }
                 } else {
                     return;
@@ -149,37 +154,60 @@ bot.on("message", message => {
             }
         } else { // multiple verses
             if (chapter != undefined) {
-                var verse = "";
+                var next_message = "";
                 for (var v = citation[2] - 1; v < citation[3]; v++) {
-                	try {
-                    	verse += "**" + (v + 1) + "** " + chapter.verses[v].text + "\n\n ";
+                    try {
+                        var new_message = next_message + "**" + (v + 1) + "** " + chapter.verses[v].text + "\n\n "
+                        if (new_message.length <= 2000) {
+                            next_message = new_message;
+                        } else {
+                            if (citation.length == 5) {
+                                message.channel.send({
+                                    embed: {
+                                        color: userColorPreference,
+                                        title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
+                                        description: next_message
+                                    }
+                                });
+                            } else {
+                                message.channel.send({
+                                    embed: {
+                                        color: userColorPreference,
+                                        title: citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
+                                        description: next_message
+                                    }
+                                });
+                            }
+                            next_message = "**" + (v + 1) + "** " + chapter.verses[v].text + "\n\n ";
+                        }
                     } catch (error) {
-                    	console.log(error);
-                    	return;
+                        console.log(error);
+                        return;
+                    }
+                }
+                if (next_message.length != 0 && next_message != undefined) {
+                    if (citation.length == 5) {
+                        message.channel.send({
+                            embed: {
+                                color: userColorPreference,
+                                title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
+                                description: next_message
+                            }
+                        });
+                    } else {
+                        message.channel.send({
+                            embed: {
+                                color: userColorPreference,
+                                title: citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
+                                description: next_message
+                            }
+                        });
                     }
                 }
             } else {
                 return;
             }
-            if (verse != undefined) {
-                if (citation.length == 5){
-                	message.channel.send({embed: {
-			    color: userColorPreference,
-			    title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
-			    description: verse
-			  }
-			});
-                } else {
-                	message.channel.send({embed: {
-			    color: userColorPreference,
-			    title: citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
-			    description: verse
-			  }
-			});
-                }
-            } else {
-                return;
-            }
+
         }
     }
 
@@ -190,21 +218,29 @@ bot.on("message", message => {
     for (var i = 0; i < message_array_dc.length - 1; i++) {
         if (message_array_dc[i].toLowerCase() == name_dc.toLowerCase()) {
             var location_dc = message_array_dc[i + 1]; // Should be something like 1:8 or 1:8-10
+            console.log(location_dc);
             var chapter_dc = parseInt(location_dc.split(":")[0]); // 1
-           
-	    if (isNaN(chapter_dc)) return; // No chapter number; exit the function here
+            console.log(chapter_dc);
+            if (isNaN(chapter_dc)) return; // No chapter number; exit the function here
 
             var verse_nums_dc = location_dc.split(":")[1]; // 8 or 8-10
-            if (verse_nums_dc.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
-                var verse_first_dc = parseInt(verse_nums_dc.split("-")[0]); // 8
-                if (isNaN(verse_first_dc)) return; // No verse number; exit the function here
+            console.log(verse_nums_dc);
+            try {
+                if (verse_nums_dc.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
+                    var verse_first_dc = parseInt(verse_nums_dc.split("-")[0]); // 8
+                    console.log(verse_first_dc);
+                    if (isNaN(verse_first_dc)) return; // No verse number; exit the function here
 
-                var verse_last_dc = parseInt(verse_nums_dc.split("-")[1]); // 10
-                if (isNaN(verse_last_dc)) return; // No last verse number; exit the function here or just ignore and set to verse_first
-            } else { // Just a single verse; eg 8
-                var verse_first_dc = parseInt(verse_nums_dc); // 8
-                if (isNaN(verse_first_dc)) return; // No verse number; exit the function here
-                var verse_last_dc = verse_first_dc; // 8
+                    var verse_last_dc = parseInt(verse_nums_dc.split("-")[1]); // 10
+                    console.log(verse_last_dc);
+                    if (isNaN(verse_last_dc)) return; // No last verse number; exit the function here or just ignore and set to verse_first
+                } else { // Just a single verse; eg 8
+                    var verse_first_dc = parseInt(verse_nums_dc); // 8
+                    if (isNaN(verse_first_dc)) return; // No verse number; exit the function here
+                    var verse_last_dc = verse_first_dc; // 8
+                }
+            } catch (error) {
+                console.log(error);
             }
             if (verse_first_dc > verse_last_dc) {
                 verse_last_dc = verse_first_dc + (verse_first_dc = verse_last_dc) - verse_last_dc;
@@ -213,22 +249,22 @@ bot.on("message", message => {
         }
     }
     for (var citation_dc of citations_dc) {
-    	var chapter_dc = dc.sections[citation_dc[1] - 1];
+        var chapter_dc = dc.sections[citation_dc[1] - 1];
         if (citation_dc[2] == citation_dc[3]) { // one verse
             if (chapter_dc != undefined) {
                 var verse_dc = chapter_dc.verses[citation_dc[2] - 1];
-                console.log(verse_dc)
             } else {
                 return;
             }
             if (verse_dc != undefined) {
                 if (verse_dc.text != undefined) {
-                    message.channel.send({embed: {
-	                color: userColorPreference,
-	                title: citation_dc[0] + " " + citation_dc[1] + ":" + citation_dc[2],
-	                description: "**" + citation_dc[2] + "** " + verse_dc.text
-	              }
-	            });
+                    message.channel.send({
+                        embed: {
+                            color: userColorPreference,
+                            title: citation_dc[0] + " " + citation_dc[1] + ":" + citation_dc[2],
+                            description: citation_dc[2] + " " + verse_dc.text
+                        }
+                    });
                 } else {
                     return;
                 }
@@ -236,31 +272,47 @@ bot.on("message", message => {
                 return;
             }
         } else { // multiple verses
+            var next_message_dc = "";
             if (chapter_dc != undefined) {
-                var verse_dc = "";
+                var next_message_dc = "";
                 for (var v = citation_dc[2] - 1; v < citation_dc[3]; v++) {
-                	try {
-                    	verse_dc += "**" + (v + 1) + "** " + chapter_dc.verses[v].text + "\n\n ";
+                    try {
+                        var new_message_dc = next_message_dc + "**" + (v + 1) + "** " + chapter_dc.verses[v].text + "\n\n "
+                        if (new_message_dc.length <= 2000) {
+                            next_message_dc = new_message_dc;
+                        } else {
+
+                            message.channel.send({
+                                embed: {
+                                    color: userColorPreference,
+                                    title: citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
+                                    description: next_message_dc
+                                }
+                            });
+
+                            next_message_dc = "**" + (v + 1) + "** " + chapter_dc.verses[v].text + "\n\n ";
+                        }
                     } catch (error) {
-                    	console.log(error);
-                    	return;
+                        console.log(error);
+                        return;
                     }
+                }
+                if (next_message_dc.length != 0 && next_message_dc != undefined) {
+                    message.channel.send({
+                        embed: {
+                            color: userColorPreference,
+                            title: citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
+                            description: next_message_dc
+                        }
+                    });
+
                 }
             } else {
                 return;
             }
-            if (verse_dc != undefined) {
-               	message.channel.send({embed: {
-	            color: userColorPreference,
-	            title: citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
-	            description: verse_dc
-	          }
-	        });
-            } else {
-                return;
-            }
+
         }
-    }	
+    }
 
     switch (command.trim()) {
         case "eval":
