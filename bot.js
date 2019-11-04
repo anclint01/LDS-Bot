@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 const prefix = "lds";
+const start = new Date();
 const bom = require("./book-of-mormon.json");
 const dc = require("./doctrine-and-covenants.json");
 const pgp = require("./pearl-of-great-price.json");
