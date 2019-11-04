@@ -17,9 +17,6 @@ bot.on("ready", () => {
     console.log("ready");
 });
 
-
-
-
 bot.on("message", message => {
 
     if (message.author.id == 221285118608801802) {
@@ -115,10 +112,14 @@ bot.on("message", message => {
             var chapter = books.chapters[citation[1] - 1];
         } else {
             // Length is 5; a book like Nephi
-            if (citation[4] <= 4 && citation[4] > 0) {
-                var chapter = books.numbers[citation[4] - 1].chapters[citation[1] - 1];
-            } else {
-                return;
+            try {
+                if (citation[4] <= 4 && citation[4] > 0) {
+                    var chapter = books.numbers[citation[4] - 1].chapters[citation[1] - 1];
+                } else {
+                    return;
+                }
+            } catch (error) {
+                console.log(error);   
             }
         }
         if (citation[2] == citation[3]) { // one verse
@@ -218,21 +219,17 @@ bot.on("message", message => {
     for (var i = 0; i < message_array_dc.length - 1; i++) {
         if (message_array_dc[i].toLowerCase() == name_dc.toLowerCase()) {
             var location_dc = message_array_dc[i + 1]; // Should be something like 1:8 or 1:8-10
-            console.log(location_dc);
+
             var chapter_dc = parseInt(location_dc.split(":")[0]); // 1
-            console.log(chapter_dc);
             if (isNaN(chapter_dc)) return; // No chapter number; exit the function here
 
             var verse_nums_dc = location_dc.split(":")[1]; // 8 or 8-10
-            console.log(verse_nums_dc);
             try {
                 if (verse_nums_dc.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
                     var verse_first_dc = parseInt(verse_nums_dc.split("-")[0]); // 8
-                    console.log(verse_first_dc);
                     if (isNaN(verse_first_dc)) return; // No verse number; exit the function here
 
                     var verse_last_dc = parseInt(verse_nums_dc.split("-")[1]); // 10
-                    console.log(verse_last_dc);
                     if (isNaN(verse_last_dc)) return; // No last verse number; exit the function here or just ignore and set to verse_first
                 } else { // Just a single verse; eg 8
                     var verse_first_dc = parseInt(verse_nums_dc); // 8
@@ -305,7 +302,6 @@ bot.on("message", message => {
                             description: next_message_dc
                         }
                     });
-
                 }
             } else {
                 return;
