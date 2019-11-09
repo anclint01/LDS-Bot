@@ -1,18 +1,9 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 const prefix = "lds";
-const start = new Date();
 const bom = require("./book-of-mormon.json");
 const dc = require("./doctrine-and-covenants.json");
 const pgp = require("./pearl-of-great-price.json");
-
-function clean(text) {
-    if (typeof(text) === "string") {
-        return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
-    } else {
-        return text;
-    }
-}
 
 bot.on("ready", () => {
     console.log("ready");
@@ -32,7 +23,8 @@ bot.on("message", message => {
         "Enos": 2,
         "Jarom": 3,
         "Omni": 4,
-        "Words-of-Mormon": 5,
+        "Words_of_Mormon": 5,
+        "Wom": 5,
         "Mosiah": 6,
         "Alma": 7,
         "Helaman": 8,
@@ -44,9 +36,9 @@ bot.on("message", message => {
     let pgp_books = {
         "Moses": 0,
         "Abraham": 1,
-        "Joseph-Smith—Matthew": 2,
-        "Joseph-Smith-History": 3,
-        "Articles-Of-Faith": 4,
+        "Joseph_Smith_Matthew": 2,
+        "Joseph_Smith_History": 3,
+        "Articles_of_Faith": 4,
     }
 
     if (message.author.bot) return;
@@ -64,12 +56,15 @@ bot.on("message", message => {
 
     var citations = [];
 
+
     var name_result = "";
+    var words = "words";
+    var Of = "of";
     for (let name in bom_books) {
         for (var i = 0; i < message_array.length - 1; i++) {
             var name_construction = name.split("_");
             if (message_array[i].toLowerCase() == name_construction[0].toLowerCase()) {
-                if (name_construction.toString() == "Mormon" && message_array[i - 2] == "words" && message_array[i - 1] == "of") {
+                if (name_construction.toString() == "Mormon" && message_array[i - 2] == words.toLowerCase() && message_array[i - 1] == Of.toLowerCase()) {
                     continue;
                 }
                 if (name_construction[1] != 'undefined' && name_construction[2] != 'undefined') {
@@ -139,6 +134,7 @@ bot.on("message", message => {
             }
         }
     }
+
     for (var citation of citations) {
         var books = bom.books[bom_books[citation[0]]];
         if (citation.length == 4) {
@@ -253,17 +249,21 @@ bot.on("message", message => {
     for (var i = 0; i < message_array_dc.length - 1; i++) {
         if (message_array_dc[i].toLowerCase() == name_dc.toLowerCase()) {
             var location_dc = message_array_dc[i + 1]; // Should be something like 1:8 or 1:8-10
-
+            console.log(location_dc);
             var chapter_dc = parseInt(location_dc.split(":")[0]); // 1
+            console.log(chapter_dc);
             if (isNaN(chapter_dc)) return; // No chapter number; exit the function here
 
             var verse_nums_dc = location_dc.split(":")[1]; // 8 or 8-10
+            console.log(verse_nums_dc);
             try {
                 if (verse_nums_dc.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
                     var verse_first_dc = parseInt(verse_nums_dc.split("-")[0]); // 8
+                    console.log(verse_first_dc);
                     if (isNaN(verse_first_dc)) return; // No verse number; exit the function here
 
                     var verse_last_dc = parseInt(verse_nums_dc.split("-")[1]); // 10
+                    console.log(verse_last_dc);
                     if (isNaN(verse_last_dc)) return; // No last verse number; exit the function here or just ignore and set to verse_first
                 } else { // Just a single verse; eg 8
                     var verse_first_dc = parseInt(verse_nums_dc); // 8
@@ -279,6 +279,7 @@ bot.on("message", message => {
             citations_dc.push([name_dc, chapter_dc, verse_first_dc, verse_last_dc])
         }
     }
+
     for (var citation_dc of citations_dc) {
         var chapter_dc = dc.sections[citation_dc[1] - 1];
         if (citation_dc[2] == citation_dc[3]) { // one verse
@@ -312,15 +313,23 @@ bot.on("message", message => {
                         if (new_message_dc.length <= 2000) {
                             next_message_dc = new_message_dc;
                         } else {
-
-                            message.channel.send({
-                                embed: {
-                                    color: userColorPreference,
-                                    title: citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
-                                    description: next_message_dc
-                                }
-                            });
-
+                            if (citation_dc.length == 5) {
+                                message.channel.send({
+                                    embed: {
+                                        color: userColorPreference,
+                                        title: citation_dc[4] + " " + citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
+                                        description: next_message_dc
+                                    }
+                                });
+                            } else {
+                                message.channel.send({
+                                    embed: {
+                                        color: userColorPreference,
+                                        title: citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
+                                        description: next_message_dc
+                                    }
+                                });
+                            }
                             next_message_dc = "**" + (v + 1) + "** " + chapter_dc.verses[v].text + "\n\n ";
                         }
                     } catch (error) {
@@ -329,13 +338,23 @@ bot.on("message", message => {
                     }
                 }
                 if (next_message_dc.length != 0 && next_message_dc != undefined) {
-                    message.channel.send({
-                        embed: {
-                            color: userColorPreference,
-                            title: citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
-                            description: next_message_dc
-                        }
-                    });
+                    if (citation_dc.length == 5) {
+                        message.channel.send({
+                            embed: {
+                                color: userColorPreference,
+                                title: citation_dc[4] + " " + citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
+                                description: next_message_dc
+                            }
+                        });
+                    } else {
+                        message.channel.send({
+                            embed: {
+                                color: userColorPreference,
+                                title: citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
+                                description: next_message_dc
+                            }
+                        });
+                    }
                 }
             } else {
                 return;
@@ -343,6 +362,7 @@ bot.on("message", message => {
 
         }
     }
+
 
     var message_array_pgp = message.content.split(" ");
 
@@ -410,7 +430,7 @@ bot.on("message", message => {
                 if (verse_pgp.text != undefined) {
                     message.channel.send({
                         embed: {
-                            color: 0x086587,
+                            color: userColorPreference,
                             title: citation_pgp[0] + " " + citation_pgp[1] + ":" + citation_pgp[2],
                             description: citation_pgp[2] + " " + verse_pgp.text
                         }
@@ -433,7 +453,7 @@ bot.on("message", message => {
                             if (citation_pgp.length == 5) {
                                 message.channel.send({
                                     embed: {
-                                        color: 0x086587,
+                                        color: userColorPreference,
                                         title: citation_pgp[4] + " " + citation_pgp[0] + " " + citation_pgp[1] + ":" + verse_first_pgp + "-" + verse_last,
                                         description: next_message_pgp
                                     }
@@ -441,7 +461,7 @@ bot.on("message", message => {
                             } else {
                                 message.channel.send({
                                     embed: {
-                                        color: 0x086587,
+                                        color: userColorPreference,
                                         title: citation_pgp[0] + " " + citation_pgp[1] + ":" + verse_first_pgp + "-" + verse_last,
                                         description: next_message_pgp
                                     }
@@ -458,7 +478,7 @@ bot.on("message", message => {
                     if (citation_pgp.length == 5) {
                         message.channel.send({
                             embed: {
-                                color: 0x086587,
+                                color: userColorPreference,
                                 title: citation_pgp[4] + " " + citation_pgp[0] + " " + citation_pgp[1] + ":" + verse_first_pgp + "-" + verse_last,
                                 description: next_message_pgp
                             }
@@ -466,7 +486,7 @@ bot.on("message", message => {
                     } else {
                         message.channel.send({
                             embed: {
-                                color: 0x086587,
+                                color: userColorPreference,
                                 title: citation_pgp[0] + " " + citation_pgp[1] + ":" + verse_first_pgp + "-" + verse_last,
                                 description: next_message_pgp
                             }
@@ -528,6 +548,5 @@ bot.on("message", message => {
             break;
     }
 
-
-})
+});
 bot.login(process.env.BOT_TOKEN);
