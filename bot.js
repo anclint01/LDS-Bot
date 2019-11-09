@@ -164,14 +164,14 @@ bot.on("message", message => {
                     	message.channel.send({embed: {
 			                color: userColorPreference,
 			                title: citation[4] + " " + citation[0].replace(/_/g, " ") + " " + citation[1] + ":" + citation[2],
-			                description: citation[2] + " " + verse.text
+			                description: "**" + citation[2] + "** " + verse.text
 			              }
 			            });
                     } else {
                     	message.channel.send({embed: {
 			                color: userColorPreference,
 			                title: citation[0].replace(/_/g, " ") + " " + citation[1] + ":" + citation[2],
-			                description: citation[2] + " " + verse.text
+			                description: "**" + citation[2] + "** " + verse.text
 			              }
 			            });
                     }
@@ -287,7 +287,7 @@ bot.on("message", message => {
                     message.channel.send({embed: {
 			            color: userColorPreference,
 			            title: citation_dc[0] + " " + citation_dc[1] + ":" + citation_dc[2],
-			            description: citation_dc[2] + " " + verse_dc.text
+			            description: "**" + citation_dc[2] + "** " + verse_dc.text
 			          }
 			        });
                 } else {
@@ -423,7 +423,7 @@ bot.on("message", message => {
                    	message.channel.send({embed: {
 		                color: userColorPreference,
 		                title: citation_pgp[0].replace(/_/g, " ") + " " + citation_pgp[1] + ":" + citation_pgp[2],
-		                description: citation_pgp[2] + " " + verse_pgp.text
+		                description: "**" + citation_pgp[2] + "** " + verse_pgp.text
 		              }
 		            });
                 } else {
