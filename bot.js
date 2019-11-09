@@ -11,7 +11,7 @@ bot.on("ready", () => {
 
 bot.on("message", message => {
 
-    if (message.author.id == 221285118608801802) {
+	if (message.author.id == 221285118608801802) {
         var userColorPreference = 0xf2a93b;
     } else {
         var userColorPreference = 0x086587;
@@ -62,75 +62,75 @@ bot.on("message", message => {
     var Of = "of";
     for (let name in bom_books) {
         for (var i = 0; i < message_array.length - 1; i++) {
-            var name_construction = name.split("_");
+        	var name_construction = name.split("_");
             if (message_array[i].toLowerCase() == name_construction[0].toLowerCase()) {
-                if (name_construction.toString() == "Mormon" && message_array[i - 2] == words.toLowerCase() && message_array[i - 1] == Of.toLowerCase()) {
-                    continue;
-                }
-                if (name_construction[1] != 'undefined' && name_construction[2] != 'undefined') {
-                    if (name_construction[1] == message_array[i + 1].toLowerCase()) {
-                        name_result = `${name_construction[0]}` + '_' + `${name_construction[1]}`;
-                        if (name_construction[2].toLowerCase() == message_array[i + 2].toLowerCase()) {
-                            name_result += '_' + `${name_construction[2]}`;
-                        } else {
-                            if (name_construction.length > 1) {
-                                return;
-                            } else {
-                                name_result = name_construction[0];
-                            }
-                        }
-                    } else {
-                        if (name_construction.length > 1) {
-                            return;
-                        } else {
-                            name_result = name_construction[0];
-                        }
-                    }
-                } else {
-                    if (name_construction.length > 1) {
-                        return;
-                    } else {
-                        name_result = name_construction[0];
-                    }
-                }
-                if (name_construction.length == 1) {
-                    var location = message_array[i + 1]; // Should be something like 1:8 or 1:8-10
-                } else {
-                    var location = message_array[i + 3]; // Should be something like 1:8 or 1:8-10
-                }
-                var chapter = parseInt(location.split(":")[0]); // 1
-                if (isNaN(chapter)) return; // No chapter number; exit the function here
+            	if (name_construction.toString() == "Mormon" && message_array[i - 2].toLowerCase() == words.toLowerCase() && message_array[i - 1].toLowerCase() == Of.toLowerCase()) {
+            		continue;
+            	}
+	            if (name_construction[1] != 'undefined' && name_construction[2] != 'undefined'){
+		           	if (name_construction[1] == message_array[i + 1].toLowerCase()){
+		           		name_result = `${name_construction[0]}` + '_' + `${name_construction[1]}`;
+			           	if (name_construction[2].toLowerCase() == message_array[i + 2].toLowerCase()){
+			           		name_result += '_' + `${name_construction[2]}`;
+			           	} else {
+			           		if (name_construction.length > 1){
+			           			return;
+			           		} else {
+			           			name_result = name_construction[0];
+			           		}
+			           	}
+		           	} else {
+		           		if (name_construction.length > 1){
+		           			return;
+		           		} else {
+		           			name_result = name_construction[0];
+		           		}
+		           	}
+	            } else {
+	            	if (name_construction.length > 1){
+	            		return;
+	            	} else {
+	            		name_result = name_construction[0];
+	            	}
+	            }
+	            if(name_construction.length == 1){
+	            	var location = message_array[i + 1]; // Should be something like 1:8 or 1:8-10
+	            } else {
+	            	var location = message_array[i + 3]; // Should be something like 1:8 or 1:8-10
+	            }
+	            var chapter = parseInt(location.split(":")[0]); // 1
+	            if (isNaN(chapter)) return; // No chapter number; exit the function here
 
-                var verse_nums = location.split(":")[1]; // 8 or 8-10
-                try {
-                    if (verse_nums.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
-                        var verse_first = parseInt(verse_nums.split("-")[0]); // 8
-                        if (isNaN(verse_first)) return; // No verse number; exit the function here
+	            var verse_nums = location.split(":")[1]; // 8 or 8-10
+	            try {
+		            if (verse_nums.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
+		                var verse_first = parseInt(verse_nums.split("-")[0]); // 8
+		               if (isNaN(verse_first)) return; // No verse number; exit the function here
 
-                        var verse_last = parseInt(verse_nums.split("-")[1]); // 10
-                        if (isNaN(verse_last)) return; // No last verse number; exit the function here or just ignore and set to verse_first
-                    } else { // Just a single verse; eg 8
-                        var verse_first = parseInt(verse_nums); // 8
-                        if (isNaN(verse_first)) return; // No verse number; exit the function here
-                        var verse_last = verse_first; // 8
-                    }
-                } catch (error) {
-                    console.log(error);
-                }
-                if (verse_first > verse_last) {
-                    verse_last = verse_first + (verse_first = verse_last) - verse_last;
-                }
-                if ("numbers" in bom.books[bom_books[name]]) {
-                    // This book has multiples of the same name, so look for a number
-                    if (i > 0) { // Book name isn't the first word in the message (which would mean no number given)
-                        var booknum = parseInt(message_array[i - 1]);
-                        if (isNaN(booknum)) return; // No book number; exit the function here
-                        citations.push([name_construction, chapter, verse_first, verse_last, booknum])
-                        // We can later check if the size of this array is 4 or 5. if 5, we know it's a book like nephi
-                    }
-                } else {
-                    citations.push([name_result, chapter, verse_first, verse_last])
-                }
+		                var verse_last = parseInt(verse_nums.split("-")[1]); // 10
+		                if (isNaN(verse_last)) return; // No last verse number; exit the function here or just ignore and set to verse_first
+		            } else { // Just a single verse; eg 8
+		               var verse_first = parseInt(verse_nums); // 8
+		               if (isNaN(verse_first)) return; // No verse number; exit the function here
+		               var verse_last = verse_first; // 8
+		            }
+	            } catch (error) {
+	            	console.log(error);
+	            }
+	            if (verse_first > verse_last) {
+	                verse_last = verse_first + (verse_first = verse_last) - verse_last;
+	            }
+	            if ("numbers" in bom.books[bom_books[name]]) {
+	                // This book has multiples of the same name, so look for a number
+	                if (i > 0) { // Book name isn't the first word in the message (which would mean no number given)
+	                    var booknum = parseInt(message_array[i - 1]);
+	                    if (isNaN(booknum)) return; // No book number; exit the function here
+	                    citations.push([name_construction, chapter, verse_first, verse_last, booknum])
+	                    // We can later check if the size of this array is 4 or 5. if 5, we know it's a book like nephi
+	                }
+	            } else {
+	                citations.push([name_result, chapter, verse_first, verse_last])
+	            }
             }
         }
     }
@@ -143,14 +143,14 @@ bot.on("message", message => {
         } else {
             // Length is 5; a book like Nephi
             try {
-                if (citation[4] <= 4 && citation[4] > 0) {
-                    var chapter = books.numbers[citation[4] - 1].chapters[citation[1] - 1];
-                } else {
-                    return;
-                }
-            } catch (error) {
-                console.log(error);
-            }
+	            if (citation[4] <= 4 && citation[4] > 0) {
+	                var chapter = books.numbers[citation[4] - 1].chapters[citation[1] - 1];
+	            } else {
+	                return;
+	            }
+        	} catch (error){
+        		console.log(error);
+        	}
         }
         if (citation[2] == citation[3]) { // one verse
             if (chapter != undefined) {
@@ -160,22 +160,20 @@ bot.on("message", message => {
             }
             if (verse != undefined) {
                 if (verse.text != undefined) {
-                    if (citation.length == 5) {
-                        message.channel.send({
-                            embed: {
-                                color: userColorPreference,
-                                title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + citation[2],
-                                description: citation[2] + " " + verse.text
-                            }
-                        });
+                    if(citation.length == 5){
+                    	message.channel.send({embed: {
+			                color: userColorPreference,
+			                title: citation[4] + " " + citation[0].replace(/_/g, " ") + " " + citation[1] + ":" + citation[2],
+			                description: citation[2] + " " + verse.text
+			              }
+			            });
                     } else {
-                        message.channel.send({
-                            embed: {
-                                color: userColorPreference,
-                                title: citation[0] + " " + citation[1] + ":" + citation[2],
-                                description: citation[2] + " " + verse.text
-                            }
-                        });
+                    	message.channel.send({embed: {
+			                color: userColorPreference,
+			                title: citation[0].replace(/_/g, " ") + " " + citation[1] + ":" + citation[2],
+			                description: citation[2] + " " + verse.text
+			              }
+			            });
                     }
                 } else {
                     return;
@@ -187,58 +185,54 @@ bot.on("message", message => {
             if (chapter != undefined) {
                 var next_message = "";
                 for (var v = citation[2] - 1; v < citation[3]; v++) {
-                    try {
-                        var new_message = next_message + "**" + (v + 1) + "** " + chapter.verses[v].text + "\n\n "
-                        if (new_message.length <= 2000) {
-                            next_message = new_message;
-                        } else {
-                            if (citation.length == 5) {
-                                message.channel.send({
-                                    embed: {
-                                        color: userColorPreference,
-                                        title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
-                                        description: next_message
-                                    }
-                                });
-                            } else {
-                                message.channel.send({
-                                    embed: {
-                                        color: userColorPreference,
-                                        title: citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
-                                        description: next_message
-                                    }
-                                });
-                            }
-                            next_message = "**" + (v + 1) + "** " + chapter.verses[v].text + "\n\n ";
-                        }
+                	try {
+                		var new_message = next_message + "**" + (v + 1) + "** " + chapter.verses[v].text + "\n\n "
+						if (new_message.length <= 2000) {
+						   next_message = new_message;
+						} else {
+				           	if (citation.length == 5){
+				           		message.channel.send({embed: {
+						        	color: userColorPreference,
+						        	title: citation[4] + " " + citation[0].replace(/_/g, " ") + " " + citation[1] + ":" + verse_first + "-" + verse_last,
+						        	description: next_message
+					 	      	  }
+						    	});
+				           	} else {
+				           		message.channel.send({embed: {
+						        	color: userColorPreference,
+						        	title: citation[0].replace(/_/g, " ") + " " + citation[1] + ":" + verse_first + "-" + verse_last,
+						        	description: next_message
+						       	  }
+						    	});  
+				           	}   
+				           	next_message = "**" + (v + 1) + "** " + chapter.verses[v].text + "\n\n ";   
+                		}           	
                     } catch (error) {
-                        console.log(error);
-                        return;
+                    	console.log(error);
+                    	return;
                     }
                 }
-                if (next_message.length != 0 && next_message != undefined) {
-                    if (citation.length == 5) {
-                        message.channel.send({
-                            embed: {
-                                color: userColorPreference,
-                                title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
-                                description: next_message
-                            }
-                        });
-                    } else {
-                        message.channel.send({
-                            embed: {
-                                color: userColorPreference,
-                                title: citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
-                                description: next_message
-                            }
-                        });
-                    }
-                }
+	            if (next_message.length != 0 && next_message != undefined) {
+	                if (citation.length == 5){
+	                	message.channel.send({embed: {
+				            color: userColorPreference,
+				            title: citation[4] + " " + citation[0].replace(/_/g, " ") + " " + citation[1] + ":" + verse_first + "-" + verse_last,
+				            description: next_message
+				          }
+				        });
+	                } else {
+	                	message.channel.send({embed: {
+				            color: userColorPreference,
+				            title: citation[0].replace(/_/g, " ") + " " + citation[1] + ":" + verse_first + "-" + verse_last,
+				            description: next_message	
+				          }
+				        });
+	                }
+	            }
             } else {
                 return;
             }
-
+ 
         }
     }
 
@@ -257,22 +251,22 @@ bot.on("message", message => {
             var verse_nums_dc = location_dc.split(":")[1]; // 8 or 8-10
             console.log(verse_nums_dc);
             try {
-                if (verse_nums_dc.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
-                    var verse_first_dc = parseInt(verse_nums_dc.split("-")[0]); // 8
-                    console.log(verse_first_dc);
-                    if (isNaN(verse_first_dc)) return; // No verse number; exit the function here
+	            if (verse_nums_dc.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
+	                var verse_first_dc = parseInt(verse_nums_dc.split("-")[0]); // 8
+	                console.log(verse_first_dc);
+	                if (isNaN(verse_first_dc)) return; // No verse number; exit the function here
 
-                    var verse_last_dc = parseInt(verse_nums_dc.split("-")[1]); // 10
-                    console.log(verse_last_dc);
-                    if (isNaN(verse_last_dc)) return; // No last verse number; exit the function here or just ignore and set to verse_first
-                } else { // Just a single verse; eg 8
-                    var verse_first_dc = parseInt(verse_nums_dc); // 8
-                    if (isNaN(verse_first_dc)) return; // No verse number; exit the function here
-                    var verse_last_dc = verse_first_dc; // 8
-                }
-            } catch (error) {
-                console.log(error);
-            }
+	                var verse_last_dc = parseInt(verse_nums_dc.split("-")[1]); // 10
+	                console.log(verse_last_dc);
+	                if (isNaN(verse_last_dc)) return; // No last verse number; exit the function here or just ignore and set to verse_first
+	            } else { // Just a single verse; eg 8
+	                var verse_first_dc = parseInt(verse_nums_dc); // 8
+	                if (isNaN(verse_first_dc)) return; // No verse number; exit the function here
+	                var verse_last_dc = verse_first_dc; // 8
+	            }
+        	} catch (error) {
+        		console.log(error);
+        	}
             if (verse_first_dc > verse_last_dc) {
                 verse_last_dc = verse_first_dc + (verse_first_dc = verse_last_dc) - verse_last_dc;
             }
@@ -290,13 +284,12 @@ bot.on("message", message => {
             }
             if (verse_dc != undefined) {
                 if (verse_dc.text != undefined) {
-                    message.channel.send({
-                        embed: {
-                            color: userColorPreference,
-                            title: citation_dc[0] + " " + citation_dc[1] + ":" + citation_dc[2],
-                            description: citation_dc[2] + " " + verse_dc.text
-                        }
-                    });
+                    message.channel.send({embed: {
+			            color: userColorPreference,
+			            title: citation_dc[0] + " " + citation_dc[1] + ":" + citation_dc[2],
+			            description: citation_dc[2] + " " + verse_dc.text
+			          }
+			        });
                 } else {
                     return;
                 }
@@ -304,62 +297,60 @@ bot.on("message", message => {
                 return;
             }
         } else { // multiple verses
-            var next_message_dc = "";
+        	var next_message_dc	= "";
             if (chapter_dc != undefined) {
                 var next_message_dc = "";
                 for (var v = citation_dc[2] - 1; v < citation_dc[3]; v++) {
-                    try {
-                        var new_message_dc = next_message_dc + "**" + (v + 1) + "** " + chapter_dc.verses[v].text + "\n\n "
-                        if (new_message_dc.length <= 2000) {
-                            next_message_dc = new_message_dc;
-                        } else {
-                            if (citation_dc.length == 5) {
-                                message.channel.send({
-                                    embed: {
-                                        color: userColorPreference,
-                                        title: citation_dc[4] + " " + citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
-                                        description: next_message_dc
-                                    }
-                                });
-                            } else {
-                                message.channel.send({
-                                    embed: {
-                                        color: userColorPreference,
-                                        title: citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
-                                        description: next_message_dc
-                                    }
-                                });
-                            }
-                            next_message_dc = "**" + (v + 1) + "** " + chapter_dc.verses[v].text + "\n\n ";
-                        }
+                	try {
+                		var new_message_dc = next_message_dc + "**" + (v + 1) + "** " + chapter_dc.verses[v].text + "\n\n "
+						if (new_message_dc.length <= 2000) {
+						   next_message_dc = new_message_dc ;
+						} else {
+				        	if (citation_dc.length == 5){
+				           		message.channel.send({embed: {
+						        	color: userColorPreference,
+						        	title: citation_dc[4] + " " + citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
+						        	description: next_message_dc
+						      	  }
+						    	});
+				        	} else {
+				           		message.channel.send({embed: {
+						        	color: userColorPreference,
+						        	title: citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
+						        	description: next_message_dc
+						       	  }
+						    	});
+				        	}   
+				        	next_message_dc = "**" + (v + 1) + "** " + chapter_dc.verses[v].text + "\n\n ";              	
+                    	}
                     } catch (error) {
-                        console.log(error);
-                        return;
+                    	console.log(error);
+                    	return;
                     }
                 }
-                if (next_message_dc.length != 0 && next_message_dc != undefined) {
-                    if (citation_dc.length == 5) {
-                        message.channel.send({
-                            embed: {
-                                color: userColorPreference,
-                                title: citation_dc[4] + " " + citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
-                                description: next_message_dc
-                            }
-                        });
-                    } else {
-                        message.channel.send({
-                            embed: {
-                                color: userColorPreference,
-                                title: citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
-                                description: next_message_dc
-                            }
-                        });
-                    }
-                }
+	            if (next_message_dc.length != 0 && next_message_dc != undefined) {
+				    if (citation_dc.length == 5) {
+				        message.channel.send({
+				            embed: {
+				                color: userColorPreference,
+				                title: citation_dc[4] + " " + citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
+				                description: next_message_dc
+				            }
+				        });
+				    } else {
+				        message.channel.send({
+				            embed: {
+				                color: userColorPreference,
+				                title: citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
+				                description: next_message_dc
+				            }
+				        });
+				    }
+				}
             } else {
                 return;
             }
-
+ 
         }
     }
 
@@ -372,52 +363,53 @@ bot.on("message", message => {
         for (var i = 0; i < message_array_pgp.length - 1; i++) {
             var name_construction_pgp = name.split("_");
             if (message_array_pgp[i].toLowerCase() == name_construction_pgp[0].toLowerCase()) {
-                if (name_construction_pgp[2].toLowerCase() == message_array_pgp[i + 2].toLowerCase()) {
-                    if (name_construction_pgp[1] == message_array_pgp[i + 1].toLowerCase()) {
-                        name_result_pgp = `${name_construction_pgp[0]}` + '_' + `${name_construction_pgp[1]}`;
-                        if (name_construction_pgp[2].toLowerCase() == message_array_pgp[i + 2].toLowerCase()) {
-                            name_result_pgp += `${name_construction_pgp[2]}`;
-                        }
-                    } else {
-                        name_result_pgp = name_construction_pgp[0];
-                    }
-                    if (name_construction_pgp.length == 1) {
-                        var location_pgp = message_array_pgp[i + 1]; // Should be something like 1:8 or 1:8-10
-                    } else {
-                        var location_pgp = message_array_pgp[i + 3]; // Should be something like 1:8 or 1:8-10
-                    }
-                    var chapter_pgp = parseInt(location_pgp.split(":")[0]); // 1
-                    if (isNaN(chapter_pgp)) return; // No chapter number; exit the function here
+            	if (name_construction_pgp[2].toLowerCase() == message_array_pgp[i + 2].toLowerCase()){
+	            	if (name_construction_pgp[1] == message_array_pgp[i + 1].toLowerCase()){
+	            		name_result_pgp = `${name_construction_pgp[0]}` + '_' + `${name_construction_pgp[1]}`;
+		            	if (name_construction_pgp[2].toLowerCase() == message_array_pgp[i + 2].toLowerCase()){
+		            		name_result_pgp += `${name_construction_pgp[2]}`;
+		            	}
+	            	} else {
+	            		name_result_pgp = name_construction_pgp[0];
+	            	}
+	            	if(name_construction_pgp.length == 1){
+	                	var location_pgp = message_array_pgp[i + 1]; // Should be something like 1:8 or 1:8-10
+	            	} else {
+	            		var location_pgp = message_array_pgp[i + 3]; // Should be something like 1:8 or 1:8-10
+	            	}
+	                var chapter_pgp = parseInt(location_pgp.split(":")[0]); // 1
+	                if (isNaN(chapter_pgp)) return; // No chapter number; exit the function here
 
-                    var verse_nums_pgp = location_pgp.split(":")[1]; // 8 or 8-10
-                    try {
-                        if (verse_nums_pgp.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
-                            var verse_first_pgp = parseInt(verse_nums_pgp.split("-")[0]); // 8
-                            if (isNaN(verse_first_pgp)) return; // No verse number; exit the function here
+	                var verse_nums_pgp = location_pgp.split(":")[1]; // 8 or 8-10
+	                try {
+		                if (verse_nums_pgp.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
+		                    var verse_first_pgp = parseInt(verse_nums_pgp.split("-")[0]); // 8
+		                    if (isNaN(verse_first_pgp)) return; // No verse number; exit the function here
 
-                            var verse_last_pgp = parseInt(verse_nums_pgp.split("-")[1]); // 10
-                            if (isNaN(verse_last_pgp)) return; // No last verse number; exit the function here or just ignore and set to verse_first
-                        } else { // Just a single verse; eg 8
-                            var verse_first_pgp = parseInt(verse_nums_pgp); // 8
-                            if (isNaN(verse_first_pgp)) return; // No verse number; exit the function here
-                            var verse_last_pgp = verse_first_pgp; // 8
-                        }
-                    } catch (error) {
-                        console.log(error);
-                    }
-                    if (verse_first_pgp > verse_last_pgp) {
-                        verse_last_pgp = verse_first_pgp + (verse_first_pgp = verse_last_pgp) - verse_last_pgp;
-                    }
+		                    var verse_last_pgp = parseInt(verse_nums_pgp.split("-")[1]); // 10
+		                    if (isNaN(verse_last_pgp)) return; // No last verse number; exit the function here or just ignore and set to verse_first
+		                } else { // Just a single verse; eg 8
+		                    var verse_first_pgp = parseInt(verse_nums_pgp); // 8
+		                    if (isNaN(verse_first_pgp)) return; // No verse number; exit the function here
+		                    var verse_last_pgp = verse_first_pgp; // 8
+		                }
+	            	} catch (error) {
+	            		console.log(error);
+	            	}
+	                if (verse_first_pgp > verse_last_pgp) {
+	                    verse_last_pgp = verse_first_pgp + (verse_first_pgp = verse_last_pgp) - verse_last_pgp;
+	                }
 
-                    citations_pgp.push([name, chapter_pgp, verse_first_pgp, verse_last_pgp])
-
-                }
-            }
+	                citations_pgp.push([name, chapter_pgp, verse_first_pgp, verse_last_pgp])
+	                
+	            }
+        	}
         }
     }
 
     for (var citation_pgp of citations_pgp) {
-        console.log(citation_pgp[0]);
+    	console.log(citation_pgp[0]);
+    	console.log(citation_pgp[0].replace(/_/g, " "))
         var books_pgp = pgp.books[pgp_books[citation_pgp[0]]];
         var chapter_pgp = books_pgp.chapters[citation_pgp[1] - 1];
         if (citation_pgp[2] == citation_pgp[3]) { // one verse
@@ -428,13 +420,12 @@ bot.on("message", message => {
             }
             if (verse_pgp != undefined) {
                 if (verse_pgp.text != undefined) {
-                    message.channel.send({
-                        embed: {
-                            color: userColorPreference,
-                            title: citation_pgp[0] + " " + citation_pgp[1] + ":" + citation_pgp[2],
-                            description: citation_pgp[2] + " " + verse_pgp.text
-                        }
-                    });
+                   	message.channel.send({embed: {
+		                color: userColorPreference,
+		                title: citation_pgp[0].replace(/_/g, " ") + " " + citation_pgp[1] + ":" + citation_pgp[2],
+		                description: citation_pgp[2] + " " + verse_pgp.text
+		              }
+		            });
                 } else {
                     return;
                 }
@@ -445,58 +436,54 @@ bot.on("message", message => {
             if (chapter_pgp != undefined) {
                 var next_message_pgp = "";
                 for (var v = citation_pgp[2] - 1; v < citation_pgp[3]; v++) {
-                    try {
-                        var new_message = next_message_pgp + "**" + (v + 1) + "** " + chapter_pgp.verses[v].text + "\n\n "
-                        if (new_message.length <= 2000) {
-                            next_message_pgp = new_message;
-                        } else {
-                            if (citation_pgp.length == 5) {
-                                message.channel.send({
-                                    embed: {
-                                        color: userColorPreference,
-                                        title: citation_pgp[4] + " " + citation_pgp[0] + " " + citation_pgp[1] + ":" + verse_first_pgp + "-" + verse_last,
-                                        description: next_message_pgp
-                                    }
-                                });
-                            } else {
-                                message.channel.send({
-                                    embed: {
-                                        color: userColorPreference,
-                                        title: citation_pgp[0] + " " + citation_pgp[1] + ":" + verse_first_pgp + "-" + verse_last,
-                                        description: next_message_pgp
-                                    }
-                                });
-                            }
-                            next_message_pgp = "**" + (v + 1) + "** " + chapter_pgp.verses[v].text + "\n\n ";
-                        }
+                	try {
+                		var new_message = next_message_pgp + "**" + (v + 1) + "** " + chapter_pgp.verses[v].text + "\n\n "
+						if (new_message.length <= 2000) {
+						   next_message_pgp = new_message;
+						} else {
+				           	if (citation_pgp.length == 5){
+				           		message.channel.send({embed: {
+						        	color: userColorPreference,
+						        	title: citation_pgp[4] + " " + citation_pgp[0].replace(/_/g, " ") + " " + citation_pgp[1] + ":" + verse_first_pgp + "-" + verse_last,
+						        	description: next_message_pgp
+					 	      	  }
+						    	});
+				           	} else {
+				           		message.channel.send({embed: {
+						        	color: userColorPreference,
+						        	title: citation_pgp[0].replace(/_/g, " ") + " " + citation_pgp[1] + ":" + verse_first_pgp + "-" + verse_last,
+						        	description: next_message_pgp
+						       	  }
+						    	});  
+				           	}   
+				           	next_message_pgp = "**" + (v + 1) + "** " + chapter_pgp.verses[v].text + "\n\n ";   
+                		}           	
                     } catch (error) {
-                        console.log(error);
-                        return;
+                    	console.log(error);
+                    	return;
                     }
                 }
-                if (next_message_pgp.length != 0 && next_message_pgp != undefined) {
-                    if (citation_pgp.length == 5) {
-                        message.channel.send({
-                            embed: {
-                                color: userColorPreference,
-                                title: citation_pgp[4] + " " + citation_pgp[0] + " " + citation_pgp[1] + ":" + verse_first_pgp + "-" + verse_last,
-                                description: next_message_pgp
-                            }
-                        });
-                    } else {
-                        message.channel.send({
-                            embed: {
-                                color: userColorPreference,
-                                title: citation_pgp[0] + " " + citation_pgp[1] + ":" + verse_first_pgp + "-" + verse_last,
-                                description: next_message_pgp
-                            }
-                        });
-                    }
-                }
+	            if (next_message_pgp.length != 0 && next_message_pgp != undefined) {
+	                if (citation_pgp.length == 5){
+	                	message.channel.send({embed: {
+				            color: userColorPreference,
+				            title: citation_pgp[4] + " " + citation_pgp[0].replace(/_/g, " ") + " " + citation_pgp[1] + ":" + verse_first_pgp + "-" + verse_last,
+				            description: next_message_pgp
+				          }
+				        });
+	                } else {
+	                	message.channel.send({embed: {
+				            color: userColorPreference,
+				            title: citation_pgp[0].replace(/_/g, " ") + " " + citation_pgp[1] + ":" + verse_first_pgp + "-" + verse_last,
+				            description: next_message_pgp	
+				          }
+				        });
+	                }
+	            }
             } else {
                 return;
             }
-
+ 
         }
     }
 
