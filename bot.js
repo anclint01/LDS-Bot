@@ -70,79 +70,71 @@ bot.on("message", message => {
     var Of = "of";
     for (let name in bom_books) {
         for (var i = 0; i < message_array.length - 1; i++) {
-            var name_construction = name.split("_");
+        	var name_construction = name.split("_");
             if (message_array[i].toLowerCase() == name_construction[0].toLowerCase()) {
-                if (typeof message_array[i - 2] != "undefined" && typeof message_array[i - 1] != "undefined") {
-                    if (name_construction.toString() == "Mormon") {
-                        if (message_array[i - 2].toLowerCase() == words.toLowerCase() && message_array[i - 1].toLowerCase() == Of.toLowerCase()) {
-                            continue;
-                        }
-                    }
-                }
-                if (typeof name_construction[1] != 'undefined' && typeof name_construction[2] != 'undefined') {
-                    if (name_construction[1] == message_array[i + 1].toLowerCase()) {
-                        name_result = `${name_construction[0]}` + '_' + `${name_construction[1]}`;
-                        if (name_construction[2].toLowerCase() == message_array[i + 2].toLowerCase()) {
-                            name_result += '_' + `${name_construction[2]}`;
-                        } else {
-                            if (name_construction.length > 1) {
-                                return;
-                            } else {
-                                name_result = name_construction[0];
-                            }
-                        }
-                    } else {
-                        if (name_construction.length > 1) {
-                            return;
-                        } else {
-                            name_result = name_construction[0];
-                        }
-                    }
-                } else {
-                    if (name_construction.length > 1) {
-                        return;
-                    } else {
-                        name_result = name_construction[0];
-                    }
-                }
-                if (name_construction.length == 1) {
-                    var location = message_array[i + 1]; // Should be something like 1:8 or 1:8-10
-                } else {
-                    var location = message_array[i + 3]; // Should be something like 1:8 or 1:8-10
-                }
-                var chapter = parseInt(location.split(":")[0]); // 1
-                if (isNaN(chapter)) return; // No chapter number; exit the function here
+            	if (typeof message_array[i-2] != "undefined" && typeof message_array[i-1] != "undefined"){
+            		if (name_construction.toString() == "Mormon") {
+            			if (message_array[i - 2].toLowerCase() == words.toLowerCase() && message_array[i - 1].toLowerCase() == Of.toLowerCase()){
+            				continue;
+            			}
+            		}
+            	}
+	            if (typeof name_construction[1] != 'undefined' && typeof name_construction[2] != 'undefined'){
+		           	if (name_construction[1].toLowerCase() == message_array[i + 1].toLowerCase()){
+		           		name_result = `${name_construction[0]}` + '_' + `${name_construction[1]}`;
+		           		if(typeof message_array[i+2] != "undefined"){
+			           		if (name_construction[2].toLowerCase() == message_array[i + 2].toLowerCase()){
+			           			name_result += '_' + `${name_construction[2]}`;
+			           		} else {
+								continue;
+			           		}
+			            } else {
+			            	continue;
+			            }
+		           	} else {
+		           		continue;
+		           	}
+	            } else {
+	            	name_result = name_construction.toString();
+	            }
+	            if(name_construction.length == 1){
+	            	var location = message_array[i + 1]; // Should be something like 1:8 or 1:8-10
+	            } else {
+	            	var location = message_array[i + 3]; // Should be something like 1:8 or 1:8-10
+	            }
+	            var chapter = parseInt(location.split(":")[0]); // 1
+	            if (isNaN(chapter)) return; // No chapter number; exit the function here
 
-                var verse_nums = location.split(":")[1]; // 8 or 8-10
-                try {
-                    if (verse_nums.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
-                        var verse_first = parseInt(verse_nums.split("-")[0]); // 8
-                        if (isNaN(verse_first)) return; // No verse number; exit the function here
+	            var verse_nums = location.split(":")[1]; // 8 or 8-10
+	            try {
+		            if (verse_nums.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
+		                var verse_first = parseInt(verse_nums.split("-")[0]); // 8
+		               if (isNaN(verse_first)) return; // No verse number; exit the function here
 
-                        var verse_last = parseInt(verse_nums.split("-")[1]); // 10
-                        if (isNaN(verse_last)) return; // No last verse number; exit the function here or just ignore and set to verse_first
-                    } else { // Just a single verse; eg 8
-                        var verse_first = parseInt(verse_nums); // 8
-                        if (isNaN(verse_first)) return; // No verse number; exit the function here
-                        var verse_last = verse_first; // 8
-                    }
-                } catch (error) {
-                    console.log(error);
-                }
-                if (verse_first > verse_last) {
-                    verse_last = verse_first + (verse_first = verse_last) - verse_last;
-                }
-                if ("numbers" in bom.books[bom_books[name]]) {
-                    // This book has multiples of the same name, so look for a number
-                    if (i > 0) { // Book name isn't the first word in the message (which would mean no number given)
-                        var booknum = parseInt(message_array[i - 1]);
-                        if (isNaN(booknum)) return; // No book number; exit the function here
-                        citations.push([name_construction, chapter, verse_first, verse_last, booknum])
-                        // We can later check if the size of this array is 4 or 5. if 5, we know it's a book like nephi
-                    }
-                } else {
-                    citations.push([name_result, chapter, verse_first, verse_last])
-                }
+		                var verse_last = parseInt(verse_nums.split("-")[1]); // 10
+		                if (isNaN(verse_last)) return; // No last verse number; exit the function here or just ignore and set to verse_first
+		            } else { // Just a single verse; eg 8
+		               var verse_first = parseInt(verse_nums); // 8
+		               if (isNaN(verse_first)) return; // No verse number; exit the function here
+		               var verse_last = verse_first; // 8
+		            }
+	            } catch (error) {
+	            	console.log(error);
+	            }
+	            if (verse_first > verse_last) {
+	                verse_last = verse_first + (verse_first = verse_last) - verse_last;
+	            }
+	            if ("numbers" in bom.books[bom_books[name]]) {
+	                // This book has multiples of the same name, so look for a number
+	                if (i > 0) { // Book name isn't the first word in the message (which would mean no number given)
+	                    var booknum = parseInt(message_array[i - 1]);
+	                    if (isNaN(booknum)) return; // No book number; exit the function here
+	                    citations.push([name_construction, chapter, verse_first, verse_last, booknum])
+	                    // We can later check if the size of this array is 4 or 5. if 5, we know it's a book like nephi
+	                }
+	            } else {
+	                citations.push([name_result, chapter, verse_first, verse_last])
+	            }
             }
         }
     }
