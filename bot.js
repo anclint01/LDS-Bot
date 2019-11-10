@@ -376,48 +376,62 @@ bot.on("message", message => {
         for (var i = 0; i < message_array_pgp.length - 1; i++) {
             var name_construction_pgp = name.split("_");
             if (message_array_pgp[i].toLowerCase() == name_construction_pgp[0].toLowerCase()) {
-                if (name_construction_pgp[2].toLowerCase() != message_array_pgp[i + 2].toLowerCase()){
-                	continue;
+                if (typeof name_construction_pgp[2] != 'undefined') {
+                    if (typeof message_array_pgp[i + 2] != 'undefined') {
+                        if (name_construction_pgp[2].toLowerCase() != message_array_pgp[i + 2].toLowerCase()) {
+                            continue;
+                        }
+                    }
                 }
-	           	if (name_construction_pgp[1] == message_array_pgp[i + 1].toLowerCase()){
-	           		name_result_pgp = `${name_construction_pgp[0]}` + '_' + `${name_construction_pgp[1]}`;
-		           	if (name_construction_pgp[2].toLowerCase() == message_array_pgp[i + 2].toLowerCase()){
-		           		name_result_pgp += `${name_construction_pgp[2]}`;
-		           	}
-	           	} else {
-	           		name_result_pgp = name_construction_pgp[0];
-	           	}
-	           	if(name_construction_pgp.length == 1){
-	               	var location_pgp = message_array_pgp[i + 1]; // Should be something like 1:8 or 1:8-10
-	           	} else {
-	           		var location_pgp = message_array_pgp[i + 3]; // Should be something like 1:8 or 1:8-10
-	          	}
-	            var chapter_pgp = parseInt(location_pgp.split(":")[0]); // 1
-	            if (isNaN(chapter_pgp)) return; // No chapter number; exit the function here
+                if (typeof name_construction_pgp[1] != 'undefined' && typeof name_construction_pgp[2] != 'undefined') {
+                    if (name_construction_pgp[1] == message_array_pgp[i + 1].toLowerCase()) {
+                        name_result_pgp = `${name_construction_pgp[0]}` + '_' + `${name_construction_pgp[1]}`;
+                        if (typeof message_array_pgp[i + 2] != 'undefined') {
+                            if (name_construction_pgp[2].toLowerCase() == message_array_pgp[i + 2].toLowerCase()) {
+                                name_result_pgp += `${name_construction_pgp[2]}`;
+                            } else {
+                                continue;
+                            }
+                        } else {
+                            continue;
+                        }
+                    } else {
+                        continue;
+                    }
+                } else {
+                    name_result_pgp = name_construction_pgp.toString();
+                }
+                if (name_construction_pgp.length == 1) {
+                    var location_pgp = message_array_pgp[i + 1]; // Should be something like 1:8 or 1:8-10
+                } else {
+                    var location_pgp = message_array_pgp[i + 3]; // Should be something like 1:8 or 1:8-10
+                }
+                var chapter_pgp = parseInt(location_pgp.split(":")[0]); // 1
+                if (isNaN(chapter_pgp)) return; // No chapter number; exit the function here
 
-	            var verse_nums_pgp = location_pgp.split(":")[1]; // 8 or 8-10
-	            try {
-		            if (verse_nums_pgp.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
-		                var verse_first_pgp = parseInt(verse_nums_pgp.split("-")[0]); // 8
-		                if (isNaN(verse_first_pgp)) return; // No verse number; exit the function here
+                var verse_nums_pgp = location_pgp.split(":")[1]; // 8 or 8-10
+                try {
+                    if (verse_nums_pgp.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
+                        var verse_first_pgp = parseInt(verse_nums_pgp.split("-")[0]); // 8
+                        if (isNaN(verse_first_pgp)) return; // No verse number; exit the function here
 
-		                var verse_last_pgp = parseInt(verse_nums_pgp.split("-")[1]); // 10
-		                if (isNaN(verse_last_pgp)) return; // No last verse number; exit the function here or just ignore and set to verse_first
-		            } else { // Just a single verse; eg 8
-		                var verse_first_pgp = parseInt(verse_nums_pgp); // 8
-		                if (isNaN(verse_first_pgp)) return; // No verse number; exit the function here
-		                var verse_last_pgp = verse_first_pgp; // 8
-		            }
-	           	} catch (error) {
-	           		console.log(error);
-	         	}
-	            if (verse_first_pgp > verse_last_pgp) {
-	                verse_last_pgp = verse_first_pgp + (verse_first_pgp = verse_last_pgp) - verse_last_pgp;
-	            }
+                        var verse_last_pgp = parseInt(verse_nums_pgp.split("-")[1]); // 10
+                        if (isNaN(verse_last_pgp)) return; // No last verse number; exit the function here or just ignore and set to verse_first
+                    } else { // Just a single verse; eg 8
+                        var verse_first_pgp = parseInt(verse_nums_pgp); // 8
+                        if (isNaN(verse_first_pgp)) return; // No verse number; exit the function here
+                        var verse_last_pgp = verse_first_pgp; // 8
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+                if (verse_first_pgp > verse_last_pgp) {
+                    verse_last_pgp = verse_first_pgp + (verse_first_pgp = verse_last_pgp) - verse_last_pgp;
+                }
 
-	            citations_pgp.push([name, chapter_pgp, verse_first_pgp, verse_last_pgp])
-	                
-	        }
+                citations_pgp.push([name, chapter_pgp, verse_first_pgp, verse_last_pgp])
+
+            }
         }
     }
 
