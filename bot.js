@@ -45,8 +45,11 @@ bot.on("message", message => {
         "Moses": 0,
         "Abraham": 1,
         "Joseph_Smith_Matthew": 2,
+        "JSM": 2,
         "Joseph_Smith_History": 3,
+        "JSH": 3,
         "Articles_of_Faith": 4,
+        "AOF": 4,
     }
 
     if (message.author.bot) return;
