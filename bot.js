@@ -9,6 +9,14 @@ bot.on("ready", () => {
     console.log("ready");
 });
 
+function clean(text) {
+  if (typeof(text) === "string"){
+    return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
+  }else{
+      return text;
+  }
+}
+
 bot.on("message", message => {
 
     if (message.author.id == 221285118608801802) {
