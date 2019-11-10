@@ -389,14 +389,8 @@ bot.on("message", message => {
                         if (typeof message_array_pgp[i + 2] != 'undefined') {
                             if (name_construction_pgp[2].toLowerCase() == message_array_pgp[i + 2].toLowerCase()) {
                                 name_result_pgp += `${name_construction_pgp[2]}`;
-                            } else {
-                                continue;
                             }
-                        } else {
-                            continue;
                         }
-                    } else {
-                        continue;
                     }
                 } else {
                     name_result_pgp = name_construction_pgp.toString();
@@ -406,10 +400,15 @@ bot.on("message", message => {
                 } else {
                     var location_pgp = message_array_pgp[i + 3]; // Should be something like 1:8 or 1:8-10
                 }
-                var chapter_pgp = parseInt(location_pgp.split(":")[0]); // 1
-                if (isNaN(chapter_pgp)) return; // No chapter number; exit the function here
+                try {
+                    var chapter_pgp = parseInt(location_pgp.split(":")[0]); // 1
 
-                var verse_nums_pgp = location_pgp.split(":")[1]; // 8 or 8-10
+                    if (isNaN(chapter_pgp)) return; // No chapter number; exit the function here
+
+                    var verse_nums_pgp = location_pgp.split(":")[1]; // 8 or 8-10
+                } catch (error) {
+                    console.log(error);
+                }
                 try {
                     if (verse_nums_pgp.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
                         var verse_first_pgp = parseInt(verse_nums_pgp.split("-")[0]); // 8
