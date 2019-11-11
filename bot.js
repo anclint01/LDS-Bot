@@ -72,21 +72,21 @@ bot.on("message", message => {
     var Of = "of";
     for (let name in bom_books) {
         for (var i = 0; i < message_array.length - 1; i++) {
-            var name_construction = name.split("_");
+            var name_construction = name.split("_"); // Split book name by "_" 
             if (message_array[i].toLowerCase() == name_construction[0].toLowerCase()) {
                 if (typeof message_array[i - 2] != "undefined" && typeof message_array[i - 1] != "undefined") {
-                    if (name_construction.toString() == "Mormon") {
+                    if (name_construction.toString() == "Mormon") { // This is to prevent bot from sending scriptures from both "Mormon 1:1" and "Words of Mormon 1:1"
                         if (message_array[i - 2].toLowerCase() == words.toLowerCase() && message_array[i - 1].toLowerCase() == Of.toLowerCase()) {
                             continue;
                         }
                     }
                 }
-                if (typeof name_construction[1] != 'undefined' && typeof name_construction[2] != 'undefined') {
-                    if (name_construction[1].toLowerCase() == message_array[i + 1].toLowerCase()) {
-                        name_result = `${name_construction[0]}` + '_' + `${name_construction[1]}`;
+                if (typeof name_construction[1] != 'undefined' && typeof name_construction[2] != 'undefined') { // If book name has multiple words.  
+                    if (name_construction[1].toLowerCase() == message_array[i + 1].toLowerCase()) { // Checks if following words in message after name_construction[0] (e.g "Words") match name_construction[1] (e.g "of")
+                        name_result = `${name_construction[0]}` + '_' + `${name_construction[1]}`; // begins constructing book name.
                         if (typeof message_array[i + 2] != "undefined") {
-                            if (name_construction[2].toLowerCase() == message_array[i + 2].toLowerCase()) {
-                                name_result += '_' + `${name_construction[2]}`;
+                            if (name_construction[2].toLowerCase() == message_array[i + 2].toLowerCase()) { 
+                                name_result += '_' + `${name_construction[2]}`; // Book construction complete!
                             } else {
                                 continue;
                             }
@@ -97,7 +97,7 @@ bot.on("message", message => {
                         continue;
                     }
                 } else {
-                    name_result = name_construction.toString();
+                    name_result = name_construction.toString(); // If book name doesn't have multiple words, but bot (obviously) still found book name in message, than convert name_construction to string and set it as name_result
                 }
                 if (name_construction.length == 1) {
                     var location = message_array[i + 1]; // Should be something like 1:8 or 1:8-10
@@ -247,7 +247,9 @@ bot.on("message", message => {
 
         }
     }
-
+    
+    // Yes some likely unnecessary duplicate code haha, I'll get to it eventually ¯\_(ツ)_/¯
+    
     var name_dc = "D&C";
     var message_array_dc = message.content.split(" ");
 
