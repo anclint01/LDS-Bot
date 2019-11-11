@@ -170,7 +170,7 @@ bot.on("message", message => {
                         message.channel.send({
                             embed: {
                                 color: userColorPreference,
-                                title: citation[4] + " " + citation[0].replace(/_/g, " ") + " " + citation[1] + ":" + citation[2],
+                                title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + citation[2],
                                 description: "**" + citation[2] + "** " + verse.text
                             }
                         });
@@ -202,7 +202,7 @@ bot.on("message", message => {
                                 message.channel.send({
                                     embed: {
                                         color: userColorPreference,
-                                        title: citation[4] + " " + citation[0].replace(/_/g, " ") + " " + citation[1] + ":" + verse_first + "-" + verse_last,
+                                        title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
                                         description: next_message
                                     }
                                 });
@@ -227,7 +227,7 @@ bot.on("message", message => {
                         message.channel.send({
                             embed: {
                                 color: userColorPreference,
-                                title: citation[4] + " " + citation[0].replace(/_/g, " ") + " " + citation[1] + ":" + verse_first + "-" + verse_last,
+                                title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
                                 description: next_message
                             }
                         });
@@ -471,7 +471,7 @@ bot.on("message", message => {
                                 message.channel.send({
                                     embed: {
                                         color: userColorPreference,
-                                        title: citation_pgp[4] + " " + citation_pgp[0].replace(/_/g, " ") + " " + citation_pgp[1] + ":" + verse_first_pgp + "-" + verse_last,
+                                        title: citation_pgp[4] + " " + citation_pgp[0] + " " + citation_pgp[1] + ":" + verse_first_pgp + "-" + verse_last,
                                         description: next_message_pgp
                                     }
                                 });
@@ -496,7 +496,7 @@ bot.on("message", message => {
                         message.channel.send({
                             embed: {
                                 color: userColorPreference,
-                                title: citation_pgp[4] + " " + citation_pgp[0].replace(/_/g, " ") + " " + citation_pgp[1] + ":" + verse_first_pgp + "-" + verse_last,
+                                title: citation_pgp[4] + " " + citation_pgp[0] + " " + citation_pgp[1] + ":" + verse_first_pgp + "-" + verse_last,
                                 description: next_message_pgp
                             }
                         });
