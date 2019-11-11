@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
-const prefix = "lds";
+const prefix = "lds ";
 const bom = require("./book-of-mormon.json");
 const dc = require("./doctrine-and-covenants.json");
 const pgp = require("./pearl-of-great-price.json");
@@ -519,7 +519,6 @@ bot.on("message", message => {
 
     switch (command.trim()) {
         case "eval":
-            console.log("test");
             if (message.author.id === "453840514022899712") {
                 try {
                     var code = argument;
@@ -562,6 +561,9 @@ bot.on("message", message => {
             break;
         case "invite":
             message.channel.send("https://discordapp.com/oauth2/authorize?permissions=93184&scope=bot&client_id=639271772818112564");
+            break;
+        case "github":
+            message.channel.send("https://github.com/anclint01/LDS-Bot");
             break;
     }
 
