@@ -76,17 +76,22 @@ bot.on("message", message => {
             const backwards = sentEmbed.createReactionCollector(backwardsFilter, {timer: 1200000});
             const forwards = sentEmbed.createReactionCollector(forwardsFilter, {timer: 120000});
             backwards.on('collect', r => {
-                if (page > 0 && page < edited_embeds.length) {
+                if (page > 1 && page <= edited_embeds.length) {
                     page--;
-                    sentEmbed.edit({embed:edited_embeds[page]});
+                    sentEmbed.edit({embed:edited_embeds[page-1]});
                 }
                 r.remove(r.users.filter(u => !u.bot).first());
             })
             forwards.on('collect', r => {
-                if (page >= 0 && page < edited_embeds.length) {
+                if (page >= 1 && page+1 <= edited_embeds.length) {
                     page++;
-                    sentEmbed.edit({embed:edited_embeds[page]});
+                    console.log(page);
+                	console.log(edited_embeds.length);
+                    if (typeof edited_embeds != 'undefined'){
+                    	sentEmbed.edit({embed:edited_embeds[page-1]});
+                	}
                 }
+
                 r.remove(r.users.filter(u => !u.bot).first());
             })
 
