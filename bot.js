@@ -80,7 +80,6 @@ bot.on("message", message => {
             });
             backwards.on('collect', r => {
                 if (page > 0 && page < edited_embeds.length) {
-                    console.log("backwards")
                     page--;
                     sentEmbed.edit({
                         embed: edited_embeds[page]
@@ -90,7 +89,6 @@ bot.on("message", message => {
             })
             forwards.on('collect', r => {
                 if (page >= 0 && page < edited_embeds.length) {
-                    console.log("forward")
                     page++;
                     sentEmbed.edit({
                         embed: edited_embeds[page]
@@ -343,15 +341,12 @@ bot.on("message", message => {
             if (isNaN(chapter_dc)) return; // No chapter number; exit the function here
 
             var verse_nums_dc = location_dc.split(":")[1]; // 8 or 8-10
-            console.log(verse_nums_dc);
             try {
                 if (verse_nums_dc.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
                     var verse_first_dc = parseInt(verse_nums_dc.split("-")[0]); // 8
-                    console.log(verse_first_dc);
                     if (isNaN(verse_first_dc)) return; // No verse number; exit the function here
 
                     var verse_last_dc = parseInt(verse_nums_dc.split("-")[1]); // 10
-                    console.log(verse_last_dc);
                     if (isNaN(verse_last_dc)) return; // No last verse number; exit the function here or just ignore and set to verse_first
                 } else { // Just a single verse; eg 8
                     var verse_first_dc = parseInt(verse_nums_dc); // 8
