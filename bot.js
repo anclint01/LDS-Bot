@@ -24,7 +24,43 @@ bot.on("message", message => {
     } else {
         var userColorPreference = 0x086587;
     }
+    
+    function get_line(filename, line_no1, line_no2, callback) {
+        var data = fs.readFileSync(filename, 'utf8');
+        var lines = data.split("\n");
+        if(line_no2 > lines.length){
+            throw new Error('File end reached without finding line');
+        }
 
+        let pttrn = /^\s*/;
+        let indentation_removal = [];
+        let total_lines = [];
+        let indentation_length;
+        let indentation_amount = []
+        let final_lines = [];
+        for (var i = line_no1; i <= line_no2; i++) {
+            let line_holder = "";
+            line_holder += lines[i];
+            indentation_length = (line_holder.match(pttrn)[0].length);
+            total_lines.push(line_holder);
+            indentation_amount.push(indentation_length);
+        }
+        let min = Math.min(...indentation_amount);
+        for(var i = 0; i < total_lines.length; i++){
+            let holder = "";
+            holder += total_lines[i];
+            indentation_length = (holder.match(pttrn)[0].length);
+            if (indentation_length < min) {
+                holder = holder.substring(holder.length)
+                final_lines.push(holder)
+            } else {
+                holder = holder.substring(min);
+                final_lines.push(holder);
+            }
+        }
+        callback(null, final_lines);
+    }
+    
     let bom_books = {
         "Nephi": 0,
         "Jacob": 1,
