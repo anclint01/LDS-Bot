@@ -64,37 +64,32 @@ bot.on("message", message => {
 
     let page = 0;
 
-    function embed_page(inital_embed, edited_embeds) {
+    function embed_page (inital_embed, edited_embeds) {
         message.channel.send(inital_embed).then(sentEmbed => {
             sentEmbed.react("⬅").then(r => {
                 sentEmbed.react('➡');
             });
-            const backwardsFilter = (reaction, user) => reaction.emoji.name === '⬅' && user.id === message.author.id;
-            const forwardsFilter = (reaction, user) => reaction.emoji.name === '➡' && user.id === message.author.id;
 
-            const backwards = sentEmbed.createReactionCollector(backwardsFilter, {
-                timer: 600000
-            });
-            const forwards = sentEmbed.createReactionCollector(forwardsFilter, {
-                timer: 600000
-            });
+            const backwardsFilter = (reaction, user) => reaction.emoji.name === '⬅' && !user.bot;
+            const forwardsFilter = (reaction, user) => reaction.emoji.name === '➡' && !user.bot;
+        	
+            const backwards = sentEmbed.createReactionCollector(backwardsFilter, {timer: 1200000});
+            const forwards = sentEmbed.createReactionCollector(forwardsFilter, {timer: 120000});
             backwards.on('collect', r => {
                 if (page > 0 && page < edited_embeds.length) {
+                    console.log("backwards")
                     page--;
-                    sentEmbed.edit({
-                        embed: edited_embeds[page]
-                    });
+                    sentEmbed.edit({embed:edited_embeds[page]});
                 }
-                r.remove(r.users.filter(u => u === message.author).first());
+                r.remove(r.users.filter(u => !u.bot).first());
             })
             forwards.on('collect', r => {
                 if (page >= 0 && page < edited_embeds.length) {
+                    console.log("forward")
                     page++;
-                    sentEmbed.edit({
-                        embed: edited_embeds[page]
-                    });
+                    sentEmbed.edit({embed:edited_embeds[page]});
                 }
-                r.remove(r.users.filter(u => u === message.author).first());
+                r.remove(r.users.filter(u => !u.bot).first());
             })
 
         });
