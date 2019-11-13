@@ -77,7 +77,6 @@ bot.on("message", message => {
             const forwards = sentEmbed.createReactionCollector(forwardsFilter, {timer: 120000});
             backwards.on('collect', r => {
                 if (page > 0 && page < edited_embeds.length) {
-                    console.log("backwards")
                     page--;
                     sentEmbed.edit({embed:edited_embeds[page]});
                 }
@@ -85,7 +84,6 @@ bot.on("message", message => {
             })
             forwards.on('collect', r => {
                 if (page >= 0 && page < edited_embeds.length) {
-                    console.log("forward")
                     page++;
                     sentEmbed.edit({embed:edited_embeds[page]});
                 }
