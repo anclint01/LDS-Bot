@@ -211,7 +211,7 @@ bot.on("message", message => {
                                 description: "**" + citation[2] + "** " + verse.text,
                                 footer: {
                                     text: "LDS-Bot",
-                                    icon_url: "./icon.jpg"
+                                    icon_url: bot.user.avatarURL
                                 }
                             }
                         });
@@ -223,7 +223,7 @@ bot.on("message", message => {
                                 description: "**" + citation[2] + "** " + verse.text,
                                 footer: {
                                     text: "LDS-Bot",
-                                    icon_url: "./icon.jpg"
+                                    icon_url: bot.user.avatarURL
                                 }
                             }
                         });
@@ -251,7 +251,7 @@ bot.on("message", message => {
                                         description: next_message,
                                         footer: {
                                             text: "LDS-Bot",
-                                            icon_url: "./icon.jpg"
+                                            icon_url: bot.user.avatarURL
                                         }
                                     }
                                 });
@@ -263,7 +263,7 @@ bot.on("message", message => {
                                         description: next_message,
                                         footer: {
                                             text: "LDS-Bot",
-                                            icon_url: "./icon.jpg"
+                                            icon_url: bot.user.avatarURL
                                         }
                                     }
                                 });
@@ -284,7 +284,7 @@ bot.on("message", message => {
                                 description: next_message,
                                 footer: {
                                     text: "LDS-Bot",
-                                    icon_url: "./icon.jpg"
+                                    icon_url: bot.user.avatarURL
                                 }
                             }
                         });
@@ -296,7 +296,7 @@ bot.on("message", message => {
                                 description: next_message,
                                 footer: {
                                     text: "LDS-Bot",
-                                    icon_url: "./icon.jpg"
+                                    icon_url: bot.user.avatarURL
                                 }
                             }
                         });
@@ -364,7 +364,7 @@ bot.on("message", message => {
                             description: "**" + citation_dc[2] + "** " + verse_dc.text,
                             footer: {
                                 text: "LDS-Bot",
-                                icon_url: "./icon.jpg"
+                                icon_url: icon_url: bot.user.avatarURL
                             }
                         }
                     });
@@ -392,7 +392,7 @@ bot.on("message", message => {
                                         description: next_message_dc,
                                         footer: {
                                             text: "LDS-Bot",
-                                            icon_url: "./icon.jpg"
+                                            icon_url: bot.user.avatarURL
                                         }
                                     }
                                 });
@@ -404,7 +404,7 @@ bot.on("message", message => {
                                         description: next_message_dc,
                                         footer: {
                                             text: "LDS-Bot",
-                                            icon_url: "./icon.jpg"
+                                            icon_url: bot.user.avatarURL
                                         }
                                     }
                                 });
@@ -425,7 +425,7 @@ bot.on("message", message => {
                                 description: next_message_dc,
                                 footer: {
                                     text: "LDS-Bot",
-                                    icon_url: "./icon.jpg"
+                                    icon_url: bot.user.avatarURL
                                 }
                             }
                         });
@@ -437,7 +437,7 @@ bot.on("message", message => {
                                 description: next_message_dc,
                                 footer: {
                                     text: "LDS-Bot",
-                                    icon_url: "./icon.jpg"
+                                    icon_url: bot.user.avatarURL
                                 }
                             }
                         });
@@ -535,7 +535,7 @@ bot.on("message", message => {
                             description: "**" + citation_pgp[2] + "** " + verse_pgp.text,
                             footer: {
                                 text: "LDS-Bot",
-                                icon_url: "./icon.jpg"
+                                icon_url: bot.user.avatarURL
                             }
                         }
                     });
@@ -562,7 +562,7 @@ bot.on("message", message => {
                                         description: next_message_pgp,
                                         footer: {
                                             text: "LDS-Bot",
-                                            icon_url: "./icon.jpg"
+                                            icon_url: bot.user.avatarURL
                                         }
                                     }
                                 });
@@ -574,7 +574,7 @@ bot.on("message", message => {
                                         description: next_message_pgp,
                                         footer: {
                                             text: "LDS-Bot",
-                                            icon_url: "./icon.jpg"
+                                            icon_url: bot.user.avatarURL
                                         }
                                     }
                                 });
@@ -595,7 +595,7 @@ bot.on("message", message => {
                                 description: next_message_pgp,
                                 footer: {
                                     text: "LDS-Bot",
-                                    icon_url: "./icon.jpg"
+                                    icon_url: bot.user.avatarURL
                                 }
                             }
                         });
@@ -607,7 +607,7 @@ bot.on("message", message => {
                                 description: next_message_pgp,
                                 footer: {
                                     text: "LDS-Bot",
-                                    icon_url: "./icon.jpg"
+                                    icon_url: bot.user.avatarURL
                                 }
                             }
                         });
