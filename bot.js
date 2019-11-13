@@ -364,7 +364,7 @@ bot.on("message", message => {
                             description: "**" + citation_dc[2] + "** " + verse_dc.text,
                             footer: {
                                 text: "LDS-Bot",
-                                icon_url: icon_url: bot.user.avatarURL
+                                icon_url: bot.user.avatarURL
                             }
                         }
                     });
