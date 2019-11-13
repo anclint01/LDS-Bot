@@ -62,7 +62,7 @@ bot.on("message", message => {
         callback(null, final_lines);
     }
 
-    let page = 0;
+    let page = 1;
 
     function embed_page (inital_embed, edited_embeds) {
         message.channel.send(inital_embed).then(sentEmbed => {
