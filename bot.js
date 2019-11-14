@@ -85,8 +85,6 @@ bot.on("message", message => {
             forwards.on('collect', r => {
                 if (page >= 1 && page+1 <= edited_embeds.length) {
                     page++;
-                    console.log(page);
-                	console.log(edited_embeds.length);
                     if (typeof edited_embeds != 'undefined'){
                     	sentEmbed.edit({embed:edited_embeds[page-1]});
                 	}
@@ -284,14 +282,22 @@ bot.on("message", message => {
                                 page_array_bom.push({
                                     color: userColorPreference,
                                     title: citation[4] + " " + citation[0].replace(/_/g, " ") + " " + citation[1] + ":" + verse_first + "-" + verse_last,
-                                    description: next_message
+                                    description: next_message,
+                                    footer: {
+                                        text: "LDS-Bot",
+                                        icon_url: bot.user.avatarURL
+                                    }
                                 });
 
                             } else {
                                 page_array_bom.push({
                                     color: userColorPreference,
                                     title: citation[0].replace(/_/g, " ") + " " + citation[1] + ":" + verse_first + "-" + verse_last,
-                                    description: next_message
+                                    description: next_message,
+                                    footer: {
+                                        text: "LDS-Bot",
+                                        icon_url: bot.user.avatarURL
+                                    }
                                 });
                             }
                             next_message = "**" + (v + 1) + "** " + chapter.verses[v].text + "\n\n ";
@@ -306,13 +312,21 @@ bot.on("message", message => {
                         page_array_bom.push({
                             color: userColorPreference,
                             title: citation[4] + " " + citation[0].replace(/_/g, " ") + " " + citation[1] + ":" + verse_first + "-" + verse_last,
-                            description: next_message
+                            description: next_message,
+                            footer: {
+                                text: "LDS-Bot",
+                                icon_url: bot.user.avatarURL
+                            }
                         });
                     } else {
                         page_array_bom.push({
                             color: userColorPreference,
                             title: citation[0].replace(/_/g, " ") + " " + citation[1] + ":" + verse_first + "-" + verse_last,
-                            description: next_message
+                            description: next_message,
+                            footer: {
+                                text: "LDS-Bot",
+                                icon_url: bot.user.avatarURL
+                            }
                         });
                     }
                 }
@@ -403,13 +417,21 @@ bot.on("message", message => {
                                 page_array_dc.push({
                                     color: userColorPreference,
                                     title: citation_dc[4] + " " + citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
-                                    description: next_message_dc
+                                    description: next_message_dc,
+                                    footer: {
+                                        text: "LDS-Bot",
+                                        icon_url: bot.user.avatarURL
+                                    }
                                 });
                             } else {
                                 page_array_dc.push({
                                     color: userColorPreference,
                                     title: citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
-                                    description: next_message_dc
+                                    description: next_message_dc,
+                                    footer: {
+                                        text: "LDS-Bot",
+                                        icon_url: bot.user.avatarURL
+                                    }
                                 });
                             }
                             next_message_dc = "**" + (v + 1) + "** " + chapter_dc.verses[v].text + "\n\n ";
@@ -424,13 +446,21 @@ bot.on("message", message => {
                         page_array_dc.push({
                             color: userColorPreference,
                             title: citation_dc[4] + " " + citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
-                            description: next_message_dc
+                            description: next_message_dc,
+                            footer: {
+                                text: "LDS-Bot",
+                                icon_url: bot.user.avatarURL
+                            }
                         });
                     } else {
                         page_array_dc.push({
                             color: userColorPreference,
                             title: citation_dc[0] + " " + citation_dc[1] + ":" + verse_first_dc + "-" + verse_last_dc,
-                            description: next_message_dc
+                            description: next_message_dc,
+                            footer: {
+                                text: "LDS-Bot",
+                                icon_url: bot.user.avatarURL
+                            }
                         });
                     }
                 }
@@ -553,13 +583,21 @@ bot.on("message", message => {
                                 page_array_pgp.push({
                                     color: userColorPreference,
                                     title: citation_pgp[4] + " " + citation_pgp[0].replace(/_/g, " ") + " " + citation_pgp[1] + ":" + verse_first_pgp + "-" + verse_last,
-                                    description: next_message_pgp
+                                    description: next_message_pgp,
+                                    footer: {
+                                        text: "LDS-Bot",
+                                        icon_url: bot.user.avatarURL
+                                    }
                                 });
                             } else {
                                 page_array_pgp.push({
                                     color: userColorPreference,
                                     title: citation_pgp[0].replace(/_/g, " ") + " " + citation_pgp[1] + ":" + verse_first_pgp + "-" + verse_last,
-                                    description: next_message_pgp
+                                    description: next_message_pgp,
+                                    footer: {
+                                        text: "LDS-Bot",
+                                        icon_url: bot.user.avatarURL
+                                    }
                                 });
                             }
                             next_message_pgp = "**" + (v + 1) + "** " + chapter_pgp.verses[v].text + "\n\n ";
@@ -574,13 +612,21 @@ bot.on("message", message => {
                         page_array_pgp.push({
                             color: userColorPreference,
                             title: citation_pgp[4] + " " + citation_pgp[0].replace(/_/g, " ") + " " + citation_pgp[1] + ":" + verse_first_pgp + "-" + verse_last,
-                            description: next_message_pgp
+                            description: next_message_pgp,
+                            footer: {
+                                text: "LDS-Bot",
+                                icon_url: bot.user.avatarURL
+                            }
                         });
                     } else {
                         page_array_pgp.push({
                             color: userColorPreference,
                             title: citation_pgp[0].replace(/_/g, " ") + " " + citation_pgp[1] + ":" + verse_first_pgp + "-" + verse_last,
-                            description: next_message_pgp
+                            description: next_message_pgp,
+                            footer: {
+                                text: "LDS-Bot",
+                                icon_url: bot.user.avatarURL
+                            }
                         });
                     }
                 }
