@@ -64,7 +64,7 @@ bot.on("message", message => {
 
     let page = 1;
 
-    function embed_page (inital_embed, edited_embeds) {
+    function embed_page(inital_embed, edited_embeds) {
         message.channel.send(inital_embed).then(sentEmbed => {
             sentEmbed.react("⬅").then(r => {
                 sentEmbed.react('➡');
@@ -72,22 +72,30 @@ bot.on("message", message => {
 
             const backwardsFilter = (reaction, user) => reaction.emoji.name === '⬅' && !user.bot;
             const forwardsFilter = (reaction, user) => reaction.emoji.name === '➡' && !user.bot;
-        	
-            const backwards = sentEmbed.createReactionCollector(backwardsFilter, {timer: 1200000});
-            const forwards = sentEmbed.createReactionCollector(forwardsFilter, {timer: 120000});
+
+            const backwards = sentEmbed.createReactionCollector(backwardsFilter, {
+                timer: 1200000
+            });
+            const forwards = sentEmbed.createReactionCollector(forwardsFilter, {
+                timer: 120000
+            });
             backwards.on('collect', r => {
                 if (page > 1 && page <= edited_embeds.length) {
                     page--;
-                    sentEmbed.edit({embed:edited_embeds[page-1]});
+                    sentEmbed.edit({
+                        embed: edited_embeds[page - 1]
+                    });
                 }
                 r.remove(r.users.filter(u => !u.bot).first());
             })
             forwards.on('collect', r => {
-                if (page >= 1 && page+1 <= edited_embeds.length) {
+                if (page >= 1 && page + 1 <= edited_embeds.length) {
                     page++;
-                    if (typeof edited_embeds != 'undefined'){
-                    	sentEmbed.edit({embed:edited_embeds[page-1]});
-                	}
+                    if (typeof edited_embeds != 'undefined') {
+                        sentEmbed.edit({
+                            embed: edited_embeds[page - 1]
+                        });
+                    }
                 }
 
                 r.remove(r.users.filter(u => !u.bot).first());
@@ -686,87 +694,90 @@ bot.on("message", message => {
             message.channel.send("https://discordapp.com/oauth2/authorize?permissions=93184&scope=bot&client_id=639271772818112564");
             break;
         case "randomverse":
-        	function getRandomInt(max) {
-				return Math.floor(Math.random() * Math.floor(max));
-			}
-			let test =[bom,pgp,dc];
-			let randomMainBook = getRandomInt(3);
-			var randomNephiNumber;
-			var randomBook;
-			var randomChapter;
-			var randomVerse;
-			if (randomMainBook === 0) {
-        		randomBook = getRandomInt(test[randomMainBook].books.length);
-        	} else if (randomMainBook === 1){
-        		randomBook = getRandomInt(test[randomMainBook].books.length);
-        	}
-        	if (randomMainBook === 2){
-        		randomChapter = getRandomInt(test[randomMainBook].sections.length);
-        	} else {
-        		if (randomMainBook === 0 && randomBook === 0) {
-        			randomNephiNumber = getRandomInt(4);
-        			randomChapter = getRandomInt(test[randomMainBook].books[randomBook].numbers[randomNephiNumber].chapters.length);
-        		} else {
-        			randomChapter = getRandomInt(test[randomMainBook].books[randomBook].chapters.length);
-        		}
-        	}
-        	if (randomMainBook === 2){
-        		randomVerse = getRandomInt(test[randomMainBook].sections[randomChapter].verses.length);
-        	} else {
-        		if (randomMainBook === 0 && randomBook === 0) {
-        			randomVerse = getRandomInt(test[randomMainBook].books[randomBook].numbers[randomNephiNumber].chapters[randomChapter].verses.length);
-        		} else {
-        			randomVerse = getRandomInt(test[randomMainBook].books[randomBook].chapters[randomChapter].verses.length);
-        		}
-        	}
-        	if (randomMainBook === 0) {
-        		if (randomBook === 0) {
-        			message.channel.send({embed: {
-		                color: userColorPreference,
-		                title: test[randomMainBook].books[randomBook].numbers[randomNephiNumber].book + " " + test[randomMainBook].books[randomBook].numbers[randomNephiNumber].chapters[randomChapter].chapter + ":" + test[randomMainBook].books[randomBook].numbers[randomNephiNumber].chapters[randomChapter].verses[randomVerse].verse,
-		                description: test[randomMainBook].books[randomBook].numbers[randomNephiNumber].chapters[randomChapter].verses[randomVerse].text,
+            function getRandomInt(max) {
+                return Math.floor(Math.random() * Math.floor(max));
+            }
+            let mainBooks = [bom, pgp, dc];
+            let randomMainBook = getRandomInt(3);
+            var randomNephiNumber;
+            var randomBook;
+            var randomChapter;
+            var randomVerse;
+            if (randomMainBook == 2) {
+                randomChapter = getRandomInt(mainBooks[randomMainBook].sections.length);
+                randomVerse = getRandomInt(mainBooks[randomMainBook].sections[randomChapter].verses.length);
+            } else if (randomMainBook === 0 && randomBook === 0) {
+                randomNephiNumber = getRandomInt(4);
+                randomBook = getRandomInt(mainBooks[randomMainBook].books.length);
+                randomChapter = getRandomInt(mainBooks[randomMainBook].books[randomBook].numbers[randomNephiNumber].chapters.length);
+                randomVerse = getRandomInt(mainBooks[randomMainBook].books[randomBook].numbers[randomNephiNumber].chapters[randomChapter].verses.length);
+            } else {
+                randomBook = getRandomInt(mainBooks[randomMainBook].books.length);
+                randomChapter = getRandomInt(mainBooks[randomMainBook].books[randomBook].chapters.length);
+                randomVerse = getRandomInt(mainBooks[randomMainBook].books[randomBook].chapters[randomChapter].verses.length);
+            }
+            var book;
+            var chapter;
+            var verse;
+            if (randomMainBook === 0 && randomBook === 0) book = mainBooks[randomMainBook].books[randomBook].numbers[randomNephiNumber];
+            else if (randomMainBook != 2) book = mainBooks[randomMainBook].books[randomBook];
+
+            if (randomMainBook != 2) chapter = book.chapters[randomChapter];
+            else chapter = mainBooks[randomMainBook].sections[randomChapter];
+
+            verse = chapter.verses[randomVerse];
+            if (randomMainBook === 0) {
+                if (randomBook === 0) {
+                    message.channel.send({
+                        embed: {
+                            color: userColorPreference,
+                            title: randomNephiNumber + " Nephi " + chapter.chapter + ":" + verse.verse,
+                            description: verse.text,
+                            footer: {
+                                text: "LDS-Bot",
+                                icon_url: bot.user.avatarURL
+                            }
+                        }
+                    });
+                } else {
+                    message.channel.send({
+                        embed: {
+                            color: userColorPreference,
+                            title: book.book + " " + chapter.chapter + ":" + verse.verse,
+                            description: verse.text,
+                            footer: {
+                                text: "LDS-Bot",
+                                icon_url: bot.user.avatarURL
+                            }
+                        }
+                    });
+                }
+            } else if (randomMainBook === 1) {
+                message.channel.send({
+                    embed: {
+                        color: userColorPreference,
+                        title: book.book + " " + chapter.chapter + ":" + verse.verse,
+                        description: verse.text,
                         footer: {
                             text: "LDS-Bot",
                             icon_url: bot.user.avatarURL
                         }
-		              }
-		            });
-        		} else {
-        			message.channel.send({embed: {
-		                color: userColorPreference,
-		                title: test[randomMainBook].books[randomBook].book + " " + test[randomMainBook].books[randomBook].chapters[randomChapter].chapter + ":" + test[randomMainBook].books[randomBook].chapters[randomChapter].verses[randomVerse].verse,
-		                description: test[randomMainBook].books[randomBook].chapters[randomChapter].verses[randomVerse].text,
+                    }
+                });
+            } else if (randomMainBook === 2) {
+                message.channel.send({
+                    embed: {
+                        color: userColorPreference,
+                        title: "D&C " + chapter.section + ":" + verse.verse,
+                        description: verse.text,
                         footer: {
                             text: "LDS-Bot",
                             icon_url: bot.user.avatarURL
                         }
-		              }
-		            });
-        		}
-        	} else if (randomMainBook === 1) {
-        		message.channel.send({embed: {
-		            color: userColorPreference,
-		            title: test[randomMainBook].books[randomBook].book + " " + test[randomMainBook].books[randomBook].chapters[randomChapter].chapter + ":" + test[randomMainBook].books[randomBook].chapters[randomChapter].verses[randomVerse].verse,
-		            description: test[randomMainBook].books[randomBook].chapters[randomChapter].verses[randomVerse].text,
-                    footer: {
-                        text: "LDS-Bot",
-                        icon_url: bot.user.avatarURL
                     }
-		          }
-		        });
-        	} else if (randomMainBook === 2) {
-        		message.channel.send({embed: {
-		            color: userColorPreference,
-		            title: "D&C " + test[randomMainBook].sections[randomChapter].section + ":" + test[randomMainBook].sections[randomChapter].verses[randomVerse].verse,
-		            description: test[randomMainBook].sections[randomChapter].verses[randomVerse].text,
-                    footer: {
-                        text: "LDS-Bot",
-                        icon_url: bot.user.avatarURL
-                    }
-		          }
-		        });
-        	}
-        	break;
+                });
+            }
+            break;
         case "github":
             message.channel.send("https://github.com/anclint01/LDS-Bot");
             break;
