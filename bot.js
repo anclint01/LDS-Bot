@@ -703,18 +703,21 @@ bot.on("message", message => {
             var randomBook;
             var randomChapter;
             var randomVerse;
+            var curBook = mainBooks[randomMainBook];
             if (randomMainBook == 2) {
-                randomChapter = getRandomInt(mainBooks[randomMainBook].sections.length);
-                randomVerse = getRandomInt(mainBooks[randomMainBook].sections[randomChapter].verses.length);
-            } else if (randomMainBook === 0 && randomBook === 0) {
-                randomNephiNumber = getRandomInt(4);
-                randomBook = getRandomInt(mainBooks[randomMainBook].books.length);
-                randomChapter = getRandomInt(mainBooks[randomMainBook].books[randomBook].numbers[randomNephiNumber].chapters.length);
-                randomVerse = getRandomInt(mainBooks[randomMainBook].books[randomBook].numbers[randomNephiNumber].chapters[randomChapter].verses.length);
+                randomChapter = getRandomInt(curBook.sections.length);
+                randomVerse = getRandomInt(curBook.sections[randomChapter].verses.length);
             } else {
-                randomBook = getRandomInt(mainBooks[randomMainBook].books.length);
-                randomChapter = getRandomInt(mainBooks[randomMainBook].books[randomBook].chapters.length);
-                randomVerse = getRandomInt(mainBooks[randomMainBook].books[randomBook].chapters[randomChapter].verses.length);
+                randomBook = getRandomInt(curBook.books.length);
+                var book = curBook.books[randomBook];
+                if (randomMainBook === 0 && randomBook === 0) {
+                    randomNephiNumber = getRandomInt(4);
+                    randomChapter = getRandomInt(book.numbers[randomNephiNumber].chapters.length);
+                    randomVerse = getRandomInt(book.numbers[randomNephiNumber].chapters[randomChapter].verses.length);
+                } else {
+                    randomChapter = getRandomInt(book.chapters.length);
+                    randomVerse = getRandomInt(book.chapters[randomChapter].verses.length);
+                }
             }
             var book;
             var chapter;
@@ -731,7 +734,7 @@ bot.on("message", message => {
                     message.channel.send({
                         embed: {
                             color: userColorPreference,
-                            title: randomNephiNumber + " Nephi " + chapter.chapter + ":" + verse.verse,
+                            title: randomNephiNumber + 1 + " Nephi " + chapter.chapter + ":" + verse.verse,
                             description: verse.text,
                             footer: {
                                 text: "LDS-Bot",
@@ -777,6 +780,55 @@ bot.on("message", message => {
                     }
                 });
             }
+            break;
+        case "help":
+            message.channel.send({
+                embed: {
+                    color: userColorPreference,
+                    title: "LDS-Bot by anclint#9255",
+                    fields: [{
+                            name: "Commands",
+                            value: "``lds invite`` - provides the invite link for LDS-Bot \n ``lds github`` - provides the link for LDS-Bot GitHub repository \n ``lds randomverse`` - provides a random verse \n ``lds booknames`` - provides list of book names \n ``lds servers`` - shows number of servers LDS-Bot is in \n ``lds users`` - shows number of users across all servers LDS-Bot is on",
+                            inline: false
+                        },
+                        {
+                            name: "Links",
+                            value: "Github: https://github.com/anclint01/LDS-Bot \n Invite: https://bit.ly/2KoBoPr",
+                            inline: false
+                        }
+                    ],
+                    footer: {
+                        text: "LDS-Bot",
+                        icon_url: bot.user.avatarURL
+                    }
+                }
+            });
+            break;
+        case "servers":
+            let servers = 0;
+            bot.guilds.forEach((guild) => {
+                servers++;
+            });
+            message.channel.send({
+                embed: {
+                    color: userColorPreference,
+                    title: "lds servers",
+                    description: "LDS-Bot has reached a total of **" + servers + "** servers"
+                }
+            });
+            break;
+        case "users":
+            let users = [];
+            bot.users.forEach((user) => {
+                users.push(user.id);
+            });
+            message.channel.send({
+                embed: {
+                    color: userColorPreference,
+                    title: "lds users",
+                    description: "The number of users spanning accross all servers LDS-Bot is currently on has reached a concurrent " + users.length
+                }
+            });
             break;
         case "github":
             message.channel.send("https://github.com/anclint01/LDS-Bot");
