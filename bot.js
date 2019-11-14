@@ -685,6 +685,88 @@ bot.on("message", message => {
         case "invite":
             message.channel.send("https://discordapp.com/oauth2/authorize?permissions=93184&scope=bot&client_id=639271772818112564");
             break;
+        case "randomverse":
+        	function getRandomInt(max) {
+				return Math.floor(Math.random() * Math.floor(max));
+			}
+			let test =[bom,pgp,dc];
+			let randomMainBook = getRandomInt(3);
+			var randomNephiNumber;
+			var randomBook;
+			var randomChapter;
+			var randomVerse;
+			if (randomMainBook === 0) {
+        		randomBook = getRandomInt(test[randomMainBook].books.length);
+        	} else if (randomMainBook === 1){
+        		randomBook = getRandomInt(test[randomMainBook].books.length);
+        	}
+        	if (randomMainBook === 2){
+        		randomChapter = getRandomInt(test[randomMainBook].sections.length);
+        	} else {
+        		if (randomMainBook === 0 && randomBook === 0) {
+        			randomNephiNumber = getRandomInt(4);
+        			randomChapter = getRandomInt(test[randomMainBook].books[randomBook].numbers[randomNephiNumber].chapters.length);
+        		} else {
+        			randomChapter = getRandomInt(test[randomMainBook].books[randomBook].chapters.length);
+        		}
+        	}
+        	if (randomMainBook === 2){
+        		randomVerse = getRandomInt(test[randomMainBook].sections[randomChapter].verses.length);
+        	} else {
+        		if (randomMainBook === 0 && randomBook === 0) {
+        			randomVerse = getRandomInt(test[randomMainBook].books[randomBook].numbers[randomNephiNumber].chapters[randomChapter].verses.length);
+        		} else {
+        			randomVerse = getRandomInt(test[randomMainBook].books[randomBook].chapters[randomChapter].verses.length);
+        		}
+        	}
+        	if (randomMainBook === 0) {
+        		if (randomBook === 0) {
+        			message.channel.send({embed: {
+		                color: userColorPreference,
+		                title: test[randomMainBook].books[randomBook].numbers[randomNephiNumber].book + " " + test[randomMainBook].books[randomBook].numbers[randomNephiNumber].chapters[randomChapter].chapter + ":" + test[randomMainBook].books[randomBook].numbers[randomNephiNumber].chapters[randomChapter].verses[randomVerse].verse,
+		                description: test[randomMainBook].books[randomBook].numbers[randomNephiNumber].chapters[randomChapter].verses[randomVerse].text,
+                        footer: {
+                            text: "LDS-Bot",
+                            icon_url: bot.user.avatarURL
+                        }
+		              }
+		            });
+        		} else {
+        			message.channel.send({embed: {
+		                color: userColorPreference,
+		                title: test[randomMainBook].books[randomBook].book + " " + test[randomMainBook].books[randomBook].chapters[randomChapter].chapter + ":" + test[randomMainBook].books[randomBook].chapters[randomChapter].verses[randomVerse].verse,
+		                description: test[randomMainBook].books[randomBook].chapters[randomChapter].verses[randomVerse].text,
+                        footer: {
+                            text: "LDS-Bot",
+                            icon_url: bot.user.avatarURL
+                        }
+		              }
+		            });
+        		}
+        	} else if (randomMainBook === 1) {
+        		message.channel.send({embed: {
+		            color: userColorPreference,
+		            title: test[randomMainBook].books[randomBook].book + " " + test[randomMainBook].books[randomBook].chapters[randomChapter].chapter + ":" + test[randomMainBook].books[randomBook].chapters[randomChapter].verses[randomVerse].verse,
+		            description: test[randomMainBook].books[randomBook].chapters[randomChapter].verses[randomVerse].text,
+                    footer: {
+                        text: "LDS-Bot",
+                        icon_url: bot.user.avatarURL
+                    }
+		          }
+		        });
+        	} else if (randomMainBook === 2) {
+        		message.channel.send({embed: {
+		            color: userColorPreference,
+		            title: "D&C " + test[randomMainBook].sections[randomChapter].section + ":" + test[randomMainBook].sections[randomChapter].verses[randomVerse].verse,
+		            description: test[randomMainBook].sections[randomChapter].verses[randomVerse].text,
+                    footer: {
+                        text: "LDS-Bot",
+                        icon_url: bot.user.avatarURL
+                    }
+		          }
+		        });
+        	}
+        	break;
         case "github":
             message.channel.send("https://github.com/anclint01/LDS-Bot");
             break;
