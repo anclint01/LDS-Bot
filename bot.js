@@ -820,7 +820,9 @@ bot.on("message", message => {
         case "users":
             let users = [];
             bot.users.forEach((user) => {
-                users.push(user.id);
+                for (var i = 0; i < users.length; i++) {
+                    users.push(user.id); 
+                }
             });
             message.channel.send({
                 embed: {
