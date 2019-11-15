@@ -944,6 +944,91 @@ bot.on("message", message => {
                     });
                     totalVerses = 0;
                 }
+                if (fixedRequestedBook.toLowerCase() === "d&c") {
+                    chapterLength = dc.sections.length
+                    for (i = 0; i < chapterLength; i++) {
+                        totalVerses += dc.sections[i].verses.length;
+                    }
+                    message.channel.send({
+                        embed: {
+                            color: userColorPreference,
+                            title: "Book Info for " + "D&C",
+                            fields: [{
+                                    name: "Full Title",
+                                    value: "The Doctrine and Covenants",
+                                    inline: true
+                                },
+                                {
+                                    name: "# of Chapters:",
+                                    value: chapterLength,
+                                    inline: true
+                                },
+                                {
+                                    name: "Total Verses",
+                                    value: totalVerses,
+                                    inline: true
+                                },
+                                {
+                                    name: "More:",
+                                    value: "To get a list of all chapters with their verse count for a specific book go: ``lds chapters <bookname>``",
+                                    inline: true
+                                }
+                            ],
+                            footer: {
+                                text: "LDS-Bot",
+                                icon_url: bot.user.avatarURL
+                            }
+                        }
+                    });
+                    totalVerses = 0;
+                }
+            }
+            break;
+        case "chapters":
+            var requestedBook1 = args.slice(1).join(" ");
+            var fixedRequestedBook1 = requestedBook1.replace(/ /g, "_");
+            for (let name in bom_books) {
+                if (name.toLowerCase() === fixedRequestedBook1.toLowerCase()) {
+                    chapterLength1 = bom.books[bom_books[name]].chapters.length;
+                    var chapterVerses = [];
+                    for (i = 0; i < chapterLength1; i++) {
+                        if (bom.books[bom_books[name]] != 0) chapterVerses.push("Chapter " + bom.books[bom_books[name]].chapters[i].chapter + " - " + bom.books[bom_books[name]].chapters[i].verses.length + " verses")
+                        else chapterVerses.push("Chapter " + bom.books[bom_books[name]].numbers[args[1]].chapters[i].chapter + " - " + bom.books[bom_books[name]].chapters[i].verses.length + " verses")
+                    }
+                    console.log(chapterVerses)
+                    message.channel.send({
+                        embed: {
+                            color: userColorPreference,
+                            title: "Chapters in " + name.replace(/_/g, " "),
+                            description: chapterVerses.toString().replace(/,/g, "\n"),
+                            footer: {
+                                text: "LDS-Bot",
+                                icon_url: bot.user.avatarURL
+                            }
+                        }
+                    });
+                }
+                chapterVerses = [];
+            }
+            for (let name in pgp_books) {
+                if (name.toLowerCase() === fixedRequestedBook1.toLowerCase()) {
+                    chapterLength1 = pgp.books[pgp_books[name]].chapters.length;
+                    for (i = 0; i < chapterLength1; i++) {
+                        chapterVerses.push("Chapter " + pgp.books[pgp_books[name]].chapters[i].chapter + " - " + pgp.books[pgp_books[name]].chapters[i].verses.length + " verses")
+                    }
+                    message.channel.send({
+                        embed: {
+                            color: userColorPreference,
+                            title: "Chapters in " + name.replace(/_/g, " "),
+                            description: chapterVerses.toString().replace(/,/g, "\n"),
+                            footer: {
+                                text: "LDS-Bot",
+                                icon_url: bot.user.avatarURL
+                            }
+                        }
+                    });
+                }
+                chapterVerses = [];
             }
             break;
         case "help":
@@ -953,7 +1038,7 @@ bot.on("message", message => {
                     title: "LDS-Bot by anclint#9255",
                     fields: [{
                             name: "Commands",
-                            value: "``lds invite`` - provides the invite link for LDS-Bot \n ``lds github`` - provides the link for LDS-Bot GitHub repository \n ``lds randomverse`` - provides a random verse \n ``lds booknames`` - provides list of book names \n ``lds servers`` - shows number of servers LDS-Bot is in \n ``lds users`` - shows number of users across all servers LDS-Bot is on",
+                            value: "``lds invite`` - provides the invite link for LDS-Bot \n ``lds github`` - provides the link for LDS-Bot GitHub repository \n ``lds randomverse`` - provides a random verse \n ``lds booknames`` - provides list of book names \n ``lds bookinfo <bookname>`` - provides info on the book inputted \n ``lds chapters <bookname>`` - provides list of all chapters and number of verses per chapter for book inputted \n ``lds servers`` - shows number of servers LDS-Bot is in \n ``lds users`` - shows number of users across all servers LDS-Bot is on",
                             inline: false
                         },
                         {
