@@ -781,6 +781,70 @@ bot.on("message", message => {
                 });
             }
             break;
+        case "booknames":
+            var keys = [Object.keys(bom_books), Object.keys(pgp_books)];
+            var names = [];
+            for (key of keys) {
+                for (var i = 0; i < key.length; i++) {
+                    names.push(key[i].replace(/_/g, " "));
+                }
+            }
+            let pgp_names = names.slice(14, 22).toString();
+            let bom_names = names.slice(0, 13).toString();
+            console.log(bom_names)
+            bom_names.replace("Nsephi", "1 Nephi,2 Nephi,3 Nephi,4 Nephi");
+            console.log(bom_names)
+            let book_pages = [{
+                    color: userColorPreference,
+                    title: "Book of Mormon Names:",
+                    author: {
+                        name: "1 of 3"
+                    },
+                    description: bom_names.replace(/,/g, "\n"),
+                    fields: [{
+                        name: "FYI: ",
+                        value: "For more info use ``lds bookinfo <bookname>``",
+                        inline: true
+                    }],
+                    footer: {
+                        text: "LDS-Bot",
+                        icon_url: bot.user.avatarURL
+                    }
+                },
+                {
+                    color: userColorPreference,
+                    title: "Pearl of Great Price Names:",
+                    author: {
+                        name: "2 of 3"
+                    },
+                    description: pgp_names.replace(/,/g, "\n"),
+                    fields: [{
+                        name: "FYI: ",
+                        value: "For more info use ``lds bookinfo <bookname>``",
+                        inline: true
+                    }],
+                    footer: {
+                        text: "LDS-Bot",
+                        icon_url: bot.user.avatarURL
+                    }
+                },
+                {
+                    color: userColorPreference,
+                    title: "D&C:",
+                    author: {
+                        name: "3 of 3"
+                    },
+                    description: "D&C, is a book itself, it does not have any books within it, only chapters.",
+                    footer: {
+                        text: "LDS-Bot",
+                        icon_url: bot.user.avatarURL
+                    }
+                }
+            ]
+            embed_page({
+                embed: book_pages[0]
+            }, book_pages);
+            break;
         case "help":
             message.channel.send({
                 embed: {
@@ -821,7 +885,7 @@ bot.on("message", message => {
             let users = [];
             bot.users.forEach((user) => {
                 for (var i = 0; i < users.length; i++) {
-                    users.push(user.id); 
+                    users.push(user.id);
                 }
             });
             message.channel.send({
