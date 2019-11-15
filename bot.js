@@ -1068,17 +1068,15 @@ bot.on("message", message => {
             });
             break;
         case "users":
-            let users = [];
+            var users = 0:
             bot.users.forEach((user) => {
-                for (var i = 0; i < users.length; i++) {
-                    users.push(user.id);
-                }
+                users++;
             });
             message.channel.send({
                 embed: {
                     color: userColorPreference,
                     title: "lds users",
-                    description: "The number of users spanning accross all servers LDS-Bot is currently on has reached a concurrent " + users.length
+                    description: "The number of users spanning accross all servers LDS-Bot is currently on has reached a concurrent " + users
                 }
             });
             break;
