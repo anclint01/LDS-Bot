@@ -1068,7 +1068,7 @@ bot.on("message", message => {
             });
             break;
         case "users":
-            var users = 0:
+            var users = 0;
             bot.users.forEach((user) => {
                 users++;
             });
