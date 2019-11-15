@@ -944,44 +944,45 @@ bot.on("message", message => {
                     });
                     totalVerses = 0;
                 }
-                if (fixedRequestedBook.toLowerCase() === "d&c") {
-                    chapterLength = dc.sections.length
-                    for (i = 0; i < chapterLength; i++) {
-                        totalVerses += dc.sections[i].verses.length;
-                    }
-                    message.channel.send({
-                        embed: {
-                            color: userColorPreference,
-                            title: "Book Info for " + "D&C",
-                            fields: [{
-                                    name: "Full Title",
-                                    value: "The Doctrine and Covenants",
-                                    inline: true
-                                },
-                                {
-                                    name: "# of Chapters:",
-                                    value: chapterLength,
-                                    inline: true
-                                },
-                                {
-                                    name: "Total Verses",
-                                    value: totalVerses,
-                                    inline: true
-                                },
-                                {
-                                    name: "More:",
-                                    value: "To get a list of all chapters with their verse count for a specific book go: ``lds chapters <bookname>``",
-                                    inline: true
-                                }
-                            ],
-                            footer: {
-                                text: "LDS-Bot",
-                                icon_url: bot.user.avatarURL
-                            }
-                        }
-                    });
-                    totalVerses = 0;
+            }
+            if (fixedRequestedBook.toLowerCase() === "d&c") {
+                chapterLength = dc.sections.length
+                for (i = 0; i < chapterLength; i++) {
+                    totalVerses += dc.sections[i].verses.length;
                 }
+                message.channel.send({
+                    embed: {
+                        color: userColorPreference,
+                        title: "Book Info for " + "D&C",
+                        fields: [
+                          {
+                               name: "Full Title",
+                               value: "The Doctrine and Covenants",
+                               inline: true
+                          },
+                          {
+                              name: "# of Chapters:",
+                              value: chapterLength,
+                              inline: true
+                          },
+                          {
+                              name: "Total Verses",
+                              value: totalVerses,
+                              inline: true
+                          },
+                          {
+                              name: "More:",
+                              value: "To get a list of all chapters with their verse count for a specific book go: ``lds chapters <bookname>``",
+                              inline: true
+                          }
+                      ],
+                      footer: {
+                          text: "LDS-Bot",
+                          icon_url: bot.user.avatarURL
+                      }
+                  }
+                });
+                totalVerses = 0;
             }
             break;
         case "chapters":
