@@ -151,21 +151,21 @@ bot.on("message", message => {
     var Of = "of";
     for (let name in bom_books) {
         for (var i = 0; i < message_array.length - 1; i++) {
-            var name_construction = name.split("_"); // Split book name by "_" 
+            var name_construction = name.split("_");
             if (message_array[i].toLowerCase() == name_construction[0].toLowerCase()) {
                 if (typeof message_array[i - 2] != "undefined" && typeof message_array[i - 1] != "undefined") {
-                    if (name_construction.toString() == "Mormon") { // This is to prevent bot from sending scriptures from both "Mormon 1:1" and "Words of Mormon 1:1"
+                    if (name_construction.toString() == "Mormon") {
                         if (message_array[i - 2].toLowerCase() == words.toLowerCase() && message_array[i - 1].toLowerCase() == Of.toLowerCase()) {
                             continue;
                         }
                     }
                 }
-                if (typeof name_construction[1] != 'undefined' && typeof name_construction[2] != 'undefined') { // If book name has multiple words.  
-                    if (name_construction[1].toLowerCase() == message_array[i + 1].toLowerCase()) { // Checks if following words in message after name_construction[0] (e.g "Words") match name_construction[1] (e.g "of")
-                        name_result = `${name_construction[0]}` + '_' + `${name_construction[1]}`; // begins constructing book name.
+                if (typeof name_construction[1] != 'undefined' && typeof name_construction[2] != 'undefined') {
+                    if (name_construction[1].toLowerCase() == message_array[i + 1].toLowerCase()) {
+                        name_result = `${name_construction[0]}` + '_' + `${name_construction[1]}`;
                         if (typeof message_array[i + 2] != "undefined") {
                             if (name_construction[2].toLowerCase() == message_array[i + 2].toLowerCase()) {
-                                name_result += '_' + `${name_construction[2]}`; // Book construction complete!
+                                name_result += '_' + `${name_construction[2]}`;
                             } else {
                                 continue;
                             }
@@ -176,18 +176,18 @@ bot.on("message", message => {
                         continue;
                     }
                 } else {
-                    name_result = name_construction.toString(); // If book name doesn't have multiple words, but bot (obviously) still found book name in message, than convert name_construction to string and set it as name_result
+                    name_result = name_construction.toString();
                 }
                 if (name_construction.length == 1) {
                     var location = message_array[i + 1]; // Should be something like 1:8 or 1:8-10
                 } else {
                     var location = message_array[i + 3]; // Should be something like 1:8 or 1:8-10
                 }
-                var chapter = parseInt(location.split(":")[0]); // 1
-                if (isNaN(chapter)) return; // No chapter number; exit the function here
+                if (typeof location != "undefined") {
+                    var chapter = parseInt(location.split(":")[0]); // 1
+                    if (isNaN(chapter)) return; // No chapter number; exit the function here
+                    var verse_nums = location.split(":")[1]; // 8 or 8-10
 
-                var verse_nums = location.split(":")[1]; // 8 or 8-10
-                try {
                     if (verse_nums.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
                         var verse_first = parseInt(verse_nums.split("-")[0]); // 8
                         if (isNaN(verse_first)) return; // No verse number; exit the function here
@@ -199,22 +199,21 @@ bot.on("message", message => {
                         if (isNaN(verse_first)) return; // No verse number; exit the function here
                         var verse_last = verse_first; // 8
                     }
-                } catch (error) {
-                    console.log(error);
-                }
-                if (verse_first > verse_last) {
-                    verse_last = verse_first + (verse_first = verse_last) - verse_last;
-                }
-                if ("numbers" in bom.books[bom_books[name]]) {
-                    // This book has multiples of the same name, so look for a number
-                    if (i > 0) { // Book name isn't the first word in the message (which would mean no number given)
-                        var booknum = parseInt(message_array[i - 1]);
-                        if (isNaN(booknum)) return; // No book number; exit the function here
-                        citations.push([name_construction, chapter, verse_first, verse_last, booknum])
-                        // We can later check if the size of this array is 4 or 5. if 5, we know it's a book like nephi
+
+                    if (verse_first > verse_last) {
+                        verse_last = verse_first + (verse_first = verse_last) - verse_last;
                     }
-                } else {
-                    citations.push([name_result, chapter, verse_first, verse_last])
+                    if ("numbers" in bom.books[bom_books[name]]) {
+                        // This book has multiples of the same name, so look for a number
+                        if (i > 0) { // Book name isn't the first word in the message (which would mean no number given)
+                            var booknum = parseInt(message_array[i - 1]);
+                            if (isNaN(booknum)) return; // No book number; exit the function here
+                            citations.push([name_construction, chapter, verse_first, verse_last, booknum])
+                            // We can later check if the size of this array is 4 or 5. if 5, we know it's a book like nephi
+                        }
+                    } else {
+                        citations.push([name_result, chapter, verse_first, verse_last])
+                    }
                 }
             }
         }
@@ -357,29 +356,32 @@ bot.on("message", message => {
     for (var i = 0; i < message_array_dc.length - 1; i++) {
         if (message_array_dc[i].toLowerCase() == name_dc.toLowerCase()) {
             var location_dc = message_array_dc[i + 1]; // Should be something like 1:8 or 1:8-10
-            var chapter_dc = parseInt(location_dc.split(":")[0]); // 1
-            if (isNaN(chapter_dc)) return; // No chapter number; exit the function here
 
-            var verse_nums_dc = location_dc.split(":")[1]; // 8 or 8-10
-            try {
+            if (typeof location_dc != "undefined") {
+                var chapter_dc = parseInt(location_dc.split(":")[0]); // 1
+                if (isNaN(chapter_dc)) return; // No chapter number; exit the function here
+
+                var verse_nums_dc = location_dc.split(":")[1]; // 8 or 8-10
+
+
                 if (verse_nums_dc.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
                     var verse_first_dc = parseInt(verse_nums_dc.split("-")[0]); // 8
+                    console.log(verse_first_dc);
                     if (isNaN(verse_first_dc)) return; // No verse number; exit the function here
 
                     var verse_last_dc = parseInt(verse_nums_dc.split("-")[1]); // 10
+                    console.log(verse_last_dc);
                     if (isNaN(verse_last_dc)) return; // No last verse number; exit the function here or just ignore and set to verse_first
                 } else { // Just a single verse; eg 8
                     var verse_first_dc = parseInt(verse_nums_dc); // 8
                     if (isNaN(verse_first_dc)) return; // No verse number; exit the function here
                     var verse_last_dc = verse_first_dc; // 8
                 }
-            } catch (error) {
-                console.log(error);
+                if (verse_first_dc > verse_last_dc) {
+                    verse_last_dc = verse_first_dc + (verse_first_dc = verse_last_dc) - verse_last_dc;
+                }
+                citations_dc.push([name_dc, chapter_dc, verse_first_dc, verse_last_dc])
             }
-            if (verse_first_dc > verse_last_dc) {
-                verse_last_dc = verse_first_dc + (verse_first_dc = verse_last_dc) - verse_last_dc;
-            }
-            citations_dc.push([name_dc, chapter_dc, verse_first_dc, verse_last_dc])
         }
     }
 
@@ -515,36 +517,35 @@ bot.on("message", message => {
                 } else {
                     var location_pgp = message_array_pgp[i + 3]; // Should be something like 1:8 or 1:8-10
                 }
-                try {
+
+                if (typeof location_pgp != "undefined") {
                     var chapter_pgp = parseInt(location_pgp.split(":")[0]); // 1
 
-                    if (isNaN(chapter_pgp)) return; // No chapter number; exit the function here
+                    if (isNaN(chapter_pgp)) continue; // No chapter number; exit the function here
 
                     var verse_nums_pgp = location_pgp.split(":")[1]; // 8 or 8-10
-                } catch (error) {
-                    console.log(error);
-                }
-                try {
+
+                    if (typeof verse_nums_pgp === "undefined") {
+                        continue;
+                    }
+
                     if (verse_nums_pgp.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
                         var verse_first_pgp = parseInt(verse_nums_pgp.split("-")[0]); // 8
-                        if (isNaN(verse_first_pgp)) return; // No verse number; exit the function here
+                        if (isNaN(verse_first_pgp)) continue; // No verse number; exit the function here
 
                         var verse_last_pgp = parseInt(verse_nums_pgp.split("-")[1]); // 10
-                        if (isNaN(verse_last_pgp)) return; // No last verse number; exit the function here or just ignore and set to verse_first
+                        if (isNaN(verse_last_pgp)) continue; // No last verse number; exit the function here or just ignore and set to verse_first
                     } else { // Just a single verse; eg 8
                         var verse_first_pgp = parseInt(verse_nums_pgp); // 8
-                        if (isNaN(verse_first_pgp)) return; // No verse number; exit the function here
+                        if (isNaN(verse_first_pgp)) continue; // No verse number; exit the function here
                         var verse_last_pgp = verse_first_pgp; // 8
                     }
-                } catch (error) {
-                    console.log(error);
-                }
-                if (verse_first_pgp > verse_last_pgp) {
-                    verse_last_pgp = verse_first_pgp + (verse_first_pgp = verse_last_pgp) - verse_last_pgp;
-                }
+                    if (verse_first_pgp > verse_last_pgp) {
+                        verse_last_pgp = verse_first_pgp + (verse_first_pgp = verse_last_pgp) - verse_last_pgp;
+                    }
 
-                citations_pgp.push([name, chapter_pgp, verse_first_pgp, verse_last_pgp])
-
+                    citations_pgp.push([name, chapter_pgp, verse_first_pgp, verse_last_pgp])
+                }
             }
         }
     }
@@ -844,6 +845,106 @@ bot.on("message", message => {
             embed_page({
                 embed: book_pages[0]
             }, book_pages);
+            break;
+        case "bookinfo":
+            var requestedBook = args.splice(1).join(" ");
+            console.log(requestedBook)
+            var totalVerses = 0;
+            var chapterLength;
+            var fixedRequestedBook = requestedBook.replace(/ /g, "_");
+            for (let name in bom_books) {
+                console.log(name.toLowerCase());
+                console.log(fixedRequestedBook.toLowerCase())
+                console.log(name.toLowerCase() === fixedRequestedBook.toLowerCase())
+                if (name.toLowerCase() === fixedRequestedBook.toLowerCase()) {
+                    chapterLength = bom.books[bom_books[name]].chapters.length;
+                    for (i = 0; i < chapterLength; i++) {
+                        totalVerses += bom.books[bom_books[name]].chapters[i].verses.length;
+                    }
+                    message.channel.send({
+                        embed: {
+                            color: userColorPreference,
+                            title: "Book Info for " + name.replace(/_/g, " "),
+                            fields: [{
+                                    name: "Full Title",
+                                    value: bom.books[bom_books[name]].full_title,
+                                    inline: true
+                                },
+                                {
+                                    name: "# of Chapters",
+                                    value: bom.books[bom_books[name]].chapters.length,
+                                    inline: true
+                                },
+                                {
+                                    name: "Total Verses",
+                                    value: totalVerses,
+                                    inline: true
+                                },
+                                {
+                                    name: "Book Contained In",
+                                    value: "The Book of Mormon",
+                                    inline: true
+                                },
+                                {
+                                    name: "More",
+                                    value: "To get a list of all chapters with their verse count for a specific book use: ``lds chapters <bookname>``",
+                                    inline: true
+                                }
+                            ],
+                            footer: {
+                                text: "LDS-Bot",
+                                icon_url: bot.user.avatarURL
+                            }
+                        }
+                    });
+                    totalVerses = 0;
+                }
+            }
+            for (let name in pgp_books) {
+                if (name.toLowerCase() === fixedRequestedBook.toLowerCase()) {
+                    chapterLength = pgp.books[pgp_books[name]].chapters.length
+                    for (i = 0; i < chapterLength; i++) {
+                        totalVerses += pgp.books[pgp_books[name]].chapters[i].verses.length;
+                    }
+                    message.channel.send({
+                        embed: {
+                            color: userColorPreference,
+                            title: "Book Info for " + name.replace(/_/g, " "),
+                            fields: [{
+                                    name: "Full Title",
+                                    value: pgp.books[pgp_books[name]].full_title,
+                                    inline: true
+                                },
+                                {
+                                    name: "# of Chapters:",
+                                    value: pgp.books[pgp_books[name]].chapters.length,
+                                    inline: true
+                                },
+                                {
+                                    name: "Total Verses",
+                                    value: totalVerses,
+                                    inline: true
+                                },
+                                {
+                                    name: "Book Contained In:",
+                                    value: "The Pearl of Great Price",
+                                    inline: true
+                                },
+                                {
+                                    name: "More:",
+                                    value: "To get a list of all chapters with their verse count for a specific book go: ``lds chapters <bookname>``",
+                                    inline: true
+                                }
+                            ],
+                            footer: {
+                                text: "LDS-Bot",
+                                icon_url: bot.user.avatarURL
+                            }
+                        }
+                    });
+                    totalVerses = 0;
+                }
+            }
             break;
         case "help":
             message.channel.send({
