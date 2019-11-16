@@ -856,6 +856,7 @@ bot.on("message", message => {
             var fulltitle;
             console.log(typeof numbersForNephi)
             if (typeof numbersForNephi != "string") {
+                console.log("test");
                 var nephi = bom.books[0].numbers[numbersForNephi - 2].number;
             }
             console.log(nephi)
