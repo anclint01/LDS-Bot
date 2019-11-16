@@ -858,10 +858,10 @@ bot.on("message", message => {
             if (typeof numbersForNephi != "string") {
                 var nephi = bom.books[0].numbers[numbersForNephi - 2].number;
             }
-            //console.log(nephi)
+            console.log(nephi)
             for (let name in bom_books) {
                 if (name.toLowerCase() === fixedRequestedBook.toLowerCase() || name.toLowerCase() === fixedRequestedBook.slice(2)) {
-                    console.log(fixedRequestedBook.slice(1))
+                    console.log(nephi)
                     if (fixedRequestedBook.slice(2) != "nephi") {
                         chapterLength = bom.books[bom_books[name]].chapters.length;
                         fulltitle = bom.books[bom_books[name]].full_title;
