@@ -855,7 +855,7 @@ bot.on("message", message => {
             var fixedRequestedBook = requestedBook.replace(/ /g, "_").toLowerCase();
             var fulltitle;
             console.log(typeof numbersForNephi)
-            if (typeof numbersForNephi != "string") {
+            if (typeof numbersForNephi !== "string") {
                 console.log("test");
                 var nephi = bom.books[0].numbers[numbersForNephi - 2].number;
             }
