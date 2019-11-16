@@ -847,19 +847,31 @@ bot.on("message", message => {
             }, book_pages);
             break;
         case "bookinfo":
+            var numbersForNephi = args[1]
+            console.log(isNaN(numbersForNephi))
             var requestedBook = args.splice(1).join(" ");
-            console.log(requestedBook)
             var totalVerses = 0;
             var chapterLength;
-            var fixedRequestedBook = requestedBook.replace(/ /g, "_");
+            var fixedRequestedBook = requestedBook.replace(/ /g, "_").toLowerCase();
+            var fulltitle;
+            console.log(numbersForNephi)
+            if (!isNaN(numbersForNephi)) {
+                var nephi = bom.books[0].numbers[numbersForNephi - 2].number;
+            }
+            //console.log(nephi)
             for (let name in bom_books) {
-                console.log(name.toLowerCase());
-                console.log(fixedRequestedBook.toLowerCase())
-                console.log(name.toLowerCase() === fixedRequestedBook.toLowerCase())
-                if (name.toLowerCase() === fixedRequestedBook.toLowerCase()) {
-                    chapterLength = bom.books[bom_books[name]].chapters.length;
+                if (name.toLowerCase() === fixedRequestedBook.toLowerCase() || name.toLowerCase() === fixedRequestedBook.slice(2)) {
+                    console.log(fixedRequestedBook.slice(1))
+                    if (fixedRequestedBook.slice(2) != "nephi") {
+                        chapterLength = bom.books[bom_books[name]].chapters.length;
+                        fulltitle = bom.books[bom_books[name]].full_title;
+                    } else {
+                        chapterLength = bom.books[bom_books[name]].numbers[nephi].chapters.length;
+                        fulltitle = bom.books[bom_books[name]].numbers[nephi].full_title;
+                    }
                     for (i = 0; i < chapterLength; i++) {
-                        totalVerses += bom.books[bom_books[name]].chapters[i].verses.length;
+                        if (fixedRequestedBook.slice(2) != "nephi") totalVerses += bom.books[bom_books[name]].chapters[i].verses.length;
+                        else totalVerses += bom.books[bom_books[name]].numbers[nephi].chapters[i].verses.length;
                     }
                     message.channel.send({
                         embed: {
@@ -867,12 +879,12 @@ bot.on("message", message => {
                             title: "Book Info for " + name.replace(/_/g, " "),
                             fields: [{
                                     name: "Full Title",
-                                    value: bom.books[bom_books[name]].full_title,
+                                    value: fulltitle,
                                     inline: true
                                 },
                                 {
                                     name: "# of Chapters",
-                                    value: bom.books[bom_books[name]].chapters.length,
+                                    value: chapterLength,
                                     inline: true
                                 },
                                 {
@@ -954,33 +966,32 @@ bot.on("message", message => {
                     embed: {
                         color: userColorPreference,
                         title: "Book Info for " + "D&C",
-                        fields: [
-                          {
-                               name: "Full Title",
-                               value: "The Doctrine and Covenants",
-                               inline: true
-                          },
-                          {
-                              name: "# of Chapters:",
-                              value: chapterLength,
-                              inline: true
-                          },
-                          {
-                              name: "Total Verses",
-                              value: totalVerses,
-                              inline: true
-                          },
-                          {
-                              name: "More:",
-                              value: "To get a list of all chapters with their verse count for a specific book go: ``lds chapters <bookname>``",
-                              inline: true
-                          }
-                      ],
-                      footer: {
-                          text: "LDS-Bot",
-                          icon_url: bot.user.avatarURL
-                      }
-                  }
+                        fields: [{
+                                name: "Full Title",
+                                value: "The Doctrine and Covenants",
+                                inline: true
+                            },
+                            {
+                                name: "# of Chapters:",
+                                value: chapterLength,
+                                inline: true
+                            },
+                            {
+                                name: "Total Verses",
+                                value: totalVerses,
+                                inline: true
+                            },
+                            {
+                                name: "More:",
+                                value: "To get a list of all chapters with their verse count for a specific book go: ``lds chapters <bookname>``",
+                                inline: true
+                            }
+                        ],
+                        footer: {
+                            text: "LDS-Bot",
+                            icon_url: bot.user.avatarURL
+                        }
+                    }
                 });
                 totalVerses = 0;
             }
