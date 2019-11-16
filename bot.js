@@ -848,21 +848,16 @@ bot.on("message", message => {
             break;
         case "bookinfo":
             var numbersForNephi = args[1]
-            console.log(isNaN(numbersForNephi))
             var requestedBook = args.splice(1).join(" ");
             var totalVerses = 0;
             var chapterLength;
             var fixedRequestedBook = requestedBook.replace(/ /g, "_").toLowerCase();
             var fulltitle;
-            console.log(typeof numbersForNephi)
-            if (typeof numbersForNephi !== "string") {
-                console.log("test");
+            if (numbersForNephi === "1" || "2" || "3" || "4") {
                 var nephi = bom.books[0].numbers[numbersForNephi - 2].number;
             }
-            console.log(nephi)
             for (let name in bom_books) {
                 if (name.toLowerCase() === fixedRequestedBook.toLowerCase() || name.toLowerCase() === fixedRequestedBook.slice(2)) {
-                    console.log(nephi)
                     if (fixedRequestedBook.slice(2) != "nephi") {
                         chapterLength = bom.books[bom_books[name]].chapters.length;
                         fulltitle = bom.books[bom_books[name]].full_title;
