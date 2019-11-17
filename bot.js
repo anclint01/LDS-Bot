@@ -847,23 +847,26 @@ bot.on("message", message => {
             }, book_pages);
             break;
         case "bookinfo":
-            var numbersForNephi = args[1]
+        	var numbersForNephi = args[1]
             var requestedBook = args.splice(1).join(" ");
             var totalVerses = 0;
             var chapterLength;
             var fixedRequestedBook = requestedBook.replace(/ /g, "_").toLowerCase();
             var fulltitle;
-            if (numbersForNephi === "1" || "2" || "3" || "4") {
-                var nephi = bom.books[0].numbers[numbersForNephi - 1].number;
-            }
+            var bookName;
+            if (numbersForNephi === "1" || numbersForNephi === "2" || numbersForNephi === "3" || numbersForNephi === "4") { 
+            	var nephi = bom.books[0].numbers[numbersForNephi-1].number;
+        	}
             for (let name in bom_books) {
-                if (name.toLowerCase() === fixedRequestedBook.toLowerCase() || name.toLowerCase() === fixedRequestedBook.slice(2)) {
-                    if (fixedRequestedBook.slice(2) != "nephi") {
-                        chapterLength = bom.books[bom_books[name]].chapters.length;
-                        fulltitle = bom.books[bom_books[name]].full_title;
-                    } else {
-                        chapterLength = bom.books[bom_books[name]].numbers[nephi-1].chapters.length;
-                        fulltitle = bom.books[bom_books[name]].numbers[nephi-1].full_title;
+                if (name.toLowerCase() === fixedRequestedBook.toLowerCase() || name.toLowerCase() === fixedRequestedBook.slice(2) && typeof nephi != "undefined") {
+                	if (fixedRequestedBook.slice(2) != "nephi") {
+                		bookName = name.replace(/_/g, " ");
+                		chapterLength = bom.books[bom_books[name]].chapters.length; 
+                		fulltitle = bom.books[bom_books[name]].full_title;
+				    } else {
+				    	bookName = nephi + " " + name.replace(/_/g, " ");
+				    	chapterLength = bom.books[bom_books[name]].numbers[nephi-1].chapters.length; 
+				    	fulltitle = bom.books[bom_books[name]].numbers[nephi-1].full_title;
                     }
                     for (i = 0; i < chapterLength; i++) {
                         if (fixedRequestedBook.slice(2) != "nephi") totalVerses += bom.books[bom_books[name]].chapters[i].verses.length;
@@ -872,7 +875,7 @@ bot.on("message", message => {
                     message.channel.send({
                         embed: {
                             color: userColorPreference,
-                            title: "Book Info for " + name.replace(/_/g, " "),
+                            title: "Book Info for " + bookName,
                             fields: [{
                                     name: "Full Title",
                                     value: fulltitle,
@@ -993,21 +996,31 @@ bot.on("message", message => {
             }
             break;
         case "chapters":
+            var numbersForNephi1 = args[1]
             var requestedBook1 = args.slice(1).join(" ");
-            var fixedRequestedBook1 = requestedBook1.replace(/ /g, "_");
+            var fixedRequestedBook1 = requestedBook1.replace(/ /g, "_").toLowerCase();
+            var bookName1;
+            var chapterVerses = "";
+            if (numbersForNephi1 === "1" || numbersForNephi1 === "2" || numbersForNephi1 === "3" || numbersForNephi1 === "4") { 
+            	var nephi1 = bom.books[0].numbers[numbersForNephi1-1].number;
+        	}
             for (let name in bom_books) {
-                if (name.toLowerCase() === fixedRequestedBook1.toLowerCase()) {
-                    chapterLength1 = bom.books[bom_books[name]].chapters.length;
-                    var chapterVerses = [];
-                    for (i = 0; i < chapterLength1; i++) {
-                        if (bom.books[bom_books[name]] != 0) chapterVerses.push("Chapter " + bom.books[bom_books[name]].chapters[i].chapter + " - " + bom.books[bom_books[name]].chapters[i].verses.length + " verses")
-                        else chapterVerses.push("Chapter " + bom.books[bom_books[name]].numbers[args[1]].chapters[i].chapter + " - " + bom.books[bom_books[name]].chapters[i].verses.length + " verses")
+                if (name.toLowerCase() === fixedRequestedBook1  || name.toLowerCase() === fixedRequestedBook1.slice(2) && typeof nephi1 != "undefined") {
+                	if (fixedRequestedBook1.slice(2) != "nephi") {
+                		bookName1 = name.replace(/_/g, " ");
+                		chapterLength1 = bom.books[bom_books[name]].chapters.length;
+				    } else {
+				    	bookName1 = nephi + " " + name.replace(/_/g, " ");
+				    	chapterLength1 = bom.books[bom_books[name]].numbers[nephi1-1].chapters.length; 
                     }
-                    console.log(chapterVerses)
+                    for (i = 0; i < chapterLength1; i++) {
+                        if (fixedRequestedBook1.slice(2) != "nephi") chapterVerses += "Chapter " + bom.books[bom_books[name]].chapters[i].chapter + " - " + bom.books[bom_books[name]].chapters[i].verses.length + " verses" + "\n"
+                        else chapterVerses += "Chapter " + bom.books[bom_books[name]].numbers[nephi1-1].chapters[i].chapter + " - " + bom.books[bom_books[name]].numbers[nephi1-1].chapters[i].verses.length + " verses" + "\n"
+                    }
                     message.channel.send({
                         embed: {
                             color: userColorPreference,
-                            title: "Chapters in " + name.replace(/_/g, " "),
+                            title: "Chapters in " + bookName1,
                             description: chapterVerses.toString().replace(/,/g, "\n"),
                             footer: {
                                 text: "LDS-Bot",
@@ -1016,19 +1029,19 @@ bot.on("message", message => {
                         }
                     });
                 }
-                chapterVerses = [];
+                chapterVerses = "";
             }
             for (let name in pgp_books) {
-                if (name.toLowerCase() === fixedRequestedBook1.toLowerCase()) {
+                if (name.toLowerCase() === fixedRequestedBook1) {
                     chapterLength1 = pgp.books[pgp_books[name]].chapters.length;
                     for (i = 0; i < chapterLength1; i++) {
-                        chapterVerses.push("Chapter " + pgp.books[pgp_books[name]].chapters[i].chapter + " - " + pgp.books[pgp_books[name]].chapters[i].verses.length + " verses")
+                        chapterVerses += "Chapter " + pgp.books[pgp_books[name]].chapters[i].chapter + " - " + pgp.books[pgp_books[name]].chapters[i].verses.length + " verses" + "\n";
                     }
                     message.channel.send({
                         embed: {
                             color: userColorPreference,
                             title: "Chapters in " + name.replace(/_/g, " "),
-                            description: chapterVerses.toString().replace(/,/g, "\n"),
+                            description: chapterVerses,
                             footer: {
                                 text: "LDS-Bot",
                                 icon_url: bot.user.avatarURL
@@ -1036,8 +1049,45 @@ bot.on("message", message => {
                         }
                     });
                 }
-                chapterVerses = [];
+                chapterVerses = "";
             }
+            if (fixedRequestedBook1 === "d&c") {
+            	var moreChapterVerses = "";
+                chapterLength1 = dc.sections.length;
+                for (i = 0; i < chapterLength1; i++) {
+                	console.log(chapterVerses.length)
+                	console.log(moreChapterVerses.length)
+                    if (chapterVerses.length >= 2000) {
+                    	moreChapterVerses += "Chapter " + dc.sections[i].section + " - " + dc.sections[i].verses.length + " verses" + "\n";
+                    } else {
+                    	chapterVerses += "Chapter " + dc.sections[i].section + " - " + dc.sections[i].verses.length + " verses" + "\n";
+                    }
+                }
+                console.log(moreChapterVerses + "\n")
+                console.log(chapterVerses)
+                let pages = [
+	                    {
+	                        color: userColorPreference,
+	                        title: "Chapters in " + "D&C",
+	                        description: chapterVerses,
+	                        footer: {
+	                            text: "LDS-Bot",
+	                            icon_url: bot.user.avatarURL
+	                        }
+	                    },
+	                    {
+	                        color: userColorPreference,
+	                        title: "Chapters in " + "D&C",
+	                        description: moreChapterVerses,
+	                        footer: {
+	                            text: "LDS-Bot",
+	                            icon_url: bot.user.avatarURL
+	                        }
+	                    }
+                    ];
+	            embed_page({embed: pages[0]}, pages);
+	            chapterVerses = "";
+        	}
             break;
         case "help":
             message.channel.send({
