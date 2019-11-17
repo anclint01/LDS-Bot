@@ -854,7 +854,7 @@ bot.on("message", message => {
             var fixedRequestedBook = requestedBook.replace(/ /g, "_").toLowerCase();
             var fulltitle;
             if (numbersForNephi === "1" || "2" || "3" || "4") {
-                var nephi = bom.books[0].numbers[numbersForNephi - 2].number;
+                var nephi = bom.books[0].numbers[numbersForNephi - 1].number;
             }
             for (let name in bom_books) {
                 if (name.toLowerCase() === fixedRequestedBook.toLowerCase() || name.toLowerCase() === fixedRequestedBook.slice(2)) {
@@ -862,12 +862,12 @@ bot.on("message", message => {
                         chapterLength = bom.books[bom_books[name]].chapters.length;
                         fulltitle = bom.books[bom_books[name]].full_title;
                     } else {
-                        chapterLength = bom.books[bom_books[name]].numbers[nephi].chapters.length;
-                        fulltitle = bom.books[bom_books[name]].numbers[nephi].full_title;
+                        chapterLength = bom.books[bom_books[name]].numbers[nephi-1].chapters.length;
+                        fulltitle = bom.books[bom_books[name]].numbers[nephi-1].full_title;
                     }
                     for (i = 0; i < chapterLength; i++) {
                         if (fixedRequestedBook.slice(2) != "nephi") totalVerses += bom.books[bom_books[name]].chapters[i].verses.length;
-                        else totalVerses += bom.books[bom_books[name]].numbers[nephi].chapters[i].verses.length;
+                        else totalVerses += bom.books[bom_books[name]].numbers[nephi-1].chapters[i].verses.length;
                     }
                     message.channel.send({
                         embed: {
