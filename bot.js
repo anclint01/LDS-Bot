@@ -8,6 +8,14 @@ const pgp = require("./pearl-of-great-price.json");
 
 bot.on("ready", () => {
     console.log("ready");
+
+    bot.user.setStatus('available');
+    bot.user.setPresence({
+        game: {
+            name: `"lds help"`,
+            type: 2
+        }
+    });
 });
 
 function clean(text) {
