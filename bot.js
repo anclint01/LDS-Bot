@@ -1010,7 +1010,7 @@ bot.on("message", message => {
                         bookName1 = name.replace(/_/g, " ");
                         chapterLength1 = bom.books[bom_books[name]].chapters.length;
                     } else {
-                        bookName1 = nephi + " " + name.replace(/_/g, " ");
+                        bookName1 = nephi1 + " " + name.replace(/_/g, " ");
                         chapterLength1 = bom.books[bom_books[name]].numbers[nephi1 - 1].chapters.length;
                     }
                     for (i = 0; i < chapterLength1; i++) {
@@ -1055,16 +1055,12 @@ bot.on("message", message => {
                 var moreChapterVerses = "";
                 chapterLength1 = dc.sections.length;
                 for (i = 0; i < chapterLength1; i++) {
-                    console.log(chapterVerses.length)
-                    console.log(moreChapterVerses.length)
                     if (chapterVerses.length >= 2000) {
                         moreChapterVerses += "Chapter " + dc.sections[i].section + " - " + dc.sections[i].verses.length + " verses" + "\n";
                     } else {
                         chapterVerses += "Chapter " + dc.sections[i].section + " - " + dc.sections[i].verses.length + " verses" + "\n";
                     }
                 }
-                console.log(moreChapterVerses + "\n")
-                console.log(chapterVerses)
                 let pages = [{
                         color: userColorPreference,
                         title: "Chapters in " + "D&C",
