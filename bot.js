@@ -792,16 +792,14 @@ bot.on("message", message => {
             }
             let pgp_names = names.slice(14, 22).toString();
             let bom_names = names.slice(0, 13).toString();
-            console.log(bom_names)
-            bom_names.replace("Nsephi", "1 Nephi,2 Nephi,3 Nephi,4 Nephi");
-            console.log(bom_names)
+            let nephiFixedBomNames = bom_names.replace("Nephi", "1 Nephi,2 Nephi,3 Nephi, 4 Nephi");
             let book_pages = [{
                     color: userColorPreference,
                     title: "Book of Mormon Names:",
                     author: {
                         name: "1 of 3"
                     },
-                    description: bom_names.replace(/,/g, "\n"),
+                    description: nephiFixedBomNames.replace(/,/g, "\n"),
                     fields: [{
                         name: "FYI: ",
                         value: "For more info use ``lds bookinfo <bookname>``",
@@ -836,6 +834,11 @@ bot.on("message", message => {
                         name: "3 of 3"
                     },
                     description: "D&C, is a book itself, it does not have any books within it, only chapters.",
+                    fields: [{
+                        name: "FYI: ",
+                        value: "For more info use ``lds bookinfo D&C``",
+                        inline: true
+                    }],
                     footer: {
                         text: "LDS-Bot",
                         icon_url: bot.user.avatarURL
