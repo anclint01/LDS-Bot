@@ -88,24 +88,36 @@ bot.on("message", message => {
                 timer: 120000
             });
             backwards.on('collect', r => {
-                if (page > 1 && page <= edited_embeds.length) {
+               	if (page === 1) {
+               		page = edited_embeds.length;
+                    sentEmbed.edit({
+                        embed: edited_embeds[page - 1]
+                    });
+               	} else {
                     page--;
                     sentEmbed.edit({
                         embed: edited_embeds[page - 1]
                     });
-                }
+               	}
                 r.remove(r.users.filter(u => !u.bot).first());
             })
             forwards.on('collect', r => {
-                if (page >= 1 && page + 1 <= edited_embeds.length) {
-                    page++;
-                    if (typeof edited_embeds != 'undefined') {
-                        sentEmbed.edit({
-                            embed: edited_embeds[page - 1]
-                        });
-                    }
+            	console.log(edited_embeds.length)
+                if (page >= 1) {
+                    if (page === edited_embeds.length) {
+                    	page = 1;
+	                    sentEmbed.edit({
+	                        embed: edited_embeds[page - 1]
+	                    });
+                    } else {
+                    	page++;
+	                    if (typeof edited_embeds != 'undefined') {
+	                        sentEmbed.edit({
+	                            embed: edited_embeds[page - 1]
+	                        });
+	                    }
+                	}
                 }
-
                 r.remove(r.users.filter(u => !u.bot).first());
             })
 
