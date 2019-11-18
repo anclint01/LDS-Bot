@@ -5,6 +5,7 @@ const prefix = "lds ";
 const bom = require("./book-of-mormon.json");
 const dc = require("./doctrine-and-covenants.json");
 const pgp = require("./pearl-of-great-price.json");
+const start = new Date();
 
 bot.on("ready", () => {
     console.log("ready");
