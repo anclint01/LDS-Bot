@@ -320,7 +320,7 @@ bot.on("message", message => {
                             } else {
                                 page_array_bom.push({
                                     color: userColorPreference,
-                                    title: citation[0)] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
+                                    title: citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
                                     description: next_message,
                                     footer: {
                                         text: "LDS-Bot",
