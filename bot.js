@@ -281,7 +281,7 @@ bot.on("message", message => {
                         message.channel.send({
                             embed: {
                                 color: userColorPreference,
-                                title: citation[0].replace(/_/g, " ") + " " + citation[1] + ":" + citation[2],
+                                title: citation[0] + " " + citation[1] + ":" + citation[2],
                                 description: "**" + citation[2] + "** " + verse.text,
                                 footer: {
                                     text: "LDS-Bot",
@@ -309,7 +309,7 @@ bot.on("message", message => {
                             if (citation.length == 5) {
                                 page_array_bom.push({
                                     color: userColorPreference,
-                                    title: citation[4] + " " + citation[0].replace(/_/g, " ") + " " + citation[1] + ":" + verse_first + "-" + verse_last,
+                                    title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
                                     description: next_message,
                                     footer: {
                                         text: "LDS-Bot",
@@ -320,7 +320,7 @@ bot.on("message", message => {
                             } else {
                                 page_array_bom.push({
                                     color: userColorPreference,
-                                    title: citation[0].replace(/_/g, " ") + " " + citation[1] + ":" + verse_first + "-" + verse_last,
+                                    title: citation[0)] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
                                     description: next_message,
                                     footer: {
                                         text: "LDS-Bot",
@@ -339,7 +339,7 @@ bot.on("message", message => {
                     if (citation.length == 5) {
                         page_array_bom.push({
                             color: userColorPreference,
-                            title: citation[4] + " " + citation[0].replace(/_/g, " ") + " " + citation[1] + ":" + verse_first + "-" + verse_last,
+                            title: citation[4] + " " + citation[0] + " " + citation[1] + ":" + verse_first + "-" + verse_last,
                             description: next_message,
                             footer: {
                                 text: "LDS-Bot",
