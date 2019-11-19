@@ -669,499 +669,502 @@ bot.on("message", message => {
 
         }
     }
+    switch (message.content.startsWith(prefix)) {
+	case true:
+	    switch (command.trim()) {
+		case "eval":
+		    if (message.author.id === "453840514022899712") {
+			try {
+			    var code = argument;
+			    var evaled = eval(code);
+			    if (typeof evaled === "Promise" && additions.indexOf("inspect") >= 0) {
+				evaled.then(
+				    function() {
+					message.channel.sendCode("xl", evaled);
+					evaled = undefined;
+				    }
+				).err(console.error)
+				//evaled= eval("function(message){return "+code+";}").apply(this,[message]);
+			    } else if (typeof evaled !== "string" && (evaled !== undefined)) {
+				if (additions.indexOf("inspect") >= 0) {
+				    evaled = require("util").inspect(evaled);
+				    message.channel.sendCode("xl", clean(evaled));
+				}
+			    } else if (additions.indexOf("inspect") >= 0) {
+				message.channel.sendCode("xl", evaled);
+			    }
+			    if (additions.indexOf("fancy") >= 0) {
+				let URL = "https://images-ext-2.discordapp.net/eyJ1cmwiOiJodHRwOi8vd3d3Lm1hY2Vyb2JvdGljcy5jb20vd3AtY29udGVudC91cGxvYWRzLzIwMTYvMDIvZ2Vhci10b29scy5wbmcifQ.lc8Zq4vmjQ57Evm_VfbYnVpqdIw";
+				let embed = new Discord.RichEmbed();
+				embed.setColor("#0FF0FF");
+				embed.setThumbnail(URL);
+				embed.addField("Input", code);
+				embed.addField("Output", require("util").inspect(evaled));
+				message.channel.sendEmbed(embed).then(function() {
+				    message.delete();
+				});
+			    }
+			    if (additions.indexOf("r") >= 0 && message) {
+				message.delete();
+			    }
+			} catch (err) {
+			    message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
+			    message.delete();
+			}
+		    }
+		    break;
+		case "invite":
+		    message.channel.send("https://discordapp.com/oauth2/authorize?permissions=93184&scope=bot&client_id=639271772818112564");
+		    break;
+		case "randomverse":
+		    function getRandomInt(max) {
+			return Math.floor(Math.random() * Math.floor(max));
+		    }
+		    let mainBooks = [bom, pgp, dc];
+		    let randomMainBook = getRandomInt(3);
+		    var randomNephiNumber;
+		    var randomBook;
+		    var randomChapter;
+		    var randomVerse;
+		    var curBook = mainBooks[randomMainBook];
+		    if (randomMainBook == 2) {
+			randomChapter = getRandomInt(curBook.sections.length);
+			randomVerse = getRandomInt(curBook.sections[randomChapter].verses.length);
+		    } else {
+			randomBook = getRandomInt(curBook.books.length);
+			var book = curBook.books[randomBook];
+			if (randomMainBook === 0 && randomBook === 0) {
+			    randomNephiNumber = getRandomInt(4);
+			    randomChapter = getRandomInt(book.numbers[randomNephiNumber].chapters.length);
+			    randomVerse = getRandomInt(book.numbers[randomNephiNumber].chapters[randomChapter].verses.length);
+			} else {
+			    randomChapter = getRandomInt(book.chapters.length);
+			    randomVerse = getRandomInt(book.chapters[randomChapter].verses.length);
+			}
+		    }
+		    var book;
+		    var chapter;
+		    var verse;
+		    if (randomMainBook === 0 && randomBook === 0) book = mainBooks[randomMainBook].books[randomBook].numbers[randomNephiNumber];
+		    else if (randomMainBook != 2) book = mainBooks[randomMainBook].books[randomBook];
 
-    switch (command.trim()) {
-        case "eval":
-            if (message.author.id === "453840514022899712") {
-                try {
-                    var code = argument;
-                    var evaled = eval(code);
-                    if (typeof evaled === "Promise" && additions.indexOf("inspect") >= 0) {
-                        evaled.then(
-                            function() {
-                                message.channel.sendCode("xl", evaled);
-                                evaled = undefined;
-                            }
-                        ).err(console.error)
-                        //evaled= eval("function(message){return "+code+";}").apply(this,[message]);
-                    } else if (typeof evaled !== "string" && (evaled !== undefined)) {
-                        if (additions.indexOf("inspect") >= 0) {
-                            evaled = require("util").inspect(evaled);
-                            message.channel.sendCode("xl", clean(evaled));
-                        }
-                    } else if (additions.indexOf("inspect") >= 0) {
-                        message.channel.sendCode("xl", evaled);
-                    }
-                    if (additions.indexOf("fancy") >= 0) {
-                        let URL = "https://images-ext-2.discordapp.net/eyJ1cmwiOiJodHRwOi8vd3d3Lm1hY2Vyb2JvdGljcy5jb20vd3AtY29udGVudC91cGxvYWRzLzIwMTYvMDIvZ2Vhci10b29scy5wbmcifQ.lc8Zq4vmjQ57Evm_VfbYnVpqdIw";
-                        let embed = new Discord.RichEmbed();
-                        embed.setColor("#0FF0FF");
-                        embed.setThumbnail(URL);
-                        embed.addField("Input", code);
-                        embed.addField("Output", require("util").inspect(evaled));
-                        message.channel.sendEmbed(embed).then(function() {
-                            message.delete();
-                        });
-                    }
-                    if (additions.indexOf("r") >= 0 && message) {
-                        message.delete();
-                    }
-                } catch (err) {
-                    message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
-                    message.delete();
-                }
-            }
-            break;
-        case "invite":
-            message.channel.send("https://discordapp.com/oauth2/authorize?permissions=93184&scope=bot&client_id=639271772818112564");
-            break;
-        case "randomverse":
-            function getRandomInt(max) {
-                return Math.floor(Math.random() * Math.floor(max));
-            }
-            let mainBooks = [bom, pgp, dc];
-            let randomMainBook = getRandomInt(3);
-            var randomNephiNumber;
-            var randomBook;
-            var randomChapter;
-            var randomVerse;
-            var curBook = mainBooks[randomMainBook];
-            if (randomMainBook == 2) {
-                randomChapter = getRandomInt(curBook.sections.length);
-                randomVerse = getRandomInt(curBook.sections[randomChapter].verses.length);
-            } else {
-                randomBook = getRandomInt(curBook.books.length);
-                var book = curBook.books[randomBook];
-                if (randomMainBook === 0 && randomBook === 0) {
-                    randomNephiNumber = getRandomInt(4);
-                    randomChapter = getRandomInt(book.numbers[randomNephiNumber].chapters.length);
-                    randomVerse = getRandomInt(book.numbers[randomNephiNumber].chapters[randomChapter].verses.length);
-                } else {
-                    randomChapter = getRandomInt(book.chapters.length);
-                    randomVerse = getRandomInt(book.chapters[randomChapter].verses.length);
-                }
-            }
-            var book;
-            var chapter;
-            var verse;
-            if (randomMainBook === 0 && randomBook === 0) book = mainBooks[randomMainBook].books[randomBook].numbers[randomNephiNumber];
-            else if (randomMainBook != 2) book = mainBooks[randomMainBook].books[randomBook];
+		    if (randomMainBook != 2) chapter = book.chapters[randomChapter];
+		    else chapter = mainBooks[randomMainBook].sections[randomChapter];
 
-            if (randomMainBook != 2) chapter = book.chapters[randomChapter];
-            else chapter = mainBooks[randomMainBook].sections[randomChapter];
-
-            verse = chapter.verses[randomVerse];
-            if (randomMainBook === 0) {
-                if (randomBook === 0) {
-                    message.channel.send({
-                        embed: {
-                            color: userColorPreference,
-                            title: randomNephiNumber + 1 + " Nephi " + chapter.chapter + ":" + verse.verse,
-                            description: verse.text,
-                            footer: {
-                                text: "LDS-Bot",
-                                icon_url: bot.user.avatarURL
-                            }
-                        }
-                    });
-                } else {
-                    message.channel.send({
-                        embed: {
-                            color: userColorPreference,
-                            title: book.book + " " + chapter.chapter + ":" + verse.verse,
-                            description: verse.text,
-                            footer: {
-                                text: "LDS-Bot",
-                                icon_url: bot.user.avatarURL
-                            }
-                        }
-                    });
-                }
-            } else if (randomMainBook === 1) {
-                message.channel.send({
-                    embed: {
-                        color: userColorPreference,
-                        title: book.book + " " + chapter.chapter + ":" + verse.verse,
-                        description: verse.text,
-                        footer: {
-                            text: "LDS-Bot",
-                            icon_url: bot.user.avatarURL
-                        }
-                    }
-                });
-            } else if (randomMainBook === 2) {
-                message.channel.send({
-                    embed: {
-                        color: userColorPreference,
-                        title: "D&C " + chapter.section + ":" + verse.verse,
-                        description: verse.text,
-                        footer: {
-                            text: "LDS-Bot",
-                            icon_url: bot.user.avatarURL
-                        }
-                    }
-                });
-            }
-            break;
-        case "booknames":
-            var keys = [Object.keys(bom_books), Object.keys(pgp_books)];
-            var names = [];
-            for (key of keys) {
-                for (var i = 0; i < key.length; i++) {
-                    names.push(key[i].replace(/_/g, " "));
-                }
-            }
-            let pgp_names = names.slice(14, 22).toString();
-            let bom_names = names.slice(0, 13).toString();
-            let nephiFixedBomNames = bom_names.replace("Nephi", "1 Nephi,2 Nephi,3 Nephi, 4 Nephi");
-            let book_pages = [{
-                    color: userColorPreference,
-                    title: "Book of Mormon Names:",
-                    author: {
-                        name: "1 of 3"
-                    },
-                    description: nephiFixedBomNames.replace(/,/g, "\n"),
-                    fields: [{
-                        name: "FYI: ",
-                        value: "For more info use ``lds bookinfo <bookname>``",
-                        inline: true
-                    }],
-                    footer: {
-                        text: "LDS-Bot",
-                        icon_url: bot.user.avatarURL
-                    }
-                },
-                {
-                    color: userColorPreference,
-                    title: "Pearl of Great Price Names:",
-                    author: {
-                        name: "2 of 3"
-                    },
-                    description: pgp_names.replace(/,/g, "\n"),
-                    fields: [{
-                        name: "FYI: ",
-                        value: "For more info use ``lds bookinfo <bookname>``",
-                        inline: true
-                    }],
-                    footer: {
-                        text: "LDS-Bot",
-                        icon_url: bot.user.avatarURL
-                    }
-                },
-                {
-                    color: userColorPreference,
-                    title: "D&C:",
-                    author: {
-                        name: "3 of 3"
-                    },
-                    description: "D&C, is a book itself, it does not have any books within it, only chapters.",
-                    fields: [{
-                        name: "FYI: ",
-                        value: "For more info use ``lds bookinfo D&C``",
-                        inline: true
-                    }],
-                    footer: {
-                        text: "LDS-Bot",
-                        icon_url: bot.user.avatarURL
-                    }
-                }
-            ]
-            embed_page({
-                embed: book_pages[0]
-            }, book_pages);
-            break;
-        case "bookinfo":
-            var numbersForNephi = args[1]
-            var requestedBook = args.splice(1).join(" ");
-            var totalVerses = 0;
-            var chapterLength;
-            var fixedRequestedBook = requestedBook.replace(/ /g, "_").toLowerCase();
-            var fulltitle;
-            var bookName;
-            if (numbersForNephi === "1" || numbersForNephi === "2" || numbersForNephi === "3" || numbersForNephi === "4") {
-                var nephi = bom.books[0].numbers[numbersForNephi - 1].number;
-            }
-            for (let name in bom_books) {
-                if (name.toLowerCase() === fixedRequestedBook.toLowerCase() || name.toLowerCase() === fixedRequestedBook.slice(2) && typeof nephi != "undefined") {
-                    if (fixedRequestedBook.slice(2) != "nephi") {
-                        bookName = name.replace(/_/g, " ");
-                        chapterLength = bom.books[bom_books[name]].chapters.length;
-                        fulltitle = bom.books[bom_books[name]].full_title;
-                    } else {
-                        bookName = nephi + " " + name.replace(/_/g, " ");
-                        chapterLength = bom.books[bom_books[name]].numbers[nephi - 1].chapters.length;
-                        fulltitle = bom.books[bom_books[name]].numbers[nephi - 1].full_title;
-                    }
-                    for (i = 0; i < chapterLength; i++) {
-                        if (fixedRequestedBook.slice(2) != "nephi") totalVerses += bom.books[bom_books[name]].chapters[i].verses.length;
-                        else totalVerses += bom.books[bom_books[name]].numbers[nephi - 1].chapters[i].verses.length;
-                    }
-                    message.channel.send({
-                        embed: {
-                            color: userColorPreference,
-                            title: "Book Info for " + bookName,
-                            fields: [{
-                                    name: "Full Title",
-                                    value: fulltitle,
-                                    inline: true
-                                },
-                                {
-                                    name: "# of Chapters",
-                                    value: chapterLength,
-                                    inline: true
-                                },
-                                {
-                                    name: "Total Verses",
-                                    value: totalVerses,
-                                    inline: true
-                                },
-                                {
-                                    name: "Book Contained In",
-                                    value: "The Book of Mormon",
-                                    inline: true
-                                },
-                                {
-                                    name: "More",
-                                    value: "To get a list of all chapters with their verse count for a specific book use: ``lds chapters <bookname>``",
-                                    inline: true
-                                }
-                            ],
-                            footer: {
-                                text: "LDS-Bot",
-                                icon_url: bot.user.avatarURL
-                            }
-                        }
-                    });
-                    totalVerses = 0;
-                }
-            }
-            for (let name in pgp_books) {
-                if (name.toLowerCase() === fixedRequestedBook.toLowerCase()) {
-                    chapterLength = pgp.books[pgp_books[name]].chapters.length
-                    for (i = 0; i < chapterLength; i++) {
-                        totalVerses += pgp.books[pgp_books[name]].chapters[i].verses.length;
-                    }
-                    message.channel.send({
-                        embed: {
-                            color: userColorPreference,
-                            title: "Book Info for " + name.replace(/_/g, " "),
-                            fields: [{
-                                    name: "Full Title",
-                                    value: pgp.books[pgp_books[name]].full_title,
-                                    inline: true
-                                },
-                                {
-                                    name: "# of Chapters:",
-                                    value: pgp.books[pgp_books[name]].chapters.length,
-                                    inline: true
-                                },
-                                {
-                                    name: "Total Verses",
-                                    value: totalVerses,
-                                    inline: true
-                                },
-                                {
-                                    name: "Book Contained In:",
-                                    value: "The Pearl of Great Price",
-                                    inline: true
-                                },
-                                {
-                                    name: "More:",
-                                    value: "To get a list of all chapters with their verse count for a specific book go: ``lds chapters <bookname>``",
-                                    inline: true
-                                }
-                            ],
-                            footer: {
-                                text: "LDS-Bot",
-                                icon_url: bot.user.avatarURL
-                            }
-                        }
-                    });
-                    totalVerses = 0;
-                }
-            }
-            if (fixedRequestedBook.toLowerCase() === "d&c") {
-                chapterLength = dc.sections.length
-                for (i = 0; i < chapterLength; i++) {
-                    totalVerses += dc.sections[i].verses.length;
-                }
-                message.channel.send({
-                    embed: {
-                        color: userColorPreference,
-                        title: "Book Info for " + "D&C",
-                        fields: [{
-                                name: "Full Title",
-                                value: "The Doctrine and Covenants",
-                                inline: true
-                            },
-                            {
-                                name: "# of Chapters:",
-                                value: chapterLength,
-                                inline: true
-                            },
-                            {
-                                name: "Total Verses",
-                                value: totalVerses,
-                                inline: true
-                            },
-                            {
-                                name: "More:",
-                                value: "To get a list of all chapters with their verse count for a specific book go: ``lds chapters <bookname>``",
-                                inline: true
-                            }
-                        ],
-                        footer: {
-                            text: "LDS-Bot",
-                            icon_url: bot.user.avatarURL
-                        }
-                    }
-                });
-                totalVerses = 0;
-            }
-            break;
-        case "chapters":
-            var numbersForNephi1 = args[1]
-            var requestedBook1 = args.slice(1).join(" ");
-            var fixedRequestedBook1 = requestedBook1.replace(/ /g, "_").toLowerCase();
-            var bookName1;
-            var chapterVerses = "";
-            if (numbersForNephi1 === "1" || numbersForNephi1 === "2" || numbersForNephi1 === "3" || numbersForNephi1 === "4") {
-                var nephi1 = bom.books[0].numbers[numbersForNephi1 - 1].number;
-            }
-            for (let name in bom_books) {
-                if (name.toLowerCase() === fixedRequestedBook1 || name.toLowerCase() === fixedRequestedBook1.slice(2) && typeof nephi1 != "undefined") {
-                    if (fixedRequestedBook1.slice(2) != "nephi") {
-                        bookName1 = name.replace(/_/g, " ");
-                        chapterLength1 = bom.books[bom_books[name]].chapters.length;
-                    } else {
-                        bookName1 = nephi1 + " " + name.replace(/_/g, " ");
-                        chapterLength1 = bom.books[bom_books[name]].numbers[nephi1 - 1].chapters.length;
-                    }
-                    for (i = 0; i < chapterLength1; i++) {
-                        if (fixedRequestedBook1.slice(2) != "nephi") chapterVerses += "Chapter " + bom.books[bom_books[name]].chapters[i].chapter + " - " + bom.books[bom_books[name]].chapters[i].verses.length + " verses" + "\n"
-                        else chapterVerses += "Chapter " + bom.books[bom_books[name]].numbers[nephi1 - 1].chapters[i].chapter + " - " + bom.books[bom_books[name]].numbers[nephi1 - 1].chapters[i].verses.length + " verses" + "\n"
-                    }
-                    message.channel.send({
-                        embed: {
-                            color: userColorPreference,
-                            title: "Chapters in " + bookName1,
-                            description: chapterVerses.toString().replace(/,/g, "\n"),
-                            footer: {
-                                text: "LDS-Bot",
-                                icon_url: bot.user.avatarURL
-                            }
-                        }
-                    });
-                }
-                chapterVerses = "";
-            }
-            for (let name in pgp_books) {
-                if (name.toLowerCase() === fixedRequestedBook1) {
-                    chapterLength1 = pgp.books[pgp_books[name]].chapters.length;
-                    for (i = 0; i < chapterLength1; i++) {
-                        chapterVerses += "Chapter " + pgp.books[pgp_books[name]].chapters[i].chapter + " - " + pgp.books[pgp_books[name]].chapters[i].verses.length + " verses" + "\n";
-                    }
-                    message.channel.send({
-                        embed: {
-                            color: userColorPreference,
-                            title: "Chapters in " + name.replace(/_/g, " "),
-                            description: chapterVerses,
-                            footer: {
-                                text: "LDS-Bot",
-                                icon_url: bot.user.avatarURL
-                            }
-                        }
-                    });
-                }
-                chapterVerses = "";
-            }
-            if (fixedRequestedBook1 === "d&c") {
-                var moreChapterVerses = "";
-                chapterLength1 = dc.sections.length;
-                for (i = 0; i < chapterLength1; i++) {
-                    if (chapterVerses.length >= 2000) {
-                        moreChapterVerses += "Chapter " + dc.sections[i].section + " - " + dc.sections[i].verses.length + " verses" + "\n";
-                    } else {
-                        chapterVerses += "Chapter " + dc.sections[i].section + " - " + dc.sections[i].verses.length + " verses" + "\n";
-                    }
-                }
-                let pages = [{
-                        color: userColorPreference,
-                        title: "Chapters in " + "D&C",
-                        description: chapterVerses,
-                        footer: {
-                            text: "LDS-Bot",
-                            icon_url: bot.user.avatarURL
-                        }
-                    },
-                    {
-                        color: userColorPreference,
-                        title: "Chapters in " + "D&C",
-                        description: moreChapterVerses,
-                        footer: {
-                            text: "LDS-Bot",
-                            icon_url: bot.user.avatarURL
-                        }
-                    }
-                ];
-                embed_page({
-                    embed: pages[0]
-                }, pages);
-                chapterVerses = "";
-            }
-            break;
-        case "help":
-            message.channel.send({
-                embed: {
-                    color: userColorPreference,
-                    title: "LDS-Bot by anclint#9255",
-                    fields: [{
-                            name: "Commands",
-                            value: "``lds invite`` - provides the invite link for LDS-Bot \n ``lds github`` - provides the link for LDS-Bot GitHub repository \n ``lds randomverse`` - provides a random verse \n ``lds booknames`` - provides list of book names \n ``lds bookinfo <bookname>`` - provides info on the book inputted \n ``lds chapters <bookname>`` - provides list of all chapters and number of verses per chapter for book inputted \n ``lds servers`` - shows number of servers LDS-Bot is in \n ``lds users`` - shows number of users across all servers LDS-Bot is on",
-                            inline: false
-                        },
-                        {
-                            name: "Links",
-                            value: "Github: https://github.com/anclint01/LDS-Bot \n Invite: https://bit.ly/2KoBoPr",
-                            inline: false
-                        }
-                    ],
-                    footer: {
-                        text: "LDS-Bot",
-                        icon_url: bot.user.avatarURL
-                    }
-                }
-            });
-            break;
-        case "servers":
-            let servers = 0;
-            bot.guilds.forEach((guild) => {
-                servers++;
-            });
-            message.channel.send({
-                embed: {
-                    color: userColorPreference,
-                    title: "lds servers",
-                    description: "LDS-Bot has reached a total of **" + servers + "** servers"
-                }
-            });
-            break;
-        case "users":
-            var users = 0;
-            bot.users.forEach((user) => {
-                users++;
-            });
-            message.channel.send({
-                embed: {
-                    color: userColorPreference,
-                    title: "lds users",
-                    description: "The number of users spanning accross all servers LDS-Bot is currently on has reached a concurrent " + users
-                }
-            });
-            break;
-        case "github":
-            message.channel.send("https://github.com/anclint01/LDS-Bot");
-            break;
+		    verse = chapter.verses[randomVerse];
+		    if (randomMainBook === 0) {
+			if (randomBook === 0) {
+			    message.channel.send({
+				embed: {
+				    color: userColorPreference,
+				    title: randomNephiNumber + 1 + " Nephi " + chapter.chapter + ":" + verse.verse,
+				    description: verse.text,
+				    footer: {
+					text: "LDS-Bot",
+					icon_url: bot.user.avatarURL
+				    }
+				}
+			    });
+			} else {
+			    message.channel.send({
+				embed: {
+				    color: userColorPreference,
+				    title: book.book + " " + chapter.chapter + ":" + verse.verse,
+				    description: verse.text,
+				    footer: {
+					text: "LDS-Bot",
+					icon_url: bot.user.avatarURL
+				    }
+				}
+			    });
+			}
+		    } else if (randomMainBook === 1) {
+			message.channel.send({
+			    embed: {
+				color: userColorPreference,
+				title: book.book + " " + chapter.chapter + ":" + verse.verse,
+				description: verse.text,
+				footer: {
+				    text: "LDS-Bot",
+				    icon_url: bot.user.avatarURL
+				}
+			    }
+			});
+		    } else if (randomMainBook === 2) {
+			message.channel.send({
+			    embed: {
+				color: userColorPreference,
+				title: "D&C " + chapter.section + ":" + verse.verse,
+				description: verse.text,
+				footer: {
+				    text: "LDS-Bot",
+				    icon_url: bot.user.avatarURL
+				}
+			    }
+			});
+		    }
+		    break;
+		case "booknames":
+		    var keys = [Object.keys(bom_books), Object.keys(pgp_books)];
+		    var names = [];
+		    for (key of keys) {
+			for (var i = 0; i < key.length; i++) {
+			    names.push(key[i].replace(/_/g, " "));
+			}
+		    }
+		    let pgp_names = names.slice(14, 22).toString();
+		    let bom_names = names.slice(0, 13).toString();
+		    let nephiFixedBomNames = bom_names.replace("Nephi", "1 Nephi,2 Nephi,3 Nephi, 4 Nephi");
+		    let book_pages = [{
+			    color: userColorPreference,
+			    title: "Book of Mormon Names:",
+			    author: {
+				name: "1 of 3"
+			    },
+			    description: nephiFixedBomNames.replace(/,/g, "\n"),
+			    fields: [{
+				name: "FYI: ",
+				value: "For more info use ``lds bookinfo <bookname>``",
+				inline: true
+			    }],
+			    footer: {
+				text: "LDS-Bot",
+				icon_url: bot.user.avatarURL
+			    }
+			},
+			{
+			    color: userColorPreference,
+			    title: "Pearl of Great Price Names:",
+			    author: {
+				name: "2 of 3"
+			    },
+			    description: pgp_names.replace(/,/g, "\n"),
+			    fields: [{
+				name: "FYI: ",
+				value: "For more info use ``lds bookinfo <bookname>``",
+				inline: true
+			    }],
+			    footer: {
+				text: "LDS-Bot",
+				icon_url: bot.user.avatarURL
+			    }
+			},
+			{
+			    color: userColorPreference,
+			    title: "D&C:",
+			    author: {
+				name: "3 of 3"
+			    },
+			    description: "D&C, is a book itself, it does not have any books within it, only chapters.",
+			    fields: [{
+				name: "FYI: ",
+				value: "For more info use ``lds bookinfo D&C``",
+				inline: true
+			    }],
+			    footer: {
+				text: "LDS-Bot",
+				icon_url: bot.user.avatarURL
+			    }
+			}
+		    ]
+		    embed_page({
+			embed: book_pages[0]
+		    }, book_pages);
+		    break;
+		case "bookinfo":
+		    var numbersForNephi = args[1]
+		    var requestedBook = args.splice(1).join(" ");
+		    var totalVerses = 0;
+		    var chapterLength;
+		    var fixedRequestedBook = requestedBook.replace(/ /g, "_").toLowerCase();
+		    var fulltitle;
+		    var bookName;
+		    if (numbersForNephi === "1" || numbersForNephi === "2" || numbersForNephi === "3" || numbersForNephi === "4") {
+			var nephi = bom.books[0].numbers[numbersForNephi - 1].number;
+		    }
+		    for (let name in bom_books) {
+			if (name.toLowerCase() === fixedRequestedBook.toLowerCase() || name.toLowerCase() === fixedRequestedBook.slice(2) && typeof nephi != "undefined") {
+			    if (fixedRequestedBook.slice(2) != "nephi") {
+				bookName = name.replace(/_/g, " ");
+				chapterLength = bom.books[bom_books[name]].chapters.length;
+				fulltitle = bom.books[bom_books[name]].full_title;
+			    } else {
+				bookName = nephi + " " + name.replace(/_/g, " ");
+				chapterLength = bom.books[bom_books[name]].numbers[nephi - 1].chapters.length;
+				fulltitle = bom.books[bom_books[name]].numbers[nephi - 1].full_title;
+			    }
+			    for (i = 0; i < chapterLength; i++) {
+				if (fixedRequestedBook.slice(2) != "nephi") totalVerses += bom.books[bom_books[name]].chapters[i].verses.length;
+				else totalVerses += bom.books[bom_books[name]].numbers[nephi - 1].chapters[i].verses.length;
+			    }
+			    message.channel.send({
+				embed: {
+				    color: userColorPreference,
+				    title: "Book Info for " + bookName,
+				    fields: [{
+					    name: "Full Title",
+					    value: fulltitle,
+					    inline: true
+					},
+					{
+					    name: "# of Chapters",
+					    value: chapterLength,
+					    inline: true
+					},
+					{
+					    name: "Total Verses",
+					    value: totalVerses,
+					    inline: true
+					},
+					{
+					    name: "Book Contained In",
+					    value: "The Book of Mormon",
+					    inline: true
+					},
+					{
+					    name: "More",
+					    value: "To get a list of all chapters with their verse count for a specific book use: ``lds chapters <bookname>``",
+					    inline: true
+					}
+				    ],
+				    footer: {
+					text: "LDS-Bot",
+					icon_url: bot.user.avatarURL
+				    }
+				}
+			    });
+			    totalVerses = 0;
+			}
+		    }
+		    for (let name in pgp_books) {
+			if (name.toLowerCase() === fixedRequestedBook.toLowerCase()) {
+			    chapterLength = pgp.books[pgp_books[name]].chapters.length
+			    for (i = 0; i < chapterLength; i++) {
+				totalVerses += pgp.books[pgp_books[name]].chapters[i].verses.length;
+			    }
+			    message.channel.send({
+				embed: {
+				    color: userColorPreference,
+				    title: "Book Info for " + name.replace(/_/g, " "),
+				    fields: [{
+					    name: "Full Title",
+					    value: pgp.books[pgp_books[name]].full_title,
+					    inline: true
+					},
+					{
+					    name: "# of Chapters:",
+					    value: pgp.books[pgp_books[name]].chapters.length,
+					    inline: true
+					},
+					{
+					    name: "Total Verses",
+					    value: totalVerses,
+					    inline: true
+					},
+					{
+					    name: "Book Contained In:",
+					    value: "The Pearl of Great Price",
+					    inline: true
+					},
+					{
+					    name: "More:",
+					    value: "To get a list of all chapters with their verse count for a specific book go: ``lds chapters <bookname>``",
+					    inline: true
+					}
+				    ],
+				    footer: {
+					text: "LDS-Bot",
+					icon_url: bot.user.avatarURL
+				    }
+				}
+			    });
+			    totalVerses = 0;
+			}
+		    }
+		    if (fixedRequestedBook.toLowerCase() === "d&c") {
+			chapterLength = dc.sections.length
+			for (i = 0; i < chapterLength; i++) {
+			    totalVerses += dc.sections[i].verses.length;
+			}
+			message.channel.send({
+			    embed: {
+				color: userColorPreference,
+				title: "Book Info for " + "D&C",
+				fields: [{
+					name: "Full Title",
+					value: "The Doctrine and Covenants",
+					inline: true
+				    },
+				    {
+					name: "# of Chapters:",
+					value: chapterLength,
+					inline: true
+				    },
+				    {
+					name: "Total Verses",
+					value: totalVerses,
+					inline: true
+				    },
+				    {
+					name: "More:",
+					value: "To get a list of all chapters with their verse count for a specific book go: ``lds chapters <bookname>``",
+					inline: true
+				    }
+				],
+				footer: {
+				    text: "LDS-Bot",
+				    icon_url: bot.user.avatarURL
+				}
+			    }
+			});
+			totalVerses = 0;
+		    }
+		    break;
+		case "chapters":
+		    var numbersForNephi1 = args[1]
+		    var requestedBook1 = args.slice(1).join(" ");
+		    var fixedRequestedBook1 = requestedBook1.replace(/ /g, "_").toLowerCase();
+		    var bookName1;
+		    var chapterVerses = "";
+		    if (numbersForNephi1 === "1" || numbersForNephi1 === "2" || numbersForNephi1 === "3" || numbersForNephi1 === "4") {
+			var nephi1 = bom.books[0].numbers[numbersForNephi1 - 1].number;
+		    }
+		    for (let name in bom_books) {
+			if (name.toLowerCase() === fixedRequestedBook1 || name.toLowerCase() === fixedRequestedBook1.slice(2) && typeof nephi1 != "undefined") {
+			    if (fixedRequestedBook1.slice(2) != "nephi") {
+				bookName1 = name.replace(/_/g, " ");
+				chapterLength1 = bom.books[bom_books[name]].chapters.length;
+			    } else {
+				bookName1 = nephi1 + " " + name.replace(/_/g, " ");
+				chapterLength1 = bom.books[bom_books[name]].numbers[nephi1 - 1].chapters.length;
+			    }
+			    for (i = 0; i < chapterLength1; i++) {
+				if (fixedRequestedBook1.slice(2) != "nephi") chapterVerses += "Chapter " + bom.books[bom_books[name]].chapters[i].chapter + " - " + bom.books[bom_books[name]].chapters[i].verses.length + " verses" + "\n"
+				else chapterVerses += "Chapter " + bom.books[bom_books[name]].numbers[nephi1 - 1].chapters[i].chapter + " - " + bom.books[bom_books[name]].numbers[nephi1 - 1].chapters[i].verses.length + " verses" + "\n"
+			    }
+			    message.channel.send({
+				embed: {
+				    color: userColorPreference,
+				    title: "Chapters in " + bookName1,
+				    description: chapterVerses.toString().replace(/,/g, "\n"),
+				    footer: {
+					text: "LDS-Bot",
+					icon_url: bot.user.avatarURL
+				    }
+				}
+			    });
+			}
+			chapterVerses = "";
+		    }
+		    for (let name in pgp_books) {
+			if (name.toLowerCase() === fixedRequestedBook1) {
+			    chapterLength1 = pgp.books[pgp_books[name]].chapters.length;
+			    for (i = 0; i < chapterLength1; i++) {
+				chapterVerses += "Chapter " + pgp.books[pgp_books[name]].chapters[i].chapter + " - " + pgp.books[pgp_books[name]].chapters[i].verses.length + " verses" + "\n";
+			    }
+			    message.channel.send({
+				embed: {
+				    color: userColorPreference,
+				    title: "Chapters in " + name.replace(/_/g, " "),
+				    description: chapterVerses,
+				    footer: {
+					text: "LDS-Bot",
+					icon_url: bot.user.avatarURL
+				    }
+				}
+			    });
+			}
+			chapterVerses = "";
+		    }
+		    if (fixedRequestedBook1 === "d&c") {
+			var moreChapterVerses = "";
+			chapterLength1 = dc.sections.length;
+			for (i = 0; i < chapterLength1; i++) {
+			    if (chapterVerses.length >= 2000) {
+				moreChapterVerses += "Chapter " + dc.sections[i].section + " - " + dc.sections[i].verses.length + " verses" + "\n";
+			    } else {
+				chapterVerses += "Chapter " + dc.sections[i].section + " - " + dc.sections[i].verses.length + " verses" + "\n";
+			    }
+			}
+			let pages = [{
+				color: userColorPreference,
+				title: "Chapters in " + "D&C",
+				description: chapterVerses,
+				footer: {
+				    text: "LDS-Bot",
+				    icon_url: bot.user.avatarURL
+				}
+			    },
+			    {
+				color: userColorPreference,
+				title: "Chapters in " + "D&C",
+				description: moreChapterVerses,
+				footer: {
+				    text: "LDS-Bot",
+				    icon_url: bot.user.avatarURL
+				}
+			    }
+			];
+			embed_page({
+			    embed: pages[0]
+			}, pages);
+			chapterVerses = "";
+		    }
+		    break;
+		case "help":
+		    message.channel.send({
+			embed: {
+			    color: userColorPreference,
+			    title: "LDS-Bot by anclint#9255",
+			    fields: [{
+				    name: "Commands",
+				    value: "``lds invite`` - provides the invite link for LDS-Bot \n ``lds github`` - provides the link for LDS-Bot GitHub repository \n ``lds randomverse`` - provides a random verse \n ``lds booknames`` - provides list of book names \n ``lds bookinfo <bookname>`` - provides info on the book inputted \n ``lds chapters <bookname>`` - provides list of all chapters and number of verses per chapter for book inputted \n ``lds servers`` - shows number of servers LDS-Bot is in \n ``lds users`` - shows number of users across all servers LDS-Bot is on",
+				    inline: false
+				},
+				{
+				    name: "Links",
+				    value: "Github: https://github.com/anclint01/LDS-Bot \n Invite: https://bit.ly/2KoBoPr",
+				    inline: false
+				}
+			    ],
+			    footer: {
+				text: "LDS-Bot",
+				icon_url: bot.user.avatarURL
+			    }
+			}
+		    });
+		    break;
+		case "servers":
+		    let servers = 0;
+		    bot.guilds.forEach((guild) => {
+			servers++;
+		    });
+		    message.channel.send({
+			embed: {
+			    color: userColorPreference,
+			    title: "lds servers",
+			    description: "LDS-Bot has reached a total of **" + servers + "** servers"
+			}
+		    });
+		    break;
+		case "users":
+		    var users = 0;
+		    bot.users.forEach((user) => {
+			users++;
+		    });
+		    message.channel.send({
+			embed: {
+			    color: userColorPreference,
+			    title: "lds users",
+			    description: "The number of users spanning accross all servers LDS-Bot is currently on has reached a concurrent " + users
+			}
+		    });
+		    break;
+		case "github":
+		    message.channel.send("https://github.com/anclint01/LDS-Bot");
+		    break;
+		break;
+	    }
     }
 
 });
