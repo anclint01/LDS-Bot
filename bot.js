@@ -1135,31 +1135,23 @@ bot.on("message", message => {
 		    });
 		    break;
 		case "servers":
-		    let servers = 0;
-		    bot.guilds.forEach((guild) => {
-			servers++;
-		    });
 		    message.channel.send({
-			embed: {
-			    color: userColorPreference,
-			    title: "lds servers",
-			    description: "LDS-Bot has reached a total of **" + servers + "** servers"
-			}
+		         embed: {
+		              color: userColorPreference,
+		              title: "lds servers",
+		              description: "LDS-Bot has reached a total of **" + `${bot.guilds.size}` + "** servers"
+		         }
 		    });
-		    break;
+		break;
 		case "users":
-		    var users = 0;
-		    bot.users.forEach((user) => {
-			users++;
-		    });
 		    message.channel.send({
-			embed: {
-			    color: userColorPreference,
-			    title: "lds users",
-			    description: "The number of users spanning accross all servers LDS-Bot is currently on has reached a concurrent " + users
-			}
+		        embed: {
+		            color: userColorPreference,
+		            title: "lds users",
+		            description: "The number of users spanning accross all servers LDS-Bot is currently on has reached a concurrent " + `${bot.users.size}`
+		        }
 		    });
-		    break;
+		break;
 		case "github":
 		    message.channel.send("https://github.com/anclint01/LDS-Bot");
 		    break;
