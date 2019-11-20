@@ -29,7 +29,7 @@ function clean(text) {
 
 bot.on("message", message => {
 
-    if (message.author.id == 221285118608801802) {
+    if (message.author.id == process.env.SOMEBODYS_ID) {
         var userColorPreference = 0xf2a93b;
     } else {
         var userColorPreference = 0x086587;
