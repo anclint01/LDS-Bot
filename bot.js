@@ -1123,7 +1123,7 @@ bot.on("message", message => {
 				},
 				{
 				    name: "Links",
-				    value: "Github: https://github.com/anclint01/LDS-Bot \n Invite: https://bit.ly/2KoBoPr",
+				    value: "Support Server: https://discord.gg/G6P6Pq8 \n Github: https://github.com/anclint01/LDS-Bot \n Invite: https://bit.ly/2KoBoPr",
 				    inline: false
 				}
 			    ],
@@ -1144,7 +1144,8 @@ bot.on("message", message => {
 		    });
 		break;
 		case "announcement":
-		     try {
+		   if (message.author.id === "453840514022899712"){  
+                    try {
 		      let toSay = args.splice(1).join(" ")
 		      bot.guilds.map((guild) => {
 			let found = 0
@@ -1168,6 +1169,7 @@ bot.on("message", message => {
 		    catch (err) {
 		      console.log("Could not send message to a (few) guild(s)!");
 		    }
+                  }
                 break;
 		case "users":
 		    message.channel.send({
