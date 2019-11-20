@@ -1143,6 +1143,32 @@ bot.on("message", message => {
 		         }
 		    });
 		break;
+		case "announcement":
+		     try {
+		      let toSay = args.splice(1).join(" ")
+		      bot.guilds.map((guild) => {
+			let found = 0
+			guild.channels.map((c) => {
+			  if (found === 0) {
+			    if (c.type === "text") {
+			      if (c.permissionsFor(bot.user).has("VIEW_CHANNEL") === true) {
+				if (c.permissionsFor(bot.user).has("SEND_MESSAGES") === true) {
+				 if (c.name === "general" || c.name === "general-chat" || c.name === "general-1") {
+				  c.send(toSay);
+				  found = 1;
+				  console.log(found);
+				  }
+				}
+			      }
+			    }
+			  }
+			});
+		      });
+		    }
+		    catch (err) {
+		      console.log("Could not send message to a (few) guild(s)!");
+		    }
+                break;
 		case "users":
 		    message.channel.send({
 		        embed: {
