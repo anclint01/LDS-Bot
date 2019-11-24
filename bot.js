@@ -124,7 +124,55 @@ bot.on("message", message => {
 
         });
     }
+    function term(word, callback) {
+        console.log("test");
+        get('http://api.urbandictionary.com/v0/define?term=' + encodeURIComponent(word), function(error, result) {
+            if (error) {
+                callback(error);
+                return;
+            }
+            if (!result) {
+                callback(new Error(word + ' is undefined.'));
+                return;
+            }
+            callback(null, result.list);
+        });
+    }
+    function get(url, callback) {
+        console.log("test1");
+        http.get(url, function(result) {
+            const contentType = result.headers['content-type'];
+            const statusCode = result.statusCode;
+            let error;
+            if (statusCode !== 200) {
+                error = new Error('Unable to send request for definitions. Status code: ' + statusCode);
+            } else if (contentType.indexOf('application/json') === -1) {
+                error = new Error("Content retrieved isn't JSON. Content type: '" + contentType + "'");
+            }
 
+            if (error) {
+            // Removes response data to clear up memory.
+                result.resume();
+                callback(error);
+                return;
+            }
+            result.setEncoding('utf8');
+
+            let rawData = '';
+            result.on('data', function(buffer) {
+                rawData += buffer;
+            });
+            result.on('end', function() {
+                try {
+                    callback(null, JSON.parse(rawData));
+                } catch (error) {
+                    callback(new Error('Failed to parse retrieved Urban Dictionary JSON.'));
+                    console.log('rawData is: ' + rawData);
+                }
+            });
+        });
+        console.log("test3");
+    }
     let bom_books = {
         "Nephi": 0,
         "Jacob": 1,
@@ -871,6 +919,69 @@ bot.on("message", message => {
 			embed: book_pages[0]
 		    }, book_pages);
 		    break;
+        case "define":
+            let msg = args[2];
+            console.log(msg + " msg")
+            term(msg, function(error, entries) {
+                if (error) {
+                    console.error(error.message)
+                    message.channel.send(error.message);
+                } else {
+                    if (entries.length == 1) {
+                        message.channel.send({
+                            embed: {
+                                color: 9384170,
+                                title: '**' + entries[0].word + '**',
+                                fields: [{
+                                        name: "Definition",
+                                        value: entries[0].definition
+                                    },
+                                    {
+                                        name: "**Example**",
+                                        value: entries[0].example
+                                    },
+                                ],
+                            }
+                        });
+                    } else if (entries.length > 1) {
+                        if (entries[0].definition.length < 1024 && entries[1].definition.length < 1024 && entries[0].example.length < 1024 && entries[0].example.length < 1024) {
+                            message.channel.send({
+                                embed: {
+                                    color: 9384170,
+                                    title: '**' + entries[0].word + '**',
+                                    fields: [{
+                                            name: "Definition",
+                                            value: entries[0].definition,
+                                        },
+                                        {
+                                            name: 'Second Definition',
+                                            value: entries[1].definition,
+                                        },
+                                        {
+                                            name: "**First Example**",
+                                            value: entries[0].example,
+                                        },
+                                        {
+                                            name: "**Second Example**",
+                                            value: entries[1].example,
+                                        },
+                                    ],
+                                }
+                            });
+                        } else {
+                            console.log("Error");
+                            console.log("Length of entries[0].definition " + entries[0].definition.length);
+                            console.log("Length of entries[1].definition " + entries[1].definition.length);
+                            console.log("Length of entries[1].example " + entries[1].example.length);
+                            console.log("Length of entries[0].example " + entries[0].example.length);
+
+                        }
+                    }
+                }
+            })
+
+
+        break;
 		case "bookinfo":
 		    var numbersForNephi = args[1]
 		    var requestedBook = args.splice(1).join(" ");
