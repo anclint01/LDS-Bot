@@ -921,67 +921,66 @@ bot.on("message", message => {
 		    }, book_pages);
 		    break;
         case "define":
-            let msg = args[2];
-            console.log(msg + " msg")
-            term(msg, function(error, entries) {
-                if (error) {
-                    console.error(error.message)
-                    message.channel.send(error.message);
-                } else {
-                    if (entries.length == 1) {
-                        message.channel.send({
-                            embed: {
-                                color: 9384170,
-                                title: '**' + entries[0].word + '**',
-                                fields: [{
-                                        name: "Definition",
-                                        value: entries[0].definition
-                                    },
-                                    {
-                                        name: "**Example**",
-                                        value: entries[0].example
-                                    },
-                                ],
-                            }
-                        });
-                    } else if (entries.length > 1) {
-                        if (entries[0].definition.length < 1024 && entries[1].definition.length < 1024 && entries[0].example.length < 1024 && entries[0].example.length < 1024) {
-                            message.channel.send({
-                                embed: {
-                                    color: 9384170,
-                                    title: '**' + entries[0].word + '**',
-                                    fields: [{
-                                            name: "Definition",
-                                            value: entries[0].definition,
-                                        },
-                                        {
-                                            name: 'Second Definition',
-                                            value: entries[1].definition,
-                                        },
-                                        {
-                                            name: "**First Example**",
-                                            value: entries[0].example,
-                                        },
-                                        {
-                                            name: "**Second Example**",
-                                            value: entries[1].example,
-                                        },
-                                    ],
-                                }
-                            });
-                        } else {
-                            console.log("Error");
-                            console.log("Length of entries[0].definition " + entries[0].definition.length);
-                            console.log("Length of entries[1].definition " + entries[1].definition.length);
-                            console.log("Length of entries[1].example " + entries[1].example.length);
-                            console.log("Length of entries[0].example " + entries[0].example.length);
+	    if (message.author.id === "453840514022899712") {
+		    let msg = args[1];
+		    term(msg, function(error, entries) {
+			if (error) {
+			    console.error(error.message)
+			    message.channel.send(error.message);
+			} else {
+			    if (entries.length == 1) {
+				message.channel.send({
+				    embed: {
+					color: 9384170,
+					title: '**' + entries[0].word + '**',
+					fields: [{
+						name: "Definition",
+						value: entries[0].definition
+					    },
+					    {
+						name: "**Example**",
+						value: entries[0].example
+					    },
+					],
+				    }
+				});
+			    } else if (entries.length > 1) {
+				if (entries[0].definition.length < 1024 && entries[1].definition.length < 1024 && entries[0].example.length < 1024 && entries[0].example.length < 1024) {
+				    message.channel.send({
+					embed: {
+					    color: 9384170,
+					    title: '**' + entries[0].word + '**',
+					    fields: [{
+						    name: "Definition",
+						    value: entries[0].definition,
+						},
+						{
+						    name: 'Second Definition',
+						    value: entries[1].definition,
+						},
+						{
+						    name: "**First Example**",
+						    value: entries[0].example,
+						},
+						{
+						    name: "**Second Example**",
+						    value: entries[1].example,
+						},
+					    ],
+					}
+				    });
+				} else {
+				    console.log("Error");
+				    console.log("Length of entries[0].definition " + entries[0].definition.length);
+				    console.log("Length of entries[1].definition " + entries[1].definition.length);
+				    console.log("Length of entries[1].example " + entries[1].example.length);
+				    console.log("Length of entries[0].example " + entries[0].example.length);
 
-                        }
-                    }
-                }
-            })
-
-
+				}
+			    }
+			}
+		    })
+	    }
         break;
 		case "bookinfo":
 		    var numbersForNephi = args[1]
