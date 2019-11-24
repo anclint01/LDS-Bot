@@ -2,7 +2,6 @@ const Discord = require('discord.js');
 const fs = require('fs');
 const bot = new Discord.Client();
 const prefix = "lds ";
-const ud = require('urban-dictionary');
 const http = require('http');
 const bom = require("./book-of-mormon.json");
 const dc = require("./doctrine-and-covenants.json");
