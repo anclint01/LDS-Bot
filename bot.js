@@ -866,7 +866,7 @@ bot.on("message", message => {
             }
 
             function checkWin() {
-                if (wrongGuesses === 6) {
+                if (wrongGuessesNumber === 6) {
                     message.channel.send("Well shucks, you've let him and/or her die :1");
                     startListening = false;
                     playerID;
