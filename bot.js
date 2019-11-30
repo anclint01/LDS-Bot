@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const fs = require('fs');
 const randomWords = require('random-words');
-conat lc = require('letter-count');
+const lc = require('letter-count');
 const bot = new Discord.Client();
 const prefix = "lds ";
 const http = require('http');
