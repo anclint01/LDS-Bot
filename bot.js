@@ -921,6 +921,7 @@ bot.on("message", message => {
                                         fetchedMsg.edit(thing);
                                     });
                             } else {
+                                if (isNaN(message.content)){
                                 wrongGuesses.push(message.content);
                                 wrongGuessesNumber++;
                                 message.channel.send("OOOF, gotit wrong").then(msg => {
@@ -935,6 +936,7 @@ bot.on("message", message => {
                                         const fetchedMsg = msg.first();
                                         fetchedMsg.edit(thing);
                                     });
+                                }
                             }
                         } else {
                             message.channel.send("Has to be a single letter dummy").then(msg => {
