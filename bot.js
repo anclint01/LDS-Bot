@@ -1509,20 +1509,21 @@ bot.on("message", message => {
                             });
                             break;
                         case "hangman":
-                            if (message.guild.id === "334941018275184644" {
+                            if (message.guild.id === "334941018275184644") {
                                     playerID = message.author.id;
                                     channelID = message.channel.id;
                                     guildID = message.guild.id;
                                     startListening = true;
                                     setUpGame();
                                     guesses();
-                                }
-                                break;
-                                case "github":
-                                message.channel.send("https://github.com/anclint01/LDS-Bot");
-                                break;
-                                break;
                             }
-                    }
+                        break;
+                        case "github":
+                            message.channel.send("https://github.com/anclint01/LDS-Bot");
+                        break;
+                break;
+            }
+        }
 
-            }); bot.login(process.env.BOT_TOKEN);
+}); 
+bot.login(process.env.BOT_TOKEN);
