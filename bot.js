@@ -813,6 +813,16 @@ bot.on("message", message => {
                             message.delete(1000);
                         })
                         startListening = false;
+                    
+                    startListening = false;
+                    playerID;
+                    wrongGuesses = [];
+                    letterGuesses = [];
+                    wrongGuessesNumber = 0;
+                    word;
+                    wordArray = [];
+                    wordHint = "";
+                    sentEmbed;
                     } else {
                         guesses();
                     }
