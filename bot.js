@@ -897,7 +897,7 @@ bot.on("message", message => {
                     });
                 } else {
                     if (message.author.id === playerID) {
-                        if (lc.count(message.content).chars === 1 || isNaN(message.content)) {
+                        if (lc.count(message.content).chars === 1 || !isNaN(message.content)) {
                             var correct = false;
                             for (i = 0; i < wordArray.length; i++) {
                                 if (wordArray[i] === message.content.toLowerCase()) {
