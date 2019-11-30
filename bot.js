@@ -897,7 +897,7 @@ bot.on("message", message => {
                     });
                 } else {
                     if (message.author.id === playerID) {
-                        if (lc.count(message.content).chars === 1 || isNaN(message.content) === true) {
+                        if (lc.count(message.content).chars === 1) {
                             var correct = false;
                             for (i = 0; i < wordArray.length; i++) {
                                 if (wordArray[i] === message.content.toLowerCase()) {
@@ -905,6 +905,7 @@ bot.on("message", message => {
                                     correct = true;
                                 }
                             }
+                            if(!isNaN(message.content)){correct = false; message.channel.send("Has to be a letter :oki:");}
                             if (correct) {
                                 message.channel.send("Nice").then(msg => {
                                     msg.delete(1000);
