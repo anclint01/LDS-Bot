@@ -822,7 +822,6 @@ bot.on("message", message => {
                     word;
                     wordArray = [];
                     wordHint = "";
-                    sentEmbed;
                     } else {
                         guesses();
                     }
@@ -877,7 +876,6 @@ bot.on("message", message => {
                     word;
                     wordArray = [];
                     wordHint = "";
-                    sentEmbed;
                 }
                 if (wordHint.indexOf('_') === -1) {
                     message.channel.send("CONGRATULATIONS, YOU WON!");
@@ -889,7 +887,6 @@ bot.on("message", message => {
                     word;
                     wordArray = [];
                     wordHint = "";
-                    sentEmbed;
                 }
             }
 
