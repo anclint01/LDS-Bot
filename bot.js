@@ -883,7 +883,7 @@ bot.on("message", message => {
             }
 
             function guesses() {
-                if (message.content.startsWith("lds eval")) {
+                if (message.content.startsWith("lds")) {
                     message.channel.send(thing).then(sent => {
                         sentEmbed = sent.id;
                     });
