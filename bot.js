@@ -905,7 +905,7 @@ bot.on("message", message => {
                                     correct = true;
                                 }
                             }
-                            if(!isNaN(message.content)){correct = false; message.channel.send("Has to be a letter :oki:");}
+                            if(!isNaN(message.content)){correct = false; message.channel.send("Has to be a letter <:oki:582075700404682771> ").then(msg => {msg.delete(2500); message.delete(2500);})}
                             if (correct) {
                                 message.channel.send("Nice").then(msg => {
                                     msg.delete(1000);
@@ -940,7 +940,8 @@ bot.on("message", message => {
                             }
                         } else {
                             message.channel.send("Has to be a single letter dummy").then(msg => {
-                                msg.delete(6500);
+                                msg.delete(3000);
+                                message.delete(1000);
                             });
                         }
                         checkWin();
