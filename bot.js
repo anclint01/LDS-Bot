@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const fs = require('fs');
-const rword = require('rword');
+const randomWords = require('random-words');
 const lc = require('letter-count');
 const bot = new Discord.Client();
 const prefix = "lds ";
@@ -820,8 +820,7 @@ bot.on("message", message => {
             }
 
             function setUpGame(guild, channel) {
-                word = rword.generate();
-                console.log(word)
+                word = randomWords();
                 for (var i = 0; i < word.length; i++) {
                     wordHint += "_";
                     wordArray.push(word.charAt(i));
