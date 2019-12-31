@@ -7,7 +7,16 @@ const bom = require("./book-of-mormon.json");
 const dc = require("./doctrine-and-covenants.json");
 const pgp = require("./pearl-of-great-price.json");
 const start = new Date();
+bot.commands = new Discord.Collection();
+const commandFiles = fs.readdirSync('./cogs').filter(file => file.endsWith('.js'));
+// yeet
+for (const file of commandFiles) {
+    const command = require(`./cogs/${file}`);
 
+    // set a new item in the Collection
+    // with the key as the command name and the value as the exported module
+    bot.commands.set(command.name, command);
+}
 bot.on("ready", () => {
     console.log("ready");
 
