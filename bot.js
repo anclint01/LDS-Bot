@@ -23,11 +23,21 @@ bot.on("ready", () => {
     bot.user.setStatus('available');
     bot.user.setPresence({
         game: {
-            name: `"lds help"`,
-            type: 2
+            name: `v2.0.0 | lds help`,
+            type: 1
         }
     });
 });
+
+function getRanges (array) {
+    for (var ranges = [], rend, i = 0; i < array.length;) {
+        ranges.push ((rend = array[i]) + ((function (rstart) {
+            while (++rend === array[++i]);
+            return --rend === rstart;
+        })(rend) ? '' : '-' + rend)); 
+    }
+    return ranges;
+}
 
 bot.on("message", message => {
 
@@ -122,6 +132,7 @@ bot.on("message", message => {
     if (message.author.bot) return;
 	
     let message_array = message.content.split(" ");
+    message_array = message_array.filter(item => item);
     let citations = [];
     let citations_pgp = [];
     let citations_dc = [];
@@ -152,26 +163,59 @@ bot.on("message", message => {
                             }
                         }
                     } else name_result = name_construction.toString();
-
-                    if (name_result == "d&c") {
-                        var location = message_array[i + 1];
-                    } else var location = message_array[i + 1 + (name_construction.length == 1 ? 0 : 1) * 2];
-
+                    let findReference = (name_result == "D&C" ? i + 1 : i + 1 + (name_construction.length == 1 ? 0 : 1) * 2);
+                    let location = message_array[findReference];
+                    for (var a = findReference + 1; a < 9999; a++) {
+                        if (!message_array[a]) break;
+                        if (message_array[a].includes(",") || message_array[a+1] == "," || message_array[a-1].includes(",")) {
+                            if (message_array[a] == ",") continue;
+                            if (!isNaN(message_array[a].replace(/,/g, ""))) {
+                                location = location + "," + message_array[a].replace(/,/g, "");
+                            } else continue;
+                        } else break;
+                    } 
                     if (typeof location != undefined) {
-                        var chapter = parseInt(location.split(":")[0]); // 1
-                        if (isNaN(chapter)) return; // No chapter number; exit the function here
-                        var verse_nums = location.split(":")[1]; // 8 or 8-10:oki
-
-                        if (verse_nums.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
-                            var verse_first = parseInt(verse_nums.split("-")[0]); // 8
-                            if (isNaN(verse_first)) return; // No verse number; exit the function here
-
-                            var verse_last = parseInt(verse_nums.split("-")[1]); // 10
-                            if (isNaN(verse_last)) return; // No last verse number; exit the function here or just ignore and set to verse_first
-                        } else { // Just a single verse; eg 8
-                            var verse_first = parseInt(verse_nums); // 8
-                            if (isNaN(verse_first)) return; // No verse number; exit the function here
-                            var verse_last = verse_first; // 8
+                        var chapter = location.split(":")[0]; // 1
+                        if (isNaN(chapter)) return; // No chapter number; exit the loop here
+                        var verse_nums = location.split(":")[1]; // 8, 8-10, 8-10,12 or 8,10,12
+                        console.log(chapter)
+                        console.log(verse_nums)
+                        if (verse_nums.indexOf(",") == -1) {
+                            var end_verses = [];
+                            if (verse_nums.indexOf("-") != -1) { // Contains -; is a range eg. 8-10
+                                var verse_first = parseInt(verse_nums.split("-")[0]); // 8
+                                if (isNaN(verse_first)) return; // No verse number; exit the loop here
+                                end_verses.push(parseInt(verse_first))
+                                var verse_last = parseInt(verse_nums.split("-")[1]); // 10
+                                if (isNaN(verse_last)) return; // No last verse number; exit the loop here or just ignore and set to verse_first
+                                end_verses.push(parseInt(verse_last))
+                            } else { // Just a single verse; eg 8
+                                var verse_first = parseInt(verse_nums); // 8
+                                console.log(verse_first)
+                                if (isNaN(verse_first)) return; // No verse number; exit the loop here
+                                end_verses.push(parseInt(verse_first))
+                            }
+                        } else {
+                            var verses = verse_nums.trim().split(",").map(item => item.trim());
+                            var all_verses = [];
+                            for (var x = 0; x < verses.length; x++){
+                                if (verses[x].indexOf("-") == -1) all_verses.push(parseInt(verses[x]))
+                                if (verses[x].indexOf("-") != -1) {
+                                    var start = verses[x].split("-")[0];
+                                    var end = verses[x].split("-")[1];
+                                    if (start == end) {
+                                        all_verses.push(parseInt(start)); 
+                                        continue;
+                                    }
+                                    if (start > end) end = [start, start = end][0];
+                                    for (var y = start; y <= end; y++) {
+                                        all_verses.push(parseInt(y));
+                                    } 
+                                }                               
+                            }
+                            all_verses.map(function (x){return parseInt(x, 10)});
+                            all_verses.sort(function(a, b){return a - b});
+                            var end_verses = all_verses.filter(function(item, pos, self) {return self.indexOf(item) == pos})
                         }
 
                         if (verse_first > verse_last) verse_last = verse_first + (verse_first = verse_last) - verse_last;
@@ -180,14 +224,14 @@ bot.on("message", message => {
                                 // This book has multiples of the same name, so look for a number
                                 if (i > 0) { // Book name isn't the first word in the message (which would mean no number given)
                                     let booknum = parseInt(message_array[i - 1]);
-                                    if (isNaN(booknum)) return; // No book number; exit the function here
-                                    citations.push([bom, name_construction, chapter, verse_first, verse_last, booknum])
-                                    // We can later check if the size of this array is 4 or 5. if 5, we know it's a book like nephi
+                                    if (isNaN(booknum)) return; // No book number; exit the loop here
+                                    citations.push([bom, name_construction, parseInt(chapter), end_verses, booknum])
+                                    // We can later check if the size of this array is 5 or 6. if 6, we know it's a book like nephi
                                 }
-                            } else citations.push([bom, name_result, chapter, verse_first, verse_last])
+                            } else citations.push([bom, name_result, chapter, end_verses])
                         } else {
-                            if (name_result != "d&c") citations_pgp.push([pgp, name_result, chapter, verse_first, verse_last])
-                            else citations_dc.push([dc, "d&c", chapter, verse_first, verse_last])
+                            if (name_result != "D&C") citations_pgp.push([pgp, name_result, parseInt(chapter), end_verses])
+                            else citations_dc.push([dc, "D&C", parseInt(chapter), end_verses])
                         }
                     }
                 }
@@ -202,13 +246,12 @@ bot.on("message", message => {
                 title: title,
                 description: description,
                 footer: {
-                    text: "LDS-Bot",
+                    text: "LDS-Bot - NEW V2.0.0 IS LIVE! - Check Help Menu for details",
                     icon_url: bot.user.avatarURL
                 }
             }
         });
     }
-
     function LDSBot_Embed_Push(array, title, description) {
         array.push({
             embed: {
@@ -216,7 +259,7 @@ bot.on("message", message => {
                 title: title,
                 description: description,
                 footer: {
-                    text: "LDS-Bot",
+                    text: "LDS-Bot - NEW V2.0.0 IS LIVE! - Check Help Menu for details",
                     icon_url: bot.user.avatarURL
                 }
             }
@@ -227,13 +270,13 @@ bot.on("message", message => {
     for (var cites of info) {
         for (var citation of cites) {
             var books;
-            citation[1] != "d&c" ? books = citation[0].books[(citation[0] == bom ? bom_books[citation[1]] : pgp_books[citation[1]])] : books = citation[0];
-            if (citation.length == 5) { // Normal Book
+            citation[1] != "D&C" ? books = citation[0].books[(citation[0] == bom ? bom_books[citation[1]] : pgp_books[citation[1]])] : books = citation[0];
+            if (citation.length == 4) { // Normal Book
                 var chapter;
-                citation[1] != "d&c" ? chapter = books.chapters[citation[2] - 1] : chapter = books.sections[citation[2] - 1];
+                citation[1] != "D&C" ? chapter = books.chapters[citation[2] - 1] : chapter = books.sections[citation[2] - 1];
 
                 var chapter_length;
-                citation[1] != "d&c" ? chapter_length = books.chapters.length : chapter_length = books.sections.length;
+                citation[1] != "D&C" ? chapter_length = books.chapters.length : chapter_length = books.sections.length;
 
                 if (citation[2] > chapter_length) {
                     LDSBot_Embed("Reference not found", "There are only **" + chapter_length + "** chapters in " + citation[1]);
@@ -241,57 +284,54 @@ bot.on("message", message => {
                 }
             } else { // Length is 5; a book like Nephi
                 try {
-                    if (citation[5] <= 4 && citation[5] > 0) var chapter = books.numbers[citation[5] - 1].chapters[citation[2] - 1];
+                    if (citation[4] <= 4 && citation[4] > 0) var chapter = books.numbers[citation[4] - 1].chapters[citation[2] - 1];
                     else return;
-                } catch (error) console.log(error);
+                } catch (error) { console.log(error); }
             }
-
-            if (citation[3] == citation[4]) { // one verse
+            if (citation[3].length == 1) { // one verse
                 if (chapter != undefined) {
-                    if (citation[3] > chapter.verses.length) {
+                    if (citation[3][0] > chapter.verses.length) {
+                        console.log("test")
                         LDSBot_Embed("Reference not found", "There are only **" + chapter.verses.length + "** verses in " + citation[1] + " Chapter **" + citation[2] + "**");
                         return;
                     }
-                    var verse = chapter.verses[citation[3] - 1];
+                    var verse = chapter.verses[citation[3][0] - 1];
                 } else return;
                 if (verse != undefined) {
                     if (verse.text != undefined) {
-                        if (citation.length == 6) LDSBot_Embed(citation[4] + " " + citation[1] + " " + citation[2] + ":" + citation[3], "**" + citation[3] + "** " + verse.text);
-                        else LDSBot_Embed(citation[1].replace(/_/g, " ") + " " + citation[2] + ":" + citation[3], "**" + citation[3] + "** " + verse.text);
+                        if (citation.length == 5) LDSBot_Embed(citation[4] + " " + citation[1] + " " + citation[2] + ":" + citation[3][0], "**" + citation[3][0] + "** " + verse.text);
+                        else LDSBot_Embed(citation[1].replace(/_/g, " ") + " " + citation[2] + ":" + citation[3][0], "**" + citation[3][0] + "** " + verse.text);
                     } else return;
                 } else return;
             } else { // multiple verses
                 let page_array = [];
                 if (chapter != undefined) {
-                    if (citation[3] > chapter.verses.length) {
-                        LDSBot_Embed("Reference not found", "**" + "There are only **" + chapter.verses.length + "** verses in " + citation[1] + " Chapter **" + citation[2] + "**");
+                    if (citation[3][0] > chapter.verses.length) {
+                        LDSBot_Embed("Reference(s) not found", "There are only **" + chapter.verses.length + "** verses in " + citation[1] + " Chapter **" + citation[2] + "**");
                         return;
                     }
                     var next_message = "";
-                    for (var v = citation[3] - 1; v < citation[4]; v++) {
+                    for (var v = 0; v < citation[3].length; v++) {
                         try {
-                            var new_message = next_message + "**" + (v + 1) + "** " + chapter.verses[v].text + "\n\n "
+                            if (citation[3][v] < chapter.verses.length) var new_message = next_message + "**" + (citation[3][v]) + "** " + chapter.verses[citation[3][v] - 1].text + "\n\n "
+                            else var new_message = next_message + "❗ **" + citation[3][v] + " - This verse don't seem to exist in this book you badonka**" + "\n\n "
+                            
                             if (new_message.length <= 2000) next_message = new_message;
                             else {
-                                if (citation.length == 6) LDSBot_Embed_Push(page_array, citation[5] + " " + citation[1] + " " + citation[2] + ":" + verse_first + "-" + verse_last, next_message);
+                                if (citation.length == 5) LDSBot_Embed_Push(page_array, citation[4] + " " + citation[1] + " " + citation[2] + ":" + getRanges(end_verses).join(', '), next_message);
                                 else {
-                                    LDSBot_Embed_Push(page_array, citation[1].replace(/_/g, " ") + " " + citation[2] + ":" + verse_first + "-" + verse_last, next_message);
-                                    next_message = "**" + (v + 1) + "** " + chapter.verses[v].text + "\n\n ";
+                                    LDSBot_Embed_Push(page_array, citation[1].replace(/_/g, " ") + " " + citation[2] + ":" + getRanges(end_verses).join(', '), next_message);
                                 }
+                                next_message = "**" + citation[3][v] + "** " + chapter.verses[citation[3][v] - 1].text + "\n\n ";
                             }
-                        } catch (error) console.log(error);
-                        return;
+                        } catch (error) { console.log(error); return; }
                     }
                     if (next_message.length != 0 && next_message != undefined) {
-                        if (citation.length == 6) LDSBot_Embed_Push(page_array, citation[5] + " " + citation[1] + " " + citation[2] + ":" + verse_first + "-" + verse_last, next_message);
-                        else LDSBot_Embed_Push(page_array, citation[1].replace(/_/g, " ") + " " + citation[2] + ":" + verse_first + "-" + verse_last, next_message);
+                        if (citation.length == 5) LDSBot_Embed_Push(page_array, citation[4] + " " + citation[1] + " " + citation[2] + ":" + getRanges(end_verses).join(', '), next_message);
+                        else LDSBot_Embed_Push(page_array, citation[1].replace(/_/g, " ") + " " + citation[2] + ":" + getRanges(end_verses).join(', '), next_message);
                     }
-                    if (page_array.length == 1) message.channel.send({
-                        embed: page_array[0]
-                    });
-                    else embed_page({
-                        embed: page_array[0]
-                    }, page_array)
+                    if (page_array.length == 1) message.channel.send(page_array[0]);
+                    else embed_page(page_array[0], page_array)
                 } else return;
             }
         }
