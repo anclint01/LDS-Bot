@@ -1,0 +1,32 @@
+{
+  "prefix": "lds",
+  "token": "",
+  "books": [
+    {"name": "Nephi", "from": "bom", "idx": 0},
+    {"name": "Jacob", "from": "bom", "idx": 1},
+    {"name": "Enos", "from": "bom", "idx": 2},
+    {"name": "Jarom", "from": "bom", "idx": 3},    
+    {"name": "Omni", "from": "bom", "idx": 4},
+    {"name": "WordsofMormon", "from": "bom", "idx": 5},
+    {"name": "WOM", "from": "bom", "idx": 5},
+    {"name": "Mosiah", "from": "bom", "idx": 6},
+    {"name": "Alma", "from": "bom", "idx": 7},
+    {"name": "Helaman", "from": "bom", "idx": 8},
+    {"name": "Mormon", "from": "bom", "idx": 9},
+    {"name": "Ether", "from": "bom", "idx": 10},
+    {"name": "Moroni", "from": "bom", "idx": 11},    
+    {"name": "Moses", "from": "pgp", "idx": 0},
+    {"name": "Abraham", "from": "pgp", "idx": 1},
+    {"name": "JosephSmithMatthew", "from": "pgp", "idx": 2},                
+    {"name": "JSM", "from": "pgp", "idx": 2},   
+    {"name": "JosephSmithHistory", "from": "pgp", "idx": 3},   
+    {"name": "JSH", "from": "pgp", "idx": 3},   
+    {"name": "ArticlesofFaith", "from": "pgp", "idx": 4},  
+    {"name": "AOF", "from": "pgp", "idx": 4},  
+    {"name": "D&C", "from": "d&c", "idx": 0},
+    {"name": "Doctrine&Covenants", "from": "d&c", "idx": 0},
+    {"name": "DoctrineAndCovenants", "from": "d&c", "idx": 0}                  
+  ],
+  "book_names": ["nephi", "jacob", "enos", "jarom", "omni", "wordsofmormon", "wom", "mosiah", "alma", "helaman", "mormon", "ether", "moroni", "moses", "abraham", "josephsmithmatthew", "jsm", "josephsmithhistory", "jsh", "articlesoffaith", "aof", "doctrineandcovenants", "doctrine&covenants", "d&c"], 
+  "presentable_book_names": ["Nephi", "Jacob", "Enos", "Jarom", "Omni", "Words Of Mormon", "WOM", "Mosiah", "Alma", "Helaman", "Mormon", "Ether", "Moroni", "Moses", "Abraham", "Joseph Smith Matthew", "JSM", "Joseph Smith History", "JSH", "Articles Of Faith", "AOF", "Doctrine And Covenants", "Doctrine & Covenants", "D&C"] 
+}
