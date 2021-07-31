@@ -12,8 +12,6 @@
   },
   "dependencies": {
     "discord.js": "11.5.1",
-    "request": "2.81.0",
-    "random-words": "1.1.0",
-    "letter-count": "2.8.9"
+    "request": "2.81.0"
   }
 }
