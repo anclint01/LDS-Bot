@@ -8,7 +8,7 @@ const client = new Client({
 export const login = async () => {
   try {
     console.log("Logging into Discord.");
-    //await client.login(token);
+    // this is an invalid token
     await client.login("ODc4MDI3NjY3Njc1NDE4Njk2.YR7M_A.XRXa5ILUYGx6GITiE9a8AxP1DeE");
     console.log("Successfully logged into discord.")
   } catch (err) {
