@@ -1,4 +1,4 @@
-import BaseCommand from '../command';
+import BaseCommand from '../types/command';
 import { readdirSync } from  "fs";
 import { sep } from "path";
 import { Client, Collection, Message } from 'discord.js';
@@ -6,10 +6,12 @@ import { Client, Collection, Message } from 'discord.js';
 export default class CommandManager {
   client: Client;
   commands: Collection<string, any>
+  slash_commands: any[];
 
   constructor (client: Client) {
     this.client = client;
     this.commands = new Collection();
+    this.slash_commands = [];
 
     if (!this.client || !(this.client instanceof Client)) {
       throw new Error ("Discord Client is required")
@@ -17,10 +19,10 @@ export default class CommandManager {
   }
 
   async loadCommands (dir: string) { 
-    readdirSync(dir).forEach(async dirs => {
+    readdirSync(`${dir}${sep}`).forEach(async dirs => {
       const commandFiles = readdirSync(`${dir}${sep}${dirs}${sep}`).filter(files => files.endsWith(".ts"));
       for (const file of commandFiles) {
-        const location: string = `${dir}/${dirs}/${file}`;
+        const location: string = `../.${dir}/${dirs}/${file}`;
 
         this.initiateModule(location);
       }
@@ -35,7 +37,7 @@ export default class CommandManager {
         let specificCategory = `-------------------------------\n# ${category.toLowerCase()}\n-------------------------------\n`;
         this.commands.forEach((c: BaseCommand) => {
           if (c.category == category.toLowerCase()) {
-            specificCategory += `${c.name}:\n  - ${c.description}\n`;
+            specificCategory += `${c.name} - ${c.description}\n`;
           }  
         })
         commandHelp = specificCategory;  
@@ -44,38 +46,17 @@ export default class CommandManager {
         let specificCommand = "";
         this.commands.forEach((c: BaseCommand) => {
           if (c.name == category.toLowerCase()) {
-            specificCommand += `${c.name}:\n  - ${c.description}\n`;
+            specificCommand += `\`${c.name}\`\n  - ${c.description}\n`;
           }  
         })
         if (specificCommand == "") return "There is no command with that name"
-        else return specificCommand
+        else return specificCommand;
       }
     } else {
-/*      let about = "-------------------------------\n# About\n-------------------------------\n",
-          info = "-------------------------------\n# Info\n-------------------------------\n",
-          other_book_content = "-------------------------------\n# Other Book Content\n-------------------------------\n",
-          util = "-------------------------------\n# Util\n-------------------------------\n"*/
       let desc: string = "";
       this.commands.forEach((c: BaseCommand) => {
         desc += `\`${c.name}${(c.usage != "" ? " " + c.usage : "")}\` ${c.description} \n`
-
-
-        /*switch (c.category) {
-          case "about":
-            desc += `${c.name + " " + c.usage}:\n  - ${c.description}\n`
-            break
-          case "info":
-            desc += `${c.name + " " + c.usage}:\n  - ${c.description}\n`
-            break
-          case "other_book_content":
-            desc += `${c.name + " " + c.usage }:\n  - ${c.description}\n`
-            break
-          case "util":
-            desc += `${c.name + " " + c.usage}:\n  - ${c.description}\n`
-            break                              
-        }*/
       })
-      //commandHelp = about + info + other_book_content + util;
       return desc;
     }
   }
@@ -88,6 +69,7 @@ export default class CommandManager {
     else {
       if (this.commands.get(Command.name)) return console.warn(`Two or more commands have the same name ${Command.name}.`);
       try {
+        this.slash_commands.push(Command.data);
         this.commands.set(Command.name, Command);
         console.log(`${r ? "Reloaded" : "Loaded"} command ${Command.name}.`);
       } catch (e) {
@@ -117,14 +99,6 @@ export default class CommandManager {
 
     this.initiateModule(`../components/commands/${category}/${name}.ts`, true)
     return true;
-  }
-
-  executeCommand (command: any, message: Message, args: Array<string>, edited: Boolean) {
-    try {
-      command.execute(message, args, edited)
-    } catch (e) {
-      console.log(`Failed to execute command: ${e}`)
-    }
   }
 }
   
