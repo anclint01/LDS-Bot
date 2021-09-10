@@ -1,6 +1,6 @@
 {
   "name": "LDS-Bot",
-  "version": "4.0.0",
+  "version": "4.5.0",
   "description": "Bot to provide scriptures from Book of Mormon, D&C, Pearl of Great Price and optionally the KJV of the Bible",
   "main": "index.js",
   "scripts": {
@@ -8,20 +8,29 @@
     "dev": "nodemon ./src/index.ts",
     "build": "tsc"
   },
+  "nodemonConfig": {
+    "ignore": ["database/*"]
+  },  
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "@mapbox/node-pre-gyp": "^1.0.5",
     "@types/better-sqlite3": "^5.4.3",
     "@types/node": "^15.12.2",
     "better-sqlite3": "^7.4.3",
-    "discord.js": "^13.1.0",
+    "discord.js": "^13.2.0-dev.1631102601.f57791c",
     "fs": "0.0.1-security",
+    "keyv-file": "^0.2.0",
     "node-schedule": "^2.0.0",
     "nodemon": "^2.0.7",
+    "request": "^2.88.2",
+    "string-similarity": "^4.0.4",
     "tsc": "^2.0.3"
   },
   "devDependencies": {
+    "@types/keyv": "^3.1.3",
     "@types/node-schedule": "^1.3.2"
   }
 }
