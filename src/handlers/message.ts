@@ -1,152 +1,96 @@
 
-import CommandManager from "./commands";
-import { Message } from "discord.js";
-import { embed_page, getClient, LDSBot_Embed_Push } from "../other/func";
-import { prefix, book_names, books, presentable_book_names } from "../../config.json"
-import bom from "../../book-of-mormon.json";
-import dc from "../../doctrine-and-covenants.json";
-import pgp from "../../pearl-of-great-price.json";
-import ot from "../../old-testament.json";
-import nt from "../../new-testament.json";
-import { Book, Chapter, MainBook, Section, Verse } from "../other/types";
-import { options } from "..";
-const client = getClient();
-
-export const Manager: CommandManager = new CommandManager(client);
-Manager.loadCommands("../components/commands");
-export const commands = Manager.commands;
+import { Message, User } from "discord.js";
+import { LDSBot_Embed_Push, LDSBot_Embed_Send } from "../constants/func";
+import { reference } from "../types/reference";
+import { prefix, book_names, books } from "../../config.json"
+import { commands } from "..";
+import { options } from "../."
+import { Paginator } from "./paginator";
+import { get_reference } from "../constants/get_reference";
 
 export const messageHandler = async (message: Message): Promise<void> => {
-  if (message.author.bot) return console.log("this is a bot");
-  
+  if (message.author.bot) return;
   if (message.content.startsWith(prefix)) {
     const [commandName, ...args] = message.content
     .slice(prefix.length)
     .split(/ +/);
 
-    if (commands.has(commandName) || commands.mapValues((value)=>value.aliases.includes(commandName))) {
-      const command = commands.get(commandName);
+    if (commands.has(commandName.toLowerCase()) || commands.find((cmd: any) => cmd.aliases && cmd.aliases.includes(commandName.toLowerCase()))) {
+      const command = commands.get(commandName.toLowerCase()) || commands.find((cmmd: any) => cmmd.aliases && cmmd.aliases.includes(commandName.toLowerCase()))
+      
       if (!command) return;
       command.execute(message, args);
     } else return
   }
 
-  let content: string = message.content.replace(/\s/g, "");  
-  let regex: RegExp = /([1-4])?([a-z&]+)(\d+)(?::(\d+))(-(\d+)?((\d+))?)?/ig
+  let content: string = message.content; 
+  let regex: RegExp = /-?([1-4])?(?:[\s]*?)((?:nephi|jacob|enos|jarom|omni|words of mormon|wom|mosiah|alma|helaman|mormon|ether|moroni|moses|abraham|josephsmithmatthew|jsm|joseph smith history|jsh|articles of faith|aof|doctrine and covenants|d&c|doctrine & covenants|matthew|mark|luke|john|the acts|romans|corinthians|galatians|ephesians|philippians|colossians|thessalonians|timothy|titus|philemon|hebrews|james|peter|john|jude|revelation|genesis|exodus|leviticus|numbers|deuteronomy|joshua|judges|ruth|samuel|kings|chronicles|ezra|nehemiah|esther|job|psalms|proverbs|ecclesiastes|song of solomon|isaiah|jeremiah|lamentations|ezekiel|daniel|hosea|joel|amos|obadiah|jonah|micah|nahum|habakkuk|zephaniah|haggai|zechariah|malachi))\s*?(\d+)(?::(\d+))(?:-(\d+)?)?/gi;
   let matches: Array<RegExpMatchArray> = [...content.matchAll(regex)];
-  
   for (let i = 0; i < matches.length; i++) {
+    if (matches[i][0].startsWith('-')) continue;
+
     let number:   string = (typeof matches[i][1] != "undefined") ? matches[i][1] : "nothing",
         name:     string = matches[i][2], 
         chapter:  string = matches[i][3], 
         verse:    string = matches[i][4], 
-        endverse: string = "nothing";
+        endverse: string = (typeof matches[i][5] != "undefined") ? matches[i][5] : "nothing";
 
-    let sub_books: {name: string, from: string, idx: number};  
+    name = (number === "nothing" ? "" : number) + name;
+    let sub_books: {name: string, from: string, idx: number} = books.filter((el: { name: string, from: string, idx: number }) => el.name.toLowerCase() === name.replace(/\s/g, "").toLowerCase())[0];
 
-    if (number != "nothing") sub_books = books.filter((el) => el.name.toLowerCase() === `${number}${name.toLowerCase()}`)[0];
-    else sub_books = books.filter((el) => el.name.toLowerCase() === name.toLowerCase())[0];
-
-    if (typeof sub_books == "undefined") sub_books = books.filter((el) => el.name.toLowerCase() === name.toLowerCase())[0];
-    else name = (number === "nothing" ? "" : number) + name;
-
-    if (!book_names.includes(name.toLowerCase())) return; // Exit loop if book is not found.
-    
-    if (typeof matches[i][5] == "string" && matches[i][5].startsWith("-")) endverse = matches[i][6]; // 
-
+    if (!book_names.includes(name.replace(/\s/g, "").toLowerCase())) continue;
     let from: string = sub_books.from;
 
     if (["ot", "nt"].includes(from)) {
       let option;
-      try {
-        option = await options.prepare(`SELECT bible FROM options WHERE guildID = ?`).get(message.guild?.id);
-      } catch (err) {
-        console.log(err)
-      }
+      try { option = await options.prepare(`SELECT bible FROM options WHERE guildID = ?`).get(message.guild?.id); } 
+      catch (err) { console.log(err) }
       
       if (!option) {
-        try {
-          options.prepare(`INSERT INTO options (guildID, bible) VALUES (@guildID, @bible);`).run(message.guild?.id, "no");
-        } catch (err) {
-          console.log(err)
-        }       
+        try { options.prepare(`INSERT INTO options (guildID, bible) VALUES (@guildID, @bible);`).run(message.guild?.id, "no"); }
+        catch (err) { console.log(err); }       
         continue;
-      } else {
-        if (option.bible === "no") continue;
-      }
+      } 
+      if (option.bible === "no") continue;
     }
 
-    let requested_book: MainBook = (from == "bom" ? bom : (from == "pgp" ? pgp : (from == "dc" ? dc : (from == "nt" ? nt : ot))));
-    
-    let requested_sub_book: MainBook | Book = from === "d&c" ? requested_book : requested_book.books![sub_books.idx];
-    if (!requested_sub_book) return; 
+    let fetch_reference: reference | void = get_reference({book: from, sub_book: sub_books.idx, chapter: parseInt(chapter)-1, verse: parseInt(verse)-1, second_verse: endverse === "nothing" ? undefined : parseInt(endverse)-1});
+    if (!fetch_reference) return;
 
-    let presentable_name: string = presentable_book_names[book_names.indexOf(name.toLowerCase())]      
-    if (!presentable_name) return;
-
-
-    let book_chapters: Chapter[] | Section[] | undefined = (from == "d&C" ? (requested_sub_book as MainBook).sections : (requested_sub_book as Book).chapters)
-    if (!book_chapters) return;
-
-    let chapter_length: number = book_chapters!.length;
-    if (!requested_book || !book_chapters || parseInt(chapter) > chapter_length) {
-      return void await message.channel.send({ content: "\u200E", embeds: [{ 
-        color: 0x086587, 
-        title: "Reference not found", 
-        description: "There are only **" + 
-        chapter_length + "** Chapters in " + presentable_name, 
-        footer: { 
-          text: "LDS-Bot", 
-          icon_url: client.user!.displayAvatarURL()
-        }
-      }]}).catch((err: any) => {
-        console.log("Something went wrong: " + err)
-      });    
+    if (fetch_reference.reference.includes("Reference not found")) {
+      return void LDSBot_Embed_Send(message, fetch_reference.reference, fetch_reference.text as string, "LDS-Bot");
     }
 
-    let book_chapter = book_chapters[parseInt(chapter)-1];
-    if (!book_chapter) return;
-
-    let chapter_verses: Verse, desc: string = "";
+    let desc: string = "";
     let page_array: Array<any> = [];
-    if (endverse != "nothing") {
-      for (let x = parseInt(verse)-1; x < parseInt(endverse); x++) { 
-        let new_message: string;
-        if (x+1 <= book_chapter.verses.length) new_message = desc + "**" + book_chapter.verses[x].verse + "** " + book_chapter.verses[x].text + "\n\n";
-        else new_message = desc + "? **" + (x+1) + " - This verse doesn't seem to exist**\n\n"
+    if (Array.isArray(fetch_reference.text)) {
+      let references: string[] = fetch_reference.text;
+      for (let x = 0; x < references.length; x++) { 
+        let new_message: string = desc + references[x] + "\n\n";
         
         if (new_message.length <= 2000) desc = new_message;
         else {
-          LDSBot_Embed_Push(page_array, presentable_name + " " + chapter + ":" + verse + (endverse != "nothing" ? "-" + endverse: ""), desc);
-          desc = "**" + book_chapter.verses[x].verse + "** " + book_chapter.verses[x].text + "\n\n";
+          LDSBot_Embed_Push(page_array, fetch_reference.reference + (from === "ot" || from === "nt" ? " (KJV) " : ""), desc, fetch_reference.main_book);
+          desc = references[x] + "\n\n";
         }
       }
     } else {
-      if (!book_chapter.verses[parseInt(verse)-1]) {
-        return void message.channel.send({ content: "\u200E", embeds: [{ 
-          color: 0x086587, 
-          title: "Reference not found", 
-          description: "There are only **" + book_chapter.verses.length + "** verses in " + presentable_name + " Chapter **" + chapter + "**", 
-          footer: { 
-            text: "LDS-Bot", 
-            icon_url: client.user!.displayAvatarURL()
-          }
-        }]}).catch((error: any)=> {
-          console.log("Something went wrong: " + error);
-        });
-      }
-      chapter_verses = book_chapter.verses[parseInt(verse)-1], desc = "**" + chapter_verses.verse + "** " + chapter_verses.text;
+      void LDSBot_Embed_Send(message, fetch_reference.reference + (from === "ot" || from === "nt" ? " (KJV) " : ""), fetch_reference.text, "LDS-Bot | " + fetch_reference.main_book);  
+      continue;
     }
 
     if (desc.length > 0) {
-      LDSBot_Embed_Push(page_array, presentable_name + " " + chapter + ":" + verse + (endverse != "nothing" ? "-" + endverse: ""), desc);
+      LDSBot_Embed_Push(page_array, fetch_reference.reference + (from === "ot" || from === "nt" ? " (KJV) " : ""), desc, fetch_reference.main_book);
     }
 
     if (page_array.length == 1) {
-      return void message.channel.send({ content: "\u200E", embeds: [page_array[0]] }).catch((err: any)=> {
+      void LDSBot_Embed_Send(message, page_array[0].title, page_array[0].description, page_array[0].footer.text).catch((err: any) => {
         console.log("Something went wrong: " + err);
       });
-    } else embed_page(message, page_array[0], page_array)
 
+      continue;
+    } else {
+      new Paginator(message.author as User, page_array[0], page_array, message as Message)._new();
+    }
   }
 }
