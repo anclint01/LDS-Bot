@@ -40,7 +40,7 @@ export class Store extends EventEmitter {
                     let k = key.split(":")[1];
                     let data = (typeof element.value === 'string') ? this.opts.deserialize(element.value) : element.value;
 
-                    if (data !== undefined && key !== undefined && data.value !== undefined) {
+                    if (data !== undefined && key !== undefined) {
                         values.push({
                             key: k,
                             value: data.value
