@@ -2,7 +2,7 @@ const EventEmitter = require('events');
 const JSONB = require('json-buffer');
 
 export class Store extends EventEmitter {
-    constructor(uri: any, opts ? : any) {
+    constructor(uri: any, opts?: any) {
         super();
         this.opts = Object.assign({
                 namespace: 'keyv',
@@ -58,7 +58,7 @@ export class Store extends EventEmitter {
             });
     }
 
-    get(key: string, opts ? : any) {
+    get(key: string, opts?: any) {
         const keyPrefixed = this._getKeyPrefix(key);
         const {
             store
@@ -87,12 +87,14 @@ export class Store extends EventEmitter {
             _cache
         } = this.opts.store;
 
-        if (!_cache || !_cache.size) return undefined
+        if (!_cache) {
+          return undefined
+        }
 
         return _cache.size;
     }
 
-    set(key: string, value: any, ttl ? : any) {
+    set(key: string, value: any, ttl?: any) {
         const keyPrefixed = this._getKeyPrefix(key);
         if (typeof ttl === 'undefined') {
             ttl = this.opts.ttl;
