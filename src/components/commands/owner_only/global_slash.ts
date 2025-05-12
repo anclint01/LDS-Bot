@@ -13,9 +13,9 @@ class Command extends BaseCommand {
     super ("rsc", "owner_only", "rsc")
   }
   async execute (message: Message, args?: string[]) {
-    if (message.author.id != "453840514022899712") return;
+    if (message.author.id != "") return;
 
-    const rest = new REST({ version: '10' }).setToken("NjM5MjcxNzcyODE4MTEyNTY0.GclNMB.eedbRcydzOkWvqIhFogmEGkHKqktSAM_SX493s");
+    const rest = new REST({ version: '10' }).setToken("");
     
     (async () => {
       try {
